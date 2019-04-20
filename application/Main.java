@@ -3,15 +3,16 @@ package application;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 
 
 public class Main extends Application implements EventHandler<ActionEvent>{
 	private Stage primaryStage;
-	private Button setUpButton;
 	
 	private Scene getEnterQuestionPage() {
 		
@@ -24,11 +25,6 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 	}
 	
 	private Scene getMainMenuPage() {
-		BorderPane root = new BorderPane();
-		
-		this.setUpButton = new Button();
-		setUpButton.setText("Set Up");
-		
 		// Anonymous class
 		/*setUpButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -37,10 +33,20 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 			}
 		});*/
 		
-		// Lambda Expression
-		setUpButton.setOnAction(event -> System.out.println("Hello"));
+		BorderPane root = new BorderPane();
 		
-		root.setTop(setUpButton);
+		Label title = new Label("Quiz Generator");
+		
+		Button setUpButton = new Button();
+		setUpButton.setText("Set Up");
+		
+		// Lambda Expression
+		setUpButton.setOnAction(event -> getSetUpPage());
+		
+		root.setTop(title);
+		root.setCenter(setUpButton);
+		
+		BorderPane.setAlignment(title, Pos.CENTER);
 
 		Scene mainPage = new Scene(root, 400, 400);
 		
@@ -53,6 +59,8 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 	}
 	
 	private Scene getResultPage() {
+		
+		
 		
 		return null;
 	}
@@ -77,6 +85,8 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 		try {
 			this.primaryStage = primaryStage;
 			Scene mainMenuPage = getMainMenuPage();
+			
+			mainMenuPage.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			
 			primaryStage.setScene(mainMenuPage);
 			primaryStage.show();
