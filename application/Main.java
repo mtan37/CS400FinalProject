@@ -28,7 +28,17 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 		
 		this.setUpButton = new Button();
 		setUpButton.setText("Set Up");
-		setUpButton.setOnAction(this);
+		
+		// Anonymous class
+		/*setUpButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				System.out.println("Button Clicked2");
+			}
+		});*/
+		
+		// Lambda Expression
+		setUpButton.setOnAction(event -> System.out.println("Hello"));
 		
 		root.setTop(setUpButton);
 
@@ -77,11 +87,11 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 	
 	@Override
 	public void handle(ActionEvent event) {
-		if(event.getSource()==setUpButton) {
+		/*if(event.getSource()==setUpButton) {
 			System.out.println("Button Pressed");
 			
 			//primaryStage.setScene();
-		}
+		}*/
 	}
 	
 	public static void main(String[] args) {
