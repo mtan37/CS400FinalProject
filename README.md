@@ -10,13 +10,3 @@ Now you have the project in the eclipse workspace. When you want to add changes:
 1) git add .
 2) git commit -m "Whatever change messages"
 3) git push origin master
-
-
-To differentiate the event sources, use this:
-
-@Override
-	public void handle(ActionEvent event) {
-		if(event.getSource()==setUpButton) {
-			main.switchTo(main.setting.settingScene);
-		}
-	}
