@@ -10,3 +10,6 @@ Now you have the project in the eclipse workspace. When you want to add changes:
 1) git add .
 2) git commit -m "Whatever change messages"
 3) git push
+
+If there is change by other people use:
+1) git pull
