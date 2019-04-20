@@ -5,11 +5,13 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 
 
 public class Main extends Application implements EventHandler<ActionEvent>{
-	Stage primaryStage;
+	private Stage primaryStage;
+	private Button setUpButton;
 	
 	private Scene getEnterQuestionPage() {
 		
@@ -22,8 +24,17 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 	}
 	
 	private Scene getMainMenuPage() {
+		BorderPane root = new BorderPane();
 		
-		return null;
+		this.setUpButton = new Button();
+		setUpButton.setText("Set Up");
+		setUpButton.setOnAction(this);
+		
+		root.setTop(setUpButton);
+
+		Scene mainPage = new Scene(root, 400, 400);
+		
+		return mainPage;
 	}
 	
 	private Scene getQuestionPage() {
@@ -55,22 +66,22 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 	public void start(Stage primaryStage) {
 		try {
 			this.primaryStage = primaryStage;
+			Scene mainMenuPage = getMainMenuPage();
 			
-			System.out.println("Hello Just testing");
-			
+			primaryStage.setScene(mainMenuPage);
 			primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void switchTo(Scene scene) {
-		primaryStage.setScene(scene);
-	}
-	
 	@Override
 	public void handle(ActionEvent event) {
-		
+		if(event.getSource()==setUpButton) {
+			System.out.println("Button Pressed");
+			
+			//primaryStage.setScene();
+		}
 	}
 	
 	public static void main(String[] args) {
