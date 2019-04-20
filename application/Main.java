@@ -11,15 +11,6 @@ import javafx.scene.layout.BorderPane;
 public class Main extends Application implements EventHandler<ActionEvent>{
 	Stage primaryStage;
 	
-	/*- getEnterQuestionPage() : Scene 
-	- getQuestionFilterPage() : Scene
-	- getMainMenuPage() : Scene
-	- getQuestionPage() :  Scene
-	- getResultPage() :  Scene
-	- getSetUpPage() : Scene
-	- getLoadPage():  Scene
-	- getSavePage():  Scene*/
-
 	private Scene getEnterQuestionPage() {
 		
 		return null;
