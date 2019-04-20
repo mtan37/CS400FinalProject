@@ -58,7 +58,7 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 	}
 	
 	private void setUpSavePage() {
-		
+	  BorderPane root = new BorderPane();
 	}
 	
 	@Override
