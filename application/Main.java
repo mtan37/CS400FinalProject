@@ -11,74 +11,60 @@ import javafx.scene.layout.BorderPane;
 
 public class Main extends Application implements EventHandler<ActionEvent>{
 	private Stage primaryStage;
-	private Button setUpButton;
 	
-	private Scene getEnterQuestionPage() {
+	private void setUpEnterQuestionPage() {
 		
-		return null;
 	}
 	
-	private Scene getQuestionFilterPage() {
+	private void setUpQuestionFilterPage() {
 			
-		return null;
+
 	}
 	
-	private Scene getMainMenuPage() {
+	private void setUpMainMenuPage() {
 		BorderPane root = new BorderPane();
 		
-		this.setUpButton = new Button();
-		setUpButton.setText("Set Up");
+		//define elements appearance
+		Button goToOtherPageButton = new Button();
+		goToOtherPageButton.setText("Set Up");
 		
-		// Anonymous class
-		/*setUpButton.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				System.out.println("Button Clicked2");
-			}
-		});*/
-		
+		//define functions when different buttons on this page is triggered
 		// Lambda Expression
-		setUpButton.setOnAction(event -> System.out.println("Hello"));
+		goToOtherPageButton.setOnMouseClicked(event -> setUpEnterQuestionPage());
 		
-		root.setTop(setUpButton);
+		//set up page
+		root.setTop(goToOtherPageButton);
 
-		Scene mainPage = new Scene(root, 400, 400);
+		primaryStage.setScene(new Scene(root, 400, 400));
 		
-		return mainPage;
 	}
 	
-	private Scene getQuestionPage() {
+	private void setUpQuestionPage() {
 		
-		return null;
 	}
 	
-	private Scene getResultPage() {
-		
-		return null;
+	private void setUpResultPage() {
+
 	}
 	
-	private Scene getSetUpPage() {
+	private void setUpSetUpPage() {
 			
-		return null;
 	}
 	
-	private Scene getLoadPage() {
+	private void setUpLoadPage() {
 		
-		return null;
 	}
 	
-	private Scene getSavePage() {
+	private void setUpSavePage() {
 		
-		return null;
 	}
 	
 	@Override
 	public void start(Stage primaryStage) {
 		try {
 			this.primaryStage = primaryStage;
-			Scene mainMenuPage = getMainMenuPage();
+			setUpMainMenuPage();
 			
-			primaryStage.setScene(mainMenuPage);
 			primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -87,11 +73,7 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 	
 	@Override
 	public void handle(ActionEvent event) {
-		/*if(event.getSource()==setUpButton) {
-			System.out.println("Button Pressed");
-			
-			//primaryStage.setScene();
-		}*/
+		//code specified using lambda expression
 	}
 	
 	public static void main(String[] args) {
