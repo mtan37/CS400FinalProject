@@ -12,54 +12,64 @@ import javafx.scene.layout.BorderPane;
 public class Main extends Application implements EventHandler<ActionEvent>{
 	private Stage primaryStage;
 	
-	private void setUpEnterQuestionPage() {
+	//Marvin Tan
+	private void setUpMainMenuPage() {
+      BorderPane root = new BorderPane();
+      
+      //define elements appearance
+      Button goToOtherPageButton = new Button();
+      goToOtherPageButton.setText("Set Up");
+      
+      //define functions when different buttons on this page is triggered
+      // Lambda Expression
+      //goToOtherPageButton.setOnMouseClicked(event -> );
+      
+      //set up page
+      root.setTop(goToOtherPageButton);
+      
+      Scene sc = new Scene(root, 800, 800);
+      sc.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+      primaryStage.setScene(sc);
+      
+    }
+	
+	//Hui Beom
+	private void setUpLoadQuestionPage() {
 		
 	}
 	
+	//Hui Beom
+	private void setUpFileImportPage() {
+      BorderPane root = new BorderPane();
+    }
+	
+	//Hui Beom
+    private void setUpAddQuestionPage() {
+        
+    }
+    
+    //Lucy
 	private void setUpQuestionFilterPage() {
 			
 
 	}
 	
-	private void setUpMainMenuPage() {
-		BorderPane root = new BorderPane();
-		
-		//define elements appearance
-		Button goToOtherPageButton = new Button();
-		goToOtherPageButton.setText("Set Up");
-		
-		//define functions when different buttons on this page is triggered
-		// Lambda Expression
-		goToOtherPageButton.setOnMouseClicked(event -> setUpEnterQuestionPage());
-		
-		//set up page
-		root.setTop(goToOtherPageButton);
-		
-		Scene sc = new Scene(root, 800, 800);
-		sc.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-		primaryStage.setScene(sc);
-		
-	}
-	
+	//Lucy
 	private void setUpQuestionPage() {
 		
 	}
 	
-	private void setUpResultPage() {
+	//Marvin
+	private void setUpScorePage() {
 
 	}
 	
-	private void setUpSetUpPage() {
+	//Marvin
+	private void setUpPopUpPage() {
 			
 	}
 	
-	private void setUpLoadPage() {
-		
-	}
 	
-	private void setUpSavePage() {
-	  BorderPane root = new BorderPane();
-	}
 	
 	@Override
 	public void start(Stage primaryStage) {
