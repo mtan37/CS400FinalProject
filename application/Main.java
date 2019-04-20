@@ -34,8 +34,10 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 		
 		//set up page
 		root.setTop(goToOtherPageButton);
-
-		primaryStage.setScene(new Scene(root, 400, 400));
+		
+		Scene sc = new Scene(root, 800, 800);
+		sc.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+		primaryStage.setScene(sc);
 		
 	}
 	
