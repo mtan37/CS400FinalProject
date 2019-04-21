@@ -4,3 +4,42 @@
 	-fx-background-color: #9ED4F3;
 	-fx-font-size: 20px;
 }
+
+.topHBox {
+	-fx-background-color: #72b7df;
+}
+
+.bottomHBox {
+	-fx-background-color: #72b7df;
+}
+
+.title {
+	-fx-font-size: 30px;
+}
+
+.loadButton {
+	-fx-background-color: #1b71a3;
+	-fx-text-fill: white;
+}
+
+.loadButton:hover {
+	-fx-background-color: #0d5681;
+}
+
+.createButton {
+	-fx-background-color: #1b71a3;
+	-fx-text-fill: white;
+}
+
+.createButton:hover {
+	-fx-background-color: #0d5681;
+}
+
+.backButton {
+	-fx-background-color: #1b71a3;
+	-fx-text-fill: white;
+}
+
+.backButton:hover {
+	-fx-background-color: #0d5681;
+}
