@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -207,9 +208,9 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 		Label choiceLabel = new Label("Choices");
 		TextField choiceField = new TextField();
 		
-		Button trueButton = new Button();
+		ToggleButton trueButton = new ToggleButton();
 		trueButton.setText("T");
-		Button falseButton = new Button();
+		ToggleButton falseButton = new ToggleButton();
 		falseButton.setText("F");
 		
 		TFBox.getChildren().addAll(trueButton, falseButton);
@@ -285,6 +286,8 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 	
 	@Override
 	public void start(Stage primaryStage) {
+		quizGenerator = new QuizGenerator();
+		
 		try {
 			this.primaryStage = primaryStage;
 			setUpLoadQuestionPage();
@@ -301,6 +304,8 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 	}
 	
 	public static void main(String[] args) {
+		
+		
 		launch(args);
 	}
 }
