@@ -15,6 +15,9 @@
 .normalText{
 	-fx-font-size: 30px;
 }
+.smallText{
+	-fx-font-size: 15px;
+}
 .title {
 	-fx-font-size: 35px;
 }
@@ -31,7 +34,17 @@
 	-fx-font-size: 20px;
 	-fx-padding: 5px;
 }
-
+.popUpButton {
+	-fx-background-color: #1b71a3;
+	-fx-text-fill: white;
+	-fx-font-size: 15px;
+	-fx-padding: 2px;
+}
+.popUpButton:hover {
+	-fx-background-color: #f79d0c;
+	-fx-font-size: 15px;
+	-fx-padding: 2px;
+}
 .backButton{
 	-fx-background-color: #f2a529;
 	-fx-font-size: 20px;

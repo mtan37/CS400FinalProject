@@ -1,9 +1,11 @@
 package application;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -14,6 +16,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 
 public class Main extends Application implements EventHandler<ActionEvent>{
@@ -187,7 +190,9 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 		backButton.setText("Back");
 		backButton.getStyleClass().add("backButton");
 		
-		backButton.setOnAction(event -> setUpLoadQuestionPage());
+		backButton.setOnAction(event -> {
+		  popUpQuitAddQuestion();
+		  });
 
 		// Setting up the layout
 		topHBox.getChildren().add(title);
@@ -223,12 +228,123 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 	
 	//Marvin
 	private void setUpScorePage() {
-
+	  BorderPane root = new BorderPane();
+      VBox centerVBox = new VBox();
+      //VBox buttonVBox = new VBox();
+      HBox topHBox = new HBox();
+      //HBox dataHBox = new HBox();
+      HBox bottomHBox = new HBox();
+      
+      //define elements appearance
+      //Top
+      Label title = new Label("Quiz Generator");
+      title.setAlignment(Pos.CENTER);
+      title.getStyleClass().add("title");
+      topHBox.getChildren().add(title);
+      topHBox.setAlignment(Pos.CENTER);
+      topHBox.setPrefHeight(50);
+      topHBox.getStyleClass().add("topHBox");
+      
+      //center
+      Label numAnswered = new Label("#Answered question: 100");//stub data TODO
+      Label numCorrect = new Label("#Correct question: 50");//stub data TODO
+      Label numCorrectPercentage = new Label("%Correct: 50%");//stub data TODO
+      
+      Button startNewQuizBt = new Button();
+      startNewQuizBt.setText("Start a New Quiz With the Same Setting");
+      startNewQuizBt.getStyleClass().add("NormalButton");
+      Button changeSettingBt = new Button();
+      changeSettingBt.setText("Start a New Quiz With a Different Setting");
+      changeSettingBt.getStyleClass().add("NormalButton");
+      Button endBt = new Button();
+      endBt.setText("End the program");
+      endBt.getStyleClass().add("NormalButton");
+      
+      
+      centerVBox.getChildren().addAll(numCorrect, numAnswered, numCorrectPercentage,startNewQuizBt, changeSettingBt, endBt);
+      centerVBox.setAlignment(Pos.CENTER);
+      centerVBox.setSpacing(30);
+      
+      //bottom
+      Button backButton = new Button();
+      backButton.setText("Back to Main Page");
+      backButton.getStyleClass().add("backButton");
+      bottomHBox.getChildren().addAll(backButton);
+      bottomHBox.getStyleClass().add("bottomHBox");
+      bottomHBox.setAlignment(Pos.BASELINE_RIGHT);
+      
+      //define functions when different buttons on this page is triggered
+      // Lambda Expression
+      startNewQuizBt.setOnMouseClicked(event -> {
+        setUpQuestionPage();
+        /*reset 1.numAnswered
+         *      2.numCorrect
+         *      3.numCorrectPercentage
+         */
+        });
+      changeSettingBt.setOnMouseClicked(event -> {
+        setUpQuestionFilterPage();
+        /*reset 1.numAnswered
+         *      2.numCorrect
+         *      3.numCorrectPercentage
+         */
+        });
+      endBt.setOnMouseClicked(event -> {
+        try {
+          Platform.exit();
+          //System.exit(0);
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
+      });
+      backButton.setOnMouseClicked(event -> setUpMainMenuPage());
+      //set up border pane by elements
+      root.setTop(topHBox);
+      root.setCenter(centerVBox);
+      root.setBottom(bottomHBox);
+      
+      Scene sc = new Scene(root, 500, 700);
+      sc.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+      primaryStage.setScene(sc);
 	}
 	
 	//Marvin
-	private void setUpPopUpPage() {
-			
+	private void popUpQuitAddQuestion() {
+	  final Stage dialog = new Stage();
+      dialog.initModality(Modality.APPLICATION_MODAL);
+      dialog.initOwner(primaryStage);
+      VBox dialogVbox = new VBox();
+      HBox dialogHbox = new HBox();
+      
+      Label prompt = new Label("Are you sure you want to exit without finishing editing?");
+      prompt.getStyleClass().add("smallText");
+      
+      Button exit = new Button();
+      exit.setText("Yes,exit");
+      exit.getStyleClass().add("popUpButton");
+      Button notExit = new Button();
+      notExit.setText("Keep editing");
+      notExit.getStyleClass().add("popUpButton");
+      
+      dialogHbox.getChildren().addAll(exit, notExit);
+      dialogHbox.setAlignment(Pos.CENTER);
+      dialogHbox.setSpacing(10.0);
+      dialogVbox.getChildren().addAll(prompt, dialogHbox);
+      dialogVbox.setAlignment(Pos.CENTER);
+      
+      exit.setOnMouseClicked(event -> {
+        setUpLoadQuestionPage();
+        dialog.close();
+        });
+      notExit.setOnMouseClicked(event -> {
+        setUpQuestionPage();
+        dialog.close();
+        });
+      
+      Scene dialogScene = new Scene(dialogVbox, 400, 100);
+      dialogScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+      dialog.setScene(dialogScene);
+      dialog.show();
 	}
 	
 	@Override
@@ -238,7 +354,6 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 		try {
 			this.primaryStage = primaryStage;
 			setUpMainMenuPage();
-			
 			primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();
