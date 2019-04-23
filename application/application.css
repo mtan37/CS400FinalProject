@@ -1,45 +1,43 @@
 /* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
 
 .root {
-	-fx-background-color: #9ED4F3;
+	-fx-background-color: #FFFFFF;
 	-fx-font-size: 20px;
 }
 
 .topHBox {
-	-fx-background-color: #72b7df;
+	-fx-background-color: #9ED4F3;
 }
 
 .bottomHBox {
-	-fx-background-color: #72b7df;
+	-fx-background-color: #9ED4F3;
 }
-
-.title {
+.normalText{
 	-fx-font-size: 30px;
 }
+.title {
+	-fx-font-size: 35px;
+}
 
-.loadButton {
+.NormalButton {
 	-fx-background-color: #1b71a3;
 	-fx-text-fill: white;
+	-fx-font-size: 20px;
+	-fx-padding: 5px;
 }
 
-.loadButton:hover {
-	-fx-background-color: #0d5681;
+.NormalButton:hover {
+	-fx-background-color: #f79d0c;
+	-fx-font-size: 20px;
+	-fx-padding: 5px;
 }
 
-.createButton {
-	-fx-background-color: #1b71a3;
+.backButton{
+	-fx-background-color: #f2a529;
+	-fx-font-size: 20px;
+	-fx-padding: 5px;
+}
+
+.backButton:hover{
 	-fx-text-fill: white;
-}
-
-.createButton:hover {
-	-fx-background-color: #0d5681;
-}
-
-.backButton {
-	-fx-background-color: #1b71a3;
-	-fx-text-fill: white;
-}
-
-.backButton:hover {
-	-fx-background-color: #0d5681;
 }

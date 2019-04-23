@@ -13,8 +13,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 
@@ -25,19 +23,50 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 	//Marvin Tan
 	private void setUpMainMenuPage() {
 	  BorderPane root = new BorderPane();
+      VBox centerVBox = new VBox();
+      HBox topHBox = new HBox();
+      HBox bottomHBox = new HBox();
 	  
 	  //define elements appearance
-	  Button goToOtherPageButton = new Button();
-	  goToOtherPageButton.setText("Set Up");
+	  //Top
+	  Label title = new Label("Quiz Generator");
+	  title.setAlignment(Pos.CENTER);
+      title.getStyleClass().add("title");
+      topHBox.getChildren().add(title);
+      topHBox.setAlignment(Pos.CENTER);
+      topHBox.setPrefHeight(50);
+      topHBox.getStyleClass().add("topHBox");
+      
+      //center
+	  Button setUpBt = new Button();
+	  setUpBt.setText("Set Up");
+	  setUpBt.getStyleClass().add("NormalButton");
+	  
+	  Button createNewBt = new Button();
+	  createNewBt.setText("Create New Quiz");
+	  createNewBt.getStyleClass().add("NormalButton");
+	  
+	  centerVBox.getChildren().addAll(setUpBt, createNewBt);
+      centerVBox.setAlignment(Pos.CENTER);
+      centerVBox.setSpacing(30);
+	  
+	  //bottom
+      Label fill = new Label(" ");
+      fill.getStyleClass().add("normalText");
+	  bottomHBox.getChildren().addAll(fill);
+      bottomHBox.getStyleClass().add("bottomHBox");
 	  
 	  //define functions when different buttons on this page is triggered
 	  // Lambda Expression
-	  //goToOtherPageButton.setOnMouseClicked(event -> );
+	  setUpBt.setOnMouseClicked(event -> setUpLoadQuestionPage());
+	  createNewBt.setOnMouseClicked(event -> setUpQuestionFilterPage());
 	  
-	  //set up page
-	  root.setTop(goToOtherPageButton);
+	  //set up border pane by elements
+	  root.setTop(topHBox);
+	  root.setCenter(centerVBox);
+	  root.setBottom(bottomHBox);
 	  
-	  Scene sc = new Scene(root, 800, 800);
+	  Scene sc = new Scene(root, 500, 700);
 	  sc.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 	  primaryStage.setScene(sc);
       
@@ -61,29 +90,19 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 		// =========
 		Button loadButton = new Button();
 		loadButton.setText("Load Questions From File");
-		loadButton.getStyleClass().add("loadButton");
+		loadButton.getStyleClass().add("NormalButton");
 		
-		loadButton.setOnAction(event -> setUpFileImportPage());
+		loadButton.setOnAction(event -> quizGenerator.loadFile());
 		
 		Button createButton = new Button();
 		createButton.setText("Create New Questions");
-		createButton.getStyleClass().add("createButton");
+		createButton.getStyleClass().add("NormalButton");
 		
 		createButton.setOnAction(event -> setUpAddQuestionPage());
 		
 		// =========
 		// Bottom
 		// =========
-		Label bottomLabel = new Label("Set Up");
-		bottomLabel.setMaxHeight(Double.MAX_VALUE);
-		bottomLabel.getStyleClass().add("bottomLabel");
-	
-		Region region1 = new Region();
-        HBox.setHgrow(region1, Priority.ALWAYS);
-        
-        Region region2 = new Region();
-        HBox.setHgrow(region2, Priority.ALWAYS);
-		
 		Button backButton = new Button();
 		backButton.setText("Back");
 		backButton.getStyleClass().add("backButton");
@@ -100,80 +119,18 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 		centerVBox.setAlignment(Pos.CENTER);
 		centerVBox.setSpacing(30);
 		
-		bottomHBox.getChildren().addAll(region1, bottomLabel, region2, backButton);
+		bottomHBox.getChildren().addAll(backButton);
+		bottomHBox.setAlignment(Pos.BOTTOM_RIGHT);
 		bottomHBox.getStyleClass().add("bottomHBox");
 		
 		root.setTop(topHBox);
 		root.setCenter(centerVBox);
 		root.setBottom(bottomHBox);
 		  
-		Scene sc = new Scene(root, 400, 400);
+		Scene sc = new Scene(root, 500, 700);
 		sc.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 		primaryStage.setScene(sc);
 	}
-	
-	//Hui Beom
-	private void setUpFileImportPage() {
-		BorderPane root = new BorderPane();
-		VBox centerVBox = new VBox();
-		HBox topHBox = new HBox();
-		HBox bottomHBox = new HBox();
-
-		// =========
-		// Top
-		// =========
-		Label title = new Label("Quiz Generator");
-		title.getStyleClass().add("title");
-
-		// =========
-		// Center
-		// =========
-		Button loadButton = new Button();
-		loadButton.setText("Load");
-		loadButton.getStyleClass().add("loadButton");
-		
-		loadButton.setOnMouseClicked(event -> quizGenerator.loadFile());
-
-		// =========
-		// Bottom
-		// =========
-		Label bottomLabel = new Label("Load Questions");
-		bottomLabel.setMaxHeight(Double.MAX_VALUE);
-		bottomLabel.getStyleClass().add("bottomLabel");
-
-		Region region1 = new Region();
-        HBox.setHgrow(region1, Priority.ALWAYS);
-
-        Region region2 = new Region();
-        HBox.setHgrow(region2, Priority.ALWAYS);
-
-		Button backButton = new Button();
-		backButton.setText("Back");
-		backButton.getStyleClass().add("backButton");
-		
-		backButton.setOnAction(event -> setUpLoadQuestionPage());
-
-		// Setting up the layout
-		topHBox.getChildren().add(title);
-		topHBox.setAlignment(Pos.CENTER);
-		topHBox.setPrefHeight(50);
-		topHBox.getStyleClass().add("topHBox");
-
-		centerVBox.getChildren().addAll(loadButton);
-		centerVBox.setAlignment(Pos.CENTER);
-		centerVBox.setSpacing(30);
-
-		bottomHBox.getChildren().addAll(region1, bottomLabel, region2, backButton);
-		bottomHBox.getStyleClass().add("bottomHBox");
-
-		root.setTop(topHBox);
-		root.setCenter(centerVBox);
-		root.setBottom(bottomHBox);
-
-		Scene sc = new Scene(root, 400, 400);
-		sc.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-		primaryStage.setScene(sc);
-    }
 	
 	//Hui Beom
     private void setUpAddQuestionPage() {
@@ -219,23 +176,13 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 
 		Button saveButton = new Button();
 		saveButton.setText("Save");
-		saveButton.getStyleClass().add("loadButton");
+		saveButton.getStyleClass().add("NormalButton");
 
 		saveButton.setOnMouseClicked(event -> quizGenerator.loadFile());
 
 		// =========
 		// Bottom
 		// =========
-		Label bottomLabel = new Label("Create New Questions");
-		bottomLabel.setMaxHeight(Double.MAX_VALUE);
-		bottomLabel.getStyleClass().add("bottomLabel");
-
-		Region region1 = new Region();
-        HBox.setHgrow(region1, Priority.ALWAYS);
-
-        Region region2 = new Region();
-        HBox.setHgrow(region2, Priority.ALWAYS);
-
 		Button backButton = new Button();
 		backButton.setText("Back");
 		backButton.getStyleClass().add("backButton");
@@ -252,7 +199,7 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 		centerVBox.setAlignment(Pos.CENTER);
 		centerVBox.setSpacing(30);
 
-		bottomHBox.getChildren().addAll(region1, bottomLabel, region2, backButton);
+		bottomHBox.getChildren().addAll(backButton);
 		bottomHBox.getStyleClass().add("bottomHBox");
 
 		root.setTop(topHBox);
@@ -290,7 +237,7 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 		
 		try {
 			this.primaryStage = primaryStage;
-			setUpLoadQuestionPage();
+			setUpMainMenuPage();
 			
 			primaryStage.show();
 		} catch(Exception e) {
