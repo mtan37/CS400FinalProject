@@ -47,15 +47,15 @@ public class Main extends Application implements EventHandler<ActionEvent>{
       topHBox.getStyleClass().add("topHBox");
       
       //center
+      Button createNewBt = new Button();
+      createNewBt.setText("Start Quiz");
+      createNewBt.getStyleClass().add("NormalButton");
+      
 	  Button setUpBt = new Button();
 	  setUpBt.setText("Set Up");
 	  setUpBt.getStyleClass().add("NormalButton");
 	  
-	  Button createNewBt = new Button();
-	  createNewBt.setText("Create New Quiz");
-	  createNewBt.getStyleClass().add("NormalButton");
-	  
-	  centerVBox.getChildren().addAll(setUpBt, createNewBt);
+	  centerVBox.getChildren().addAll(createNewBt, setUpBt);
       centerVBox.setAlignment(Pos.CENTER);
       centerVBox.setSpacing(30);
 	  
@@ -265,7 +265,7 @@ public class Main extends Application implements EventHandler<ActionEvent>{
       int correctPercentage = quizGenerator.userRecord.getPercent();
       Label numAnswered = new Label("#Answered question: " + answered);//stub data TODO
       Label numCorrect = new Label("#Correct question: " + correct);//stub data TODO
-      Label numCorrectPercentage = new Label("%Correct:" + correctPercentage + "%");
+      Label numCorrectPercentage = new Label("%Correct: " + correctPercentage + "%");
       
       Button startNewQuizBt = new Button();
       startNewQuizBt.setText("Start a New Quiz With the Same Setting");
@@ -376,7 +376,9 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 		    questionFilter = setUpQuestionFilterPage();
 		    question = setUpQuestionPage();
 		    score = setUpScorePage();
-			primaryStage.setScene(mainMenu);
+		    
+			//primaryStage.setScene(mainMenu);
+		    primaryStage.setScene(score);
 			
 			primaryStage.show();
 		} catch(Exception e) {
