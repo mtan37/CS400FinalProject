@@ -10,6 +10,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -21,10 +22,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.CheckBoxListCell;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -40,6 +45,9 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 	private Scene question;
 	private Scene score;
 	private Scene currDataBase;
+	 //field for setUpQuestionPage
+   private  int currIndex=1; //current index in the quiz generator data structure
+    private Scene nextSc;
 	
 	//Marvin Tan
 	private Scene setUpMainMenuPage() {
@@ -425,11 +433,134 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 
     //Lucy
 	private Scene setUpQuestionPage() {
-	  BorderPane root = new BorderPane();
-	  Scene sc = new Scene(root, 1200, 700);
-      sc.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-	  return sc;
-	}
+	     BorderPane root = new BorderPane();
+	      root.getStyleClass().add("root");
+	     nextSc = new Scene(root, 1200, 700);
+	     
+	      //top
+	     
+	      Label l1= new Label(); //hard code can get from data structure's index
+	      l1.setText("Question "+ currIndex);
+	      l1.getStyleClass().add("normalText");
+	      Label indicator= new Label();
+	      indicator.setVisible(false);
+	      
+	      
+	      
+	      VBox topbox=new VBox(l1, indicator);
+	      topbox.getStyleClass().add("topHBox");
+	      root.setTop(topbox);
+	      
+	    // center
+	    VBox centerBox = new VBox();
+	    centerBox.setAlignment(Pos.CENTER);
+	    Label l2 = new Label("Description");
+	    l2.getStyleClass().add("normalText");
+	    TextArea ta = new TextArea(
+	        "If a good hash function is found and a reasonable table size "
+	        + "is used for a hash table, then the operations of put, remove, "
+	        + "and get should achieve an average time complexity of _____ "
+	        + "where $N$ is the number of items and $TS$ is the size of the table.");
+	    ta.getStyleClass().add("smallText");
+	   ta.setEditable(false);
+	    ta.setMaxSize(500,300);
+	    ta.setWrapText(true);
+	    // get from quiz generator data structure with index  currIndex
+	    
+	    
+	   
+	    RadioButton c1= new RadioButton("$O(1)$");//isCorrect=true
+	    RadioButton c2=new RadioButton("$O(log_{TS} N)$");
+	    RadioButton c3=new RadioButton("$O(N^{TS})$");
+	    RadioButton c4=new RadioButton("$O(N)$");
+	    ObservableList<RadioButton> choices=FXCollections.observableArrayList(c1,c2,c3,c4);
+	    ListView choiceLs=new ListView();
+	    choiceLs.setItems(choices);
+	    choiceLs.setMaxSize(500, 300);
+	    
+	    ToggleGroup tgG= new ToggleGroup();
+	    for(RadioButton c: choices) {
+	      c.setToggleGroup(tgG);
+	      c.setWrapText(true);
+	    }
+	    
+	    centerBox.getChildren().addAll(l2,ta,choiceLs);
+	    root.setCenter(centerBox);
+	    
+
+
+	      //left
+	   
+	      Image img= new Image("wallPaper-icon.png");
+	      
+	      ImageView quizImgV=new ImageView(img);
+	      VBox leftRg= new VBox();
+	      leftRg.setAlignment(Pos.CENTER);
+	      
+	      leftRg.getChildren().add(quizImgV);
+	      leftRg.setMargin(quizImgV, new Insets(50,50,50,50));
+	     
+	      root.setLeft(leftRg);
+	      
+	      
+	      
+	      
+	      
+	      
+	      //bottom
+	      Button backBt=new Button("Back");
+	      backBt.getStyleClass().add("backButton");
+	      Button nextBt= new Button("Next");
+	      nextBt.getStyleClass().add("NormalButton");
+	      Button submitBt= new Button("Submit");
+	      submitBt.getStyleClass().add("NormalButton");
+	      nextBt.setVisible(false); //visible after click submit
+	      HBox bottomBox=new HBox(submitBt,backBt,nextBt);
+	      bottomBox.getStyleClass().add("bottomHBox");
+	      root.setBottom(bottomBox);
+	     
+	      //events
+	 
+	    
+	    submitBt.setOnAction(e->{
+	      //set indicator button and next button
+	      if(tgG.getSelectedToggle().equals(c1)) {
+	        indicator.setText("Correct");
+	        indicator.getStyleClass().add("correctLabel");
+	      }else {
+	        indicator.setText("Wrong");
+	        indicator.getStyleClass().add("wrongLabel");
+	      }
+	      indicator.setVisible(true);
+	      nextBt.setVisible(true);
+	      choiceLs.setDisable(true);
+	      submitBt.setDisable(true);
+	      
+	      
+	    });
+	   
+	    //set bsck button
+	   backBt.setOnAction(e->{
+	     setUpMainMenuPage();
+	   }
+	   );
+	   
+	  
+	   nextBt.setOnAction(e->{
+	     currIndex++;
+	    
+	     setUpQuestionPage();
+	     
+	     
+	   });
+	    
+	    
+	    
+	      
+	    nextSc.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+	      return nextSc;
+	    }
+	
 	
 	//Marvin
 	private Scene setUpScorePage() {

@@ -54,3 +54,16 @@
 .backButton:hover{
 	-fx-text-fill: white;
 }
+.correctLabel{
+	-fx-background-color:#228b22;
+	-fx-text-fill: white;
+	-fx-font-size: 30px;
+	-fx-padding: 5px;
+}
+
+.wrongLabel{
+	-fx-background-color:red;
+	-fx-text-fill: white;
+	-fx-font-size: 30px;
+	-fx-padding: 5px;
+}
