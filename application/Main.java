@@ -47,8 +47,7 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 	private Scene currDataBase;
 	 //field for setUpQuestionPage
    private  int currIndex=1; //current index in the quiz generator data structure
-    private Scene nextSc;
-	
+    
 	//Marvin Tan
 	private Scene setUpMainMenuPage() {
 	  BorderPane root = new BorderPane();
@@ -435,7 +434,7 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 	private Scene setUpQuestionPage() {
 	     BorderPane root = new BorderPane();
 	      root.getStyleClass().add("root");
-	     nextSc = new Scene(root, 1200, 700);
+	     question = new Scene(root, 1200, 700);
 	     
 	      //top
 	     
@@ -539,28 +538,25 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 	      
 	    });
 	   
-	    //set bsck button
-	   backBt.setOnAction(e->{
-	     setUpMainMenuPage();
-	   }
-	   );
-	   
-	  
-	   nextBt.setOnAction(e->{
-	     currIndex++;
-	    
-	     setUpQuestionPage();
-	     
-	     
-	   });
-	    
-	    
-	    
-	      
-	    nextSc.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-	      return nextSc;
-	    }
-	
+	    // set bsck button
+	    backBt.setOnAction(e -> {
+	      primaryStage.setScene(setUpMainMenuPage());
+	    });
+
+
+	    nextBt.setOnAction(e -> {
+	      currIndex++;
+
+	      primaryStage.setScene(setUpQuestionPage());
+
+
+	    });
+
+
+
+	    question.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+	    return question;
+	  }
 	
 	//Marvin
 	private Scene setUpScorePage() {
