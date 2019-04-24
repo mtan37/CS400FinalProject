@@ -8,7 +8,7 @@ public class UserRecord {
 	 private Integer numCor;
 	 
 	 public UserRecord() {
-		 choices = new ArrayList();
+		 choices = new ArrayList<String>();
 		 numRqst = 0;
 		 numAns = 0;
 		 numCor = 0;

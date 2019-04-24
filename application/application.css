@@ -30,7 +30,7 @@
 }
 
 .NormalButton:hover {
-	-fx-background-color: #f79d0c;
+	-fx-background-color: #f9c116;
 	-fx-font-size: 20px;
 	-fx-padding: 5px;
 }
@@ -41,7 +41,7 @@
 	-fx-padding: 2px;
 }
 .popUpButton:hover {
-	-fx-background-color: #f79d0c;
+	-fx-background-color: #f9c116;
 	-fx-font-size: 15px;
 	-fx-padding: 2px;
 }

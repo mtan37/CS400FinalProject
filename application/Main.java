@@ -2,32 +2,44 @@ package application;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 
 
 public class Main extends Application implements EventHandler<ActionEvent>{
 	private Stage primaryStage;
 	private QuizGenerator quizGenerator;
-	Scene mainMenu;
-	Scene loadQuestion;
-	Scene addQuestion;
-	Scene questionFilter;
-	Scene question;
-	Scene score;
+	private Scene mainMenu;
+	private Scene loadQuestion;
+	private Scene addQuestion;
+	private Scene questionFilter;
+	private Scene question;
+	private Scene score;
+	private Scene currDataBase;
 	
 	//Marvin Tan
 	private Scene setUpMainMenuPage() {
@@ -47,15 +59,19 @@ public class Main extends Application implements EventHandler<ActionEvent>{
       topHBox.getStyleClass().add("topHBox");
       
       //center
-      Button createNewBt = new Button();
-      createNewBt.setText("Start Quiz");
-      createNewBt.getStyleClass().add("NormalButton");
+      Button startNewBt = new Button();
+      startNewBt.setText("Start Quiz");
+      startNewBt.getStyleClass().add("NormalButton");
       
 	  Button setUpBt = new Button();
-	  setUpBt.setText("Set Up");
+	  setUpBt.setText("Add question");
 	  setUpBt.getStyleClass().add("NormalButton");
 	  
-	  centerVBox.getChildren().addAll(createNewBt, setUpBt);
+	  Button currDataBaseBt = new Button();
+	  currDataBaseBt.setText("Check Loaded Question Database");
+	  currDataBaseBt.getStyleClass().add("NormalButton");
+	  
+	  centerVBox.getChildren().addAll(startNewBt, setUpBt,currDataBaseBt);
       centerVBox.setAlignment(Pos.CENTER);
       centerVBox.setSpacing(30);
 	  
@@ -68,7 +84,8 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 	  //define functions when different buttons on this page is triggered
 	  // Lambda Expression
 	  setUpBt.setOnMouseClicked(event -> primaryStage.setScene(loadQuestion));
-	  createNewBt.setOnMouseClicked(event -> primaryStage.setScene(questionFilter));
+	  startNewBt.setOnMouseClicked(event -> startNewBt());
+	  currDataBaseBt.setOnMouseClicked(event -> primaryStage.setScene(currDataBase));
 	  
 	  //set up border pane by elements
 	  root.setTop(topHBox);
@@ -81,158 +98,332 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 	  return sc;
       
     }
-	
+	/**
+	 * Define the behavior of startNew button on the main menu page
+	 */
+	private void startNewBt() {
+	  if(quizGenerator.numQuestion == 0) {
+	    Alert alert = new Alert(AlertType.INFORMATION, "Please load at least one question before start a quiz");
+        alert.initModality(Modality.APPLICATION_MODAL);
+        alert.initOwner(primaryStage);
+        alert.showAndWait().filter(response -> response == ButtonType.OK);
+        return;
+	  }
+	  primaryStage.setScene(questionFilter);
+	}
 	//Hui Beom
 	private Scene setUpLoadQuestionPage() {
-		BorderPane root = new BorderPane();
-		VBox centerVBox = new VBox();
-		HBox topHBox = new HBox();
-		HBox bottomHBox = new HBox();
-		
-		// =========
-		// Top
-		// =========
-		Label title = new Label("Quiz Generator");
-		title.getStyleClass().add("title");
-	
-		// =========
-		// Center
-		// =========
-		Button loadButton = new Button();
-		loadButton.setText("Load Questions From File");
-		loadButton.getStyleClass().add("NormalButton");
-		
-		loadButton.setOnAction(event -> quizGenerator.loadFile());
-		
-		Button createButton = new Button();
-		createButton.setText("Create New Questions");
-		createButton.getStyleClass().add("NormalButton");
-		
-		createButton.setOnAction(event -> primaryStage.setScene(addQuestion));
-		
-		// =========
-		// Bottom
-		// =========
-		Button backButton = new Button();
-		backButton.setText("Back");
-		backButton.getStyleClass().add("backButton");
 
-		backButton.setOnAction(event -> primaryStage.setScene(mainMenu));
+	  BorderPane root = new BorderPane();
+      VBox centerVBox = new VBox();
+      HBox topHBox = new HBox();
+      HBox bottomHBox = new HBox();
+      
+      // =========
+      // Top
+      // =========
+      Label title = new Label("Quiz Generator");
+      title.getStyleClass().add("title");
+  
+      // =========
+      // Center
+      // =========
+      Button loadButton = new Button();
+      loadButton.setText("Load Questions From File");
+      loadButton.getStyleClass().add("NormalButton");
+      
+      loadButton.setOnAction(event -> quizGenerator.loadFile());
+      
+      Button createButton = new Button();
+      createButton.setText("Create New Questions");
+      createButton.getStyleClass().add("NormalButton");
+      
+      createButton.setOnAction(event -> primaryStage.setScene(addQuestion));
+      
+      // =========
+      // Bottom
+      // =========
+      Button backButton = new Button();
+      backButton.setText("Back");
+      backButton.getStyleClass().add("backButton");
 
-		// Setting up the layout
-		topHBox.getChildren().add(title);
-		topHBox.setAlignment(Pos.CENTER);
-		topHBox.setPrefHeight(50);
-		topHBox.getStyleClass().add("topHBox");
-		
-		centerVBox.getChildren().addAll(loadButton, createButton);
-		centerVBox.setAlignment(Pos.CENTER);
-		centerVBox.setSpacing(30);
-		
-		bottomHBox.getChildren().addAll(backButton);
-		bottomHBox.setAlignment(Pos.BOTTOM_RIGHT);
-		bottomHBox.getStyleClass().add("bottomHBox");
-		
-		root.setTop(topHBox);
-		root.setCenter(centerVBox);
-		root.setBottom(bottomHBox);
-		  
-		Scene sc = new Scene(root, 1200, 700);
-		sc.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-		//primaryStage.setScene(sc);
-		return sc;
+      backButton.setOnAction(event -> primaryStage.setScene(mainMenu));
+
+      // Setting up the layout
+      topHBox.getChildren().add(title);
+      topHBox.setAlignment(Pos.CENTER);
+      topHBox.setPrefHeight(50);
+      topHBox.getStyleClass().add("topHBox");
+      
+      centerVBox.getChildren().addAll(loadButton, createButton);
+      centerVBox.setAlignment(Pos.CENTER);
+      centerVBox.setSpacing(30);
+      
+      bottomHBox.getChildren().addAll(backButton);
+      bottomHBox.setAlignment(Pos.BOTTOM_RIGHT);
+      bottomHBox.getStyleClass().add("bottomHBox");
+      
+      root.setTop(topHBox);
+      root.setCenter(centerVBox);
+      root.setBottom(bottomHBox);
+        
+      Scene sc = new Scene(root, 1200, 700);
+      sc.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+      //primaryStage.setScene(sc);
+      return sc;
 	}
 	
 	//Hui Beom
     private Scene setUpAddQuestionPage() {
-    	BorderPane root = new BorderPane();
-		VBox centerVBox = new VBox();
-		
-		VBox topicBox = new VBox();
-		VBox descriptionBox = new VBox();
-		VBox choiceBox = new VBox();
-		HBox TFBox = new HBox();
-		
-		HBox topHBox = new HBox();
-		HBox bottomHBox = new HBox();
+      BorderPane root = new BorderPane();
+      VBox centerVBox = new VBox();
+      
+      VBox topicBox = new VBox();
+      VBox descriptionBox = new VBox();
+      VBox choiceBox = new VBox();
+      HBox TFBox = new HBox();
+      
+      HBox topHBox = new HBox();
+      HBox bottomHBox = new HBox();
 
-		// =========
-		// Top
-		// =========
-		Label title = new Label("Quiz Generator");
-		title.getStyleClass().add("title");
+      // =========
+      // Top
+      // =========
+      Label title = new Label("Quiz Generator");
+      title.getStyleClass().add("title");
 
-		// =========
-		// Center
-		// =========
-		Label topicLabel = new Label("Topic");
-		TextField topicField = new TextField();
-		topicBox.getChildren().addAll(topicLabel, topicField);
+      // =========
+      // Center
+      // =========
+      Label topicLabel = new Label("Topic");
+      TextField topicField = new TextField();
+      topicBox.getChildren().addAll(topicLabel, topicField);
 
-		Label descriptionLabel = new Label("Description");
-		TextArea descriptionArea = new TextArea();
-		descriptionBox.getChildren().addAll(descriptionLabel, descriptionArea);
+      Label descriptionLabel = new Label("Description");
+      TextArea descriptionArea = new TextArea();
+      descriptionBox.getChildren().addAll(descriptionLabel, descriptionArea);
 
-		Label choiceLabel = new Label("Choices");
-		TextField choiceField = new TextField();
-		
-		ToggleButton trueButton = new ToggleButton();
-		trueButton.setText("T");
-		ToggleButton falseButton = new ToggleButton();
-		falseButton.setText("F");
-		
-		TFBox.getChildren().addAll(trueButton, falseButton);
-		
-		choiceBox.getChildren().addAll(choiceLabel, choiceField, TFBox);
+      Label choiceLabel = new Label("Choices");
+      TextField choiceField = new TextField();
+      
+      ToggleButton trueButton = new ToggleButton();
+      trueButton.setText("T");
+      ToggleButton falseButton = new ToggleButton();
+      falseButton.setText("F");
+      
+      TFBox.getChildren().addAll(trueButton, falseButton);
+      
+      choiceBox.getChildren().addAll(choiceLabel, choiceField, TFBox);
 
-		Button saveButton = new Button();
-		saveButton.setText("Save");
-		saveButton.getStyleClass().add("NormalButton");
+      Button saveButton = new Button();
+      saveButton.setText("Save");
+      saveButton.getStyleClass().add("NormalButton");
 
-		//saveButton.setOnMouseClicked(event -> quizGenerator.loadFile()); TODO
+      //saveButton.setOnMouseClicked(event -> quizGenerator.loadFile()); TODO
 
-		// =========
-		// Bottom
-		// =========
-		Button backButton = new Button();
-		backButton.setText("Back");
-		backButton.getStyleClass().add("backButton");
-		
-		backButton.setOnAction(event -> {
-		  popUpQuitAddQuestion();
-		  });
+      // =========
+      // Bottom
+      // =========
+      Button backButton = new Button();
+      backButton.setText("Back");
+      backButton.getStyleClass().add("backButton");
+      
+      backButton.setOnAction(event -> {
+        popUpQuitAddQuestion();
+        });
 
-		// Setting up the layout
-		topHBox.getChildren().add(title);
-		topHBox.setAlignment(Pos.CENTER);
-		topHBox.setPrefHeight(50);
-		topHBox.getStyleClass().add("topHBox");
+      // Setting up the layout
+      topHBox.getChildren().add(title);
+      topHBox.setAlignment(Pos.CENTER);
+      topHBox.setPrefHeight(50);
+      topHBox.getStyleClass().add("topHBox");
 
-		centerVBox.getChildren().addAll(topicBox, descriptionBox, choiceBox, saveButton);
-		centerVBox.setAlignment(Pos.CENTER);
-		centerVBox.setSpacing(30);
+      centerVBox.getChildren().addAll(topicBox, descriptionBox, choiceBox, saveButton);
+      centerVBox.setAlignment(Pos.CENTER);
+      centerVBox.setSpacing(30);
 
-		bottomHBox.getChildren().addAll(backButton);
-		bottomHBox.getStyleClass().add("bottomHBox");
+      bottomHBox.getChildren().addAll(backButton);
+      bottomHBox.getStyleClass().add("bottomHBox");
 
-		root.setTop(topHBox);
-		root.setCenter(centerVBox);
-		root.setBottom(bottomHBox);
+      root.setTop(topHBox);
+      root.setCenter(centerVBox);
+      root.setBottom(bottomHBox);
 
-		Scene sc = new Scene(root, 1200, 700);
-		sc.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-		//primaryStage.setScene(sc);
-		return sc;
+      Scene sc = new Scene(root, 1200, 700);
+      sc.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+      //primaryStage.setScene(sc);
+      return sc;
     }
+    
     //Lucy
 	private Scene setUpQuestionFilterPage() {
-	  BorderPane root = new BorderPane();
-	  Scene sc = new Scene(root, 1200, 700);
-      sc.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-	  return sc;
+	//count number of rows in the grid
+	    BorderPane root= new BorderPane();// the root layout
+	    HBox centerHBox = new HBox();
+	    HBox topHBox = new HBox();
+	    HBox bottomHBox = new HBox();
+	    //top, title
+	    Label title = new Label("Quiz Generator");
+	    title.getStyleClass().add("title");
+	      topHBox.getChildren().add(title);
+	      topHBox.setAlignment(Pos.CENTER);
+	      topHBox.setPrefHeight(50);
+	      topHBox.getStyleClass().add("topHBox");
+	    
+	    //center
+	    VBox centerVBox1= new VBox();
+	    centerVBox1.setAlignment(Pos.TOP_LEFT);
+	    VBox centerVBox2= new VBox();
+        centerVBox1.setAlignment(Pos.TOP_RIGHT);
+	    
+	    
+	    //center left 
+        //__________\
+	    Label topic = new Label("Choose Topic(s):");
+	    topic.setPrefHeight(50);
+	    
+	    //hard code for topics combo list
+	    //load from QuizGenerator topic TODO
+	    ObservableList<String> cmLs= FXCollections.observableArrayList("BST", "HashTable", "AVL-Tree", "Graph", "Linux", "Set");
+	    FXCollections.sort(cmLs);
+	    ListView<String> topicList = new ListView<String>();
+	    topicList.setItems(cmLs);
+	    topicList.setCellFactory(CheckBoxListCell.forListView(new Callback<String, ObservableValue<Boolean>>() {
+	        @Override
+	        public ObservableValue<Boolean> call(String item) {
+	            BooleanProperty observable = new SimpleBooleanProperty();
+	            observable.addListener((obs, wasSelected, isNowSelected) -> {
+	                System.out.println("Check box for "+item+" changed from "+wasSelected+" to "+isNowSelected);
+	                if(!wasSelected && isNowSelected)
+	                  quizGenerator.currChosenTopics.add(item);
+	                else if(!isNowSelected && wasSelected)
+	                  quizGenerator.currChosenTopics.remove(item);//TODO make this a separate method
+	                }
+	            );
+	            return observable ;
+	        }
+	    }));
+	    centerVBox1.getChildren().addAll(topic,topicList);
+	    centerVBox1.setAlignment(Pos.TOP_LEFT);
+	    
+	    //center 
+	    Label num= new Label("Enter number of questions in quiz: ");
+	    num.setPrefHeight(50);
+	    
+	    TextField numTxt= new TextField();
+        // force the field to be numeric only
+        numTxt.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, 
+                String newValue) {
+                if (!newValue.matches("\\d*")) {
+                    numTxt.setText(newValue.replaceAll("[^\\d]", ""));
+                }
+            }
+        });
+        
+        centerVBox2.getChildren().addAll(num,numTxt);
+        centerVBox2.setAlignment(Pos.TOP_RIGHT);
+        
+        centerHBox.getChildren().addAll(centerVBox1,centerVBox2);
+        centerHBox.setAlignment(Pos.CENTER);
+        centerHBox.setSpacing(10.0);
+	    
+
+	        
+	    //bottom, back button
+        Button add= new Button("Finisehd selection");
+	    Button backBt = new Button("Back to Main Page");
+	    backBt.getStyleClass().add("backButton");
+	    add.getStyleClass().add("NormalButton");
+	    bottomHBox.getChildren().addAll(backBt,add);
+	    bottomHBox.getStyleClass().add("bottomHBox");
+	    bottomHBox.setAlignment(Pos.BASELINE_RIGHT);
+	      
+	    root.setTop(topHBox);
+	    root.setCenter(centerHBox);
+	    root.setBottom(bottomHBox);
+	    
+	    //events
+	    add.setOnMouseClicked(event -> {
+	      addBtQuestionFilter(numTxt.getText());
+	    });
+	    backBt.setOnMouseClicked(event -> {
+	      primaryStage.setScene(mainMenu);
+	    });
+	    
+	    //set scene
+	    Scene sc= new Scene(root, 1200,700);
+	    sc.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+	    return sc;
+
 	}
-	
-	//Lucy
+
+  private void addBtQuestionFilter(String numTxt) {
+    int numQuestion;
+    try {
+    numQuestion = Integer.parseInt(numTxt);
+    }
+    catch (NumberFormatException e) {
+    numQuestion = -1;
+    }
+      if(quizGenerator.currChosenTopics.size() == 0 && !(numQuestion > 0)) {
+        Alert alert = new Alert(AlertType.INFORMATION, "Please choose a topic and enter the number of questions you want before proceed");
+        alert.initModality(Modality.APPLICATION_MODAL);
+        alert.initOwner(primaryStage);
+        alert.showAndWait().filter(response -> response == ButtonType.OK);
+      }
+      else if(quizGenerator.currChosenTopics.size() == 0 && numQuestion > 0) {
+        Alert alert = new Alert(AlertType.INFORMATION, "Please choose at least one topic");
+        alert.initModality(Modality.APPLICATION_MODAL);
+        alert.initOwner(primaryStage);
+        alert.showAndWait().filter(response -> response == ButtonType.OK);
+      }
+      else if(quizGenerator.currChosenTopics.size() > 0 && !(numQuestion > 0)) {
+        Alert alert = new Alert(AlertType.INFORMATION, "Please enter a number greater than 0 for the number of requested questions");
+        alert.initModality(Modality.APPLICATION_MODAL);
+        alert.initOwner(primaryStage);
+        alert.showAndWait().filter(response -> response == ButtonType.OK);
+      }
+      else if(quizGenerator.currChosenTopics.size() > 0 && numQuestion > 0) {
+        final Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(primaryStage);
+        VBox dialogVbox = new VBox();
+        HBox dialogHbox = new HBox();
+        
+        Label prompt = new Label("Proceed with your current configuration?");
+        prompt.getStyleClass().add("smallText");
+        
+        Button save = new Button();
+        save.setText("Yes, proceed");
+        save.getStyleClass().add("popUpButton");
+        Button keepEdit = new Button();
+        keepEdit.setText("No, keep editing");
+        keepEdit.getStyleClass().add("popUpButton");
+        
+        dialogHbox.getChildren().addAll(save, keepEdit);
+        dialogHbox.setAlignment(Pos.CENTER);
+        dialogHbox.setSpacing(10.0);
+        dialogVbox.getChildren().addAll(prompt, dialogHbox);
+        dialogVbox.setAlignment(Pos.CENTER);
+        
+        save.setOnMouseClicked(event -> {
+          primaryStage.setScene(question);
+          dialog.close();
+          });
+        keepEdit.setOnMouseClicked(event -> {
+          dialog.close();
+          });
+        Scene dialogScene = new Scene(dialogVbox, 400, 100);
+        dialogScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+        dialog.setScene(dialogScene);
+        dialog.show();
+      }
+      
+    }
+
+    //Lucy
 	private Scene setUpQuestionPage() {
 	  BorderPane root = new BorderPane();
 	  Scene sc = new Scene(root, 1200, 700);
@@ -294,6 +485,9 @@ public class Main extends Application implements EventHandler<ActionEvent>{
       // Lambda Expression
       startNewQuizBt.setOnMouseClicked(event -> {
         primaryStage.setScene(question);
+        quizGenerator.userRecord.setNumRqst(0);
+        quizGenerator.userRecord.setNumAns(0);
+        quizGenerator.userRecord.setNumCor(0);
         /*reset 1.numAnswered
          *      2.numCorrect
          *      3.numCorrectPercentage
@@ -301,6 +495,8 @@ public class Main extends Application implements EventHandler<ActionEvent>{
         });
       changeSettingBt.setOnMouseClicked(event -> {
         primaryStage.setScene(questionFilter);
+        quizGenerator.userRecord.setNumAns(0);
+        quizGenerator.userRecord.setNumCor(0);
         /*reset 1.numAnswered
          *      2.numCorrect
          *      3.numCorrectPercentage
@@ -325,6 +521,10 @@ public class Main extends Application implements EventHandler<ActionEvent>{
       return sc;
 	}
 	
+	private Scene setUpCurrDataBasePage() {
+	    // TODO Auto-generated method stub
+	    return null;
+	  }
 	//Marvin
 	private void popUpQuitAddQuestion() {
 	  final Stage dialog = new Stage();
@@ -354,7 +554,6 @@ public class Main extends Application implements EventHandler<ActionEvent>{
         dialog.close();
         });
       notExit.setOnMouseClicked(event -> {
-        primaryStage.setScene(question);
         dialog.close();
         });
       
@@ -376,17 +575,18 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 		    questionFilter = setUpQuestionFilterPage();
 		    question = setUpQuestionPage();
 		    score = setUpScorePage();
+		    currDataBase = setUpCurrDataBasePage();
 		    
-			//primaryStage.setScene(mainMenu);
-		    primaryStage.setScene(score);
+			primaryStage.setScene(mainMenu);
+		    //primaryStage.setScene(score);
 			
 			primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	@Override
+
+  @Override
 	public void handle(ActionEvent event) {
 		//code specified using lambda expression
 	}
