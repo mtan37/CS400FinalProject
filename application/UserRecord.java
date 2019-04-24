@@ -40,7 +40,7 @@ public class UserRecord {
 		return numCor;
 	 }
 	 
-	 protected float getPercent() {
-		return (float) numAns / (float) numCor;
+	 protected int getPercent() {
+		return (int) ((int)(float)numAns / (float)numCor * 100);
 	 }
 }

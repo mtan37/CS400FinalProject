@@ -22,9 +22,15 @@ import javafx.scene.text.Text;
 public class Main extends Application implements EventHandler<ActionEvent>{
 	private Stage primaryStage;
 	private QuizGenerator quizGenerator;
+	Scene mainMenu;
+	Scene loadQuestion;
+	Scene addQuestion;
+	Scene questionFilter;
+	Scene question;
+	Scene score;
 	
 	//Marvin Tan
-	private void setUpMainMenuPage() {
+	private Scene setUpMainMenuPage() {
 	  BorderPane root = new BorderPane();
       VBox centerVBox = new VBox();
       HBox topHBox = new HBox();
@@ -61,22 +67,23 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 	  
 	  //define functions when different buttons on this page is triggered
 	  // Lambda Expression
-	  setUpBt.setOnMouseClicked(event -> setUpLoadQuestionPage());
-	  createNewBt.setOnMouseClicked(event -> setUpQuestionFilterPage());
+	  setUpBt.setOnMouseClicked(event -> primaryStage.setScene(loadQuestion));
+	  createNewBt.setOnMouseClicked(event -> primaryStage.setScene(questionFilter));
 	  
 	  //set up border pane by elements
 	  root.setTop(topHBox);
 	  root.setCenter(centerVBox);
 	  root.setBottom(bottomHBox);
 	  
-	  Scene sc = new Scene(root, 500, 700);
+	  Scene sc = new Scene(root, 1200, 700);
 	  sc.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-	  primaryStage.setScene(sc);
+	  //primaryStage.setScene(sc);
+	  return sc;
       
     }
 	
 	//Hui Beom
-	private void setUpLoadQuestionPage() {
+	private Scene setUpLoadQuestionPage() {
 		BorderPane root = new BorderPane();
 		VBox centerVBox = new VBox();
 		HBox topHBox = new HBox();
@@ -101,7 +108,7 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 		createButton.setText("Create New Questions");
 		createButton.getStyleClass().add("NormalButton");
 		
-		createButton.setOnAction(event -> setUpAddQuestionPage());
+		createButton.setOnAction(event -> primaryStage.setScene(addQuestion));
 		
 		// =========
 		// Bottom
@@ -110,7 +117,7 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 		backButton.setText("Back");
 		backButton.getStyleClass().add("backButton");
 
-		backButton.setOnAction(event -> setUpMainMenuPage());
+		backButton.setOnAction(event -> primaryStage.setScene(mainMenu));
 
 		// Setting up the layout
 		topHBox.getChildren().add(title);
@@ -130,13 +137,14 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 		root.setCenter(centerVBox);
 		root.setBottom(bottomHBox);
 		  
-		Scene sc = new Scene(root, 500, 700);
+		Scene sc = new Scene(root, 1200, 700);
 		sc.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-		primaryStage.setScene(sc);
+		//primaryStage.setScene(sc);
+		return sc;
 	}
 	
 	//Hui Beom
-    private void setUpAddQuestionPage() {
+    private Scene setUpAddQuestionPage() {
     	BorderPane root = new BorderPane();
 		VBox centerVBox = new VBox();
 		
@@ -181,7 +189,7 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 		saveButton.setText("Save");
 		saveButton.getStyleClass().add("NormalButton");
 
-		saveButton.setOnMouseClicked(event -> quizGenerator.loadFile());
+		//saveButton.setOnMouseClicked(event -> quizGenerator.loadFile()); TODO
 
 		// =========
 		// Bottom
@@ -211,23 +219,29 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 		root.setCenter(centerVBox);
 		root.setBottom(bottomHBox);
 
-		Scene sc = new Scene(root, 500, 700);
+		Scene sc = new Scene(root, 1200, 700);
 		sc.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-		primaryStage.setScene(sc);
+		//primaryStage.setScene(sc);
+		return sc;
     }
-
     //Lucy
-	private void setUpQuestionFilterPage() {
-			
+	private Scene setUpQuestionFilterPage() {
+	  BorderPane root = new BorderPane();
+	  Scene sc = new Scene(root, 1200, 700);
+      sc.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+	  return sc;
 	}
 	
 	//Lucy
-	private void setUpQuestionPage() {
-		
+	private Scene setUpQuestionPage() {
+	  BorderPane root = new BorderPane();
+	  Scene sc = new Scene(root, 1200, 700);
+      sc.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+	  return sc;
 	}
 	
 	//Marvin
-	private void setUpScorePage() {
+	private Scene setUpScorePage() {
 	  BorderPane root = new BorderPane();
       VBox centerVBox = new VBox();
       //VBox buttonVBox = new VBox();
@@ -246,9 +260,12 @@ public class Main extends Application implements EventHandler<ActionEvent>{
       topHBox.getStyleClass().add("topHBox");
       
       //center
-      Label numAnswered = new Label("#Answered question: 100");//stub data TODO
-      Label numCorrect = new Label("#Correct question: 50");//stub data TODO
-      Label numCorrectPercentage = new Label("%Correct: 50%");//stub data TODO
+      int answered = quizGenerator.userRecord.getNumAns();
+      int correct = quizGenerator.userRecord.getNumCor();
+      int correctPercentage = quizGenerator.userRecord.getPercent();
+      Label numAnswered = new Label("#Answered question: " + answered);//stub data TODO
+      Label numCorrect = new Label("#Correct question: " + correct);//stub data TODO
+      Label numCorrectPercentage = new Label("%Correct:" + correctPercentage + "%");
       
       Button startNewQuizBt = new Button();
       startNewQuizBt.setText("Start a New Quiz With the Same Setting");
@@ -276,14 +293,14 @@ public class Main extends Application implements EventHandler<ActionEvent>{
       //define functions when different buttons on this page is triggered
       // Lambda Expression
       startNewQuizBt.setOnMouseClicked(event -> {
-        setUpQuestionPage();
+        primaryStage.setScene(question);
         /*reset 1.numAnswered
          *      2.numCorrect
          *      3.numCorrectPercentage
          */
         });
       changeSettingBt.setOnMouseClicked(event -> {
-        setUpQuestionFilterPage();
+        primaryStage.setScene(questionFilter);
         /*reset 1.numAnswered
          *      2.numCorrect
          *      3.numCorrectPercentage
@@ -292,20 +309,20 @@ public class Main extends Application implements EventHandler<ActionEvent>{
       endBt.setOnMouseClicked(event -> {
         try {
           Platform.exit();
-          //System.exit(0);
         } catch (Exception e) {
           e.printStackTrace();
         }
       });
-      backButton.setOnMouseClicked(event -> setUpMainMenuPage());
+      backButton.setOnMouseClicked(event -> primaryStage.setScene(mainMenu));
       //set up border pane by elements
       root.setTop(topHBox);
       root.setCenter(centerVBox);
       root.setBottom(bottomHBox);
       
-      Scene sc = new Scene(root, 500, 700);
+      Scene sc = new Scene(root, 1200, 700);
       sc.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-      primaryStage.setScene(sc);
+      //primaryStage.setScene(sc);
+      return sc;
 	}
 	
 	//Marvin
@@ -333,11 +350,11 @@ public class Main extends Application implements EventHandler<ActionEvent>{
       dialogVbox.setAlignment(Pos.CENTER);
       
       exit.setOnMouseClicked(event -> {
-        setUpLoadQuestionPage();
+        primaryStage.setScene(loadQuestion);
         dialog.close();
         });
       notExit.setOnMouseClicked(event -> {
-        setUpQuestionPage();
+        primaryStage.setScene(question);
         dialog.close();
         });
       
@@ -353,7 +370,14 @@ public class Main extends Application implements EventHandler<ActionEvent>{
 		
 		try {
 			this.primaryStage = primaryStage;
-			setUpMainMenuPage();
+			mainMenu = setUpMainMenuPage();
+		    loadQuestion = setUpLoadQuestionPage();
+		    addQuestion = setUpAddQuestionPage();
+		    questionFilter = setUpQuestionFilterPage();
+		    question = setUpQuestionPage();
+		    score = setUpScorePage();
+			primaryStage.setScene(mainMenu);
+			
 			primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();
