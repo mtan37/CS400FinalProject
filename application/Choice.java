@@ -1,4 +1,4 @@
-package CS400FinalProject.application;
+package application;
 
 /**
  * This Class represents Choice of a QUIZ

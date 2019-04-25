@@ -1,8 +1,8 @@
-package CS400FinalProject.application;
-
+package application;
 
 import java.util.ArrayList;
 import javafx.scene.image.Image;
+
 /**
  * This class represents the Question of the Quiz
  * @author SHAO BIN DANIEL SHI HONG
