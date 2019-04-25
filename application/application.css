@@ -37,12 +37,12 @@
 	-fx-background-color: #1b71a3;
 	-fx-text-fill: white;
 	-fx-font-size: 15px;
-	-fx-padding: 2px;
+	-fx-padding: 5px;
 }
 .popUpButton:hover {
 	-fx-background-color: #f9c116;
 	-fx-font-size: 15px;
-	-fx-padding: 2px;
+	-fx-padding: 5px;
 }
 .backButton{
 	-fx-background-color: #f2a529;

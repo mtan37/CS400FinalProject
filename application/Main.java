@@ -401,6 +401,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 				dialogHbox.setAlignment(Pos.CENTER);
 				dialogHbox.setSpacing(10.0);
 				dialogVbox.getChildren().addAll(prompt, dialogHbox);
+				dialogVbox.setSpacing(10.0);
 				dialogVbox.setAlignment(Pos.CENTER);
 
 				Scene dialogScene = new Scene(dialogVbox, 400, 100);
@@ -422,7 +423,20 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 		backButton.getStyleClass().add("backButton");
 
 		backButton.setOnAction(event -> {
-			popUpQuitAddQuestion();
+			boolean choiceIsEmpty = true;
+
+			for (int i = 1; i < choicesBox.getChildren().size(); i++) {
+				if (!((TextField) ((HBox) choicesBox.getChildren().get(i)).getChildren().get(0)).getText().isEmpty()) {
+					choiceIsEmpty = false;
+				}
+			}
+
+			if (topicField.getText().isEmpty() && descriptionArea.getText().isEmpty() && doneButton.getText() == "Done"
+					&& choiceIsEmpty) {
+				primaryStage.setScene(loadQuestion);
+			} else {
+				popUpQuitAddQuestion();
+			}
 		});
 
 		// Setting up the layout
@@ -594,6 +608,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 			dialogHbox.setSpacing(10.0);
 			dialogVbox.getChildren().addAll(prompt, dialogHbox);
 			dialogVbox.setAlignment(Pos.CENTER);
+			dialogVbox.setSpacing(10.0);
 
 			save.setOnMouseClicked(event -> {
 				if (!test) {
@@ -968,6 +983,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 		dialogHbox.setAlignment(Pos.CENTER);
 		dialogHbox.setSpacing(10.0);
 		dialogVbox.getChildren().addAll(prompt, dialogHbox);
+		dialogVbox.setSpacing(10.0);
 		dialogVbox.setAlignment(Pos.CENTER);
 
 		exit.setOnMouseClicked(event -> {
