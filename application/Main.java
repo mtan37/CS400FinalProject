@@ -184,233 +184,251 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     return sc;
   }
 
-  // Hui Beom
-  private Scene setUpAddQuestionPage() {
-    BorderPane root = new BorderPane();
-    VBox centerVBox = new VBox();
+ // Hui Beom
+	private Scene setUpAddQuestionPage() {
+		BorderPane root = new BorderPane();
+		VBox centerVBox = new VBox();
 
-    VBox topicBox = new VBox();
-    VBox descriptionBox = new VBox();
+		VBox topicBox = new VBox();
+		VBox descriptionBox = new VBox();
 
-    VBox choicesBox = new VBox();
-    HBox choiceBox = new HBox();
-    HBox addRemoveDoneBox = new HBox();
+		VBox choicesBox = new VBox();
+		HBox choiceBox = new HBox();
+		HBox addRemoveDoneBox = new HBox();
 
-    HBox topHBox = new HBox();
-    HBox bottomHBox = new HBox();
+		HBox topHBox = new HBox();
+		HBox bottomHBox = new HBox();
 
-    // =========
-    // Top
-    // =========
-    Label title = new Label("Quiz Generator");
-    title.getStyleClass().add("title");
+		// =========
+		// Top
+		// =========
+		Label title = new Label("Quiz Generator");
+		title.getStyleClass().add("title");
 
-    // =========
-    // Center
-    // =========
+		// =========
+		// Center
+		// =========
 
-    // Title
-    Label topicLabel = new Label("Topic");
-    TextField topicField = new TextField();
-    topicBox.getChildren().addAll(topicLabel, topicField);
-    // Description
-    Label descriptionLabel = new Label("Description");
-    TextArea descriptionArea = new TextArea();
-    descriptionBox.setPrefHeight(100);
-    descriptionBox.getChildren().addAll(descriptionLabel, descriptionArea);
+		// Title
+		Label topicLabel = new Label("Topic");
+		TextField topicField = new TextField();
+		topicBox.getChildren().addAll(topicLabel, topicField);
 
-    // Choice
-    Label choiceLabel = new Label("Choices");
-    TextField choiceField = new TextField();
+		// Description
+		Label descriptionLabel = new Label("Description");
+		TextArea descriptionArea = new TextArea();
+		descriptionBox.setPrefHeight(100);
+		descriptionBox.getChildren().addAll(descriptionLabel, descriptionArea);
 
+		// Choice
+		Label choiceLabel = new Label("Choices");
+		TextField choiceField = new TextField();
 
-    Button addButton = new Button();
-    addButton.setText("Add Choice");
-    addButton.setOnAction(event -> {
-      if (choicesBox.getChildren().size() < 6) {
-        HBox newChoiceBox = new HBox();
-        TextField newChoiceField = new TextField();
+		Button addButton = new Button();
+		addButton.setText("Add Choice");
+		addButton.setOnAction(event -> {
+			if (choicesBox.getChildren().size() < 6) {
+				HBox newChoiceBox = new HBox();
+				TextField newChoiceField = new TextField();
 
-        newChoiceBox.getChildren().addAll(newChoiceField);
-        HBox.setHgrow(newChoiceField, Priority.ALWAYS);
-        choicesBox.getChildren().add(newChoiceBox);
-      }
-    });
+				newChoiceBox.getChildren().addAll(newChoiceField);
+				HBox.setHgrow(newChoiceField, Priority.ALWAYS);
+				choicesBox.getChildren().add(newChoiceBox);
+			}
+		});
 
-    Button removeButton = new Button();
-    removeButton.setText("Remove Choice");
-    removeButton.setOnAction(event -> {
-      if (choicesBox.getChildren().size() > 2) {
-        choicesBox.getChildren().remove(choicesBox.getChildren().size() - 1);
-      }
-    });
+		Button removeButton = new Button();
+		removeButton.setText("Remove Choice");
+		removeButton.setOnAction(event -> {
+			if (choicesBox.getChildren().size() > 2) {
+				choicesBox.getChildren().remove(choicesBox.getChildren().size() - 1);
+			}
+		});
 
-    Button doneButton = new Button();
-    doneButton.setText("Done");
-    doneButton.setOnAction(event -> {
-      if (addRemoveDoneBox.getChildren().size() == 3) {
-        addRemoveDoneBox.getChildren().remove(0);
-        addRemoveDoneBox.getChildren().remove(0);
+		Button doneButton = new Button();
+		doneButton.setText("Done");
+		doneButton.setOnAction(event -> {
+			if (addRemoveDoneBox.getChildren().size() == 3) {
+				addRemoveDoneBox.getChildren().remove(0);
+				addRemoveDoneBox.getChildren().remove(0);
 
-        ToggleGroup toggleGroup = new ToggleGroup();
-        for (int i = 1; i < choicesBox.getChildren().size(); i++) {
-          ToggleButton button = new ToggleButton();
-          button.setText("F");
-          button.setToggleGroup(toggleGroup);
-          button.setOnMouseClicked(events -> {
-            for (int j = 1; j < choicesBox.getChildren().size(); j++) {
-              ((ToggleButton) ((HBox) choicesBox.getChildren().get(j)).getChildren().get(1))
-                  .setText("F");
-            }
-            button.setText("T");
-          });
-          ((HBox) choicesBox.getChildren().get(i)).getChildren().add(button);
-        }
+				ToggleGroup toggleGroup = new ToggleGroup();
+				for (int i = 1; i < choicesBox.getChildren().size(); i++) {
+					ToggleButton button = new ToggleButton();
+					button.setText("F");
+					button.setToggleGroup(toggleGroup);
+					button.getStyleClass().add("redButton");
+					button.setOnMouseClicked(events -> {
+						for (int j = 1; j < choicesBox.getChildren().size(); j++) {
+							((ToggleButton) ((HBox) choicesBox.getChildren().get(j)).getChildren().get(1)).setText("F");
+							((ToggleButton) ((HBox) choicesBox.getChildren().get(j)).getChildren().get(1)).getStyleClass().remove("redButton");
+							((ToggleButton) ((HBox) choicesBox.getChildren().get(j)).getChildren().get(1)).getStyleClass().remove("greenButton");
+							((ToggleButton) ((HBox) choicesBox.getChildren().get(j)).getChildren().get(1)).getStyleClass().add("redButton");
+						}
+						button.setText("T");
+						button.getStyleClass().remove("redButton");
+						button.getStyleClass().add("greenButton");
+					});
+					((HBox) choicesBox.getChildren().get(i)).getChildren().add(button);
+				}
 
-        doneButton.setText("Undo");
-      } else if (addRemoveDoneBox.getChildren().size() == 1) {
-        for (int i = 1; i < choicesBox.getChildren().size(); i++) {
-          ((HBox) choicesBox.getChildren().get(i)).getChildren().remove(1);
-        }
+				doneButton.setText("Undo");
+			} else if (addRemoveDoneBox.getChildren().size() == 1) {
+				for (int i = 1; i < choicesBox.getChildren().size(); i++) {
+					((HBox) choicesBox.getChildren().get(i)).getChildren().remove(1);
+				}
 
-        addRemoveDoneBox.getChildren().remove(0);
-        addRemoveDoneBox.getChildren().addAll(addButton, removeButton, doneButton);
-        doneButton.setText("Done");
-      }
-    });
+				addRemoveDoneBox.getChildren().remove(0);
+				addRemoveDoneBox.getChildren().addAll(addButton, removeButton, doneButton);
+				doneButton.setText("Done");
+			}
+		});
 
-    addRemoveDoneBox.getChildren().addAll(addButton, removeButton, doneButton);
+		addRemoveDoneBox.getChildren().addAll(addButton, removeButton, doneButton);
 
-    HBox.setHgrow(choiceField, Priority.ALWAYS);
-    choiceBox.getChildren().addAll(choiceField);
-    choicesBox.getChildren().addAll(choiceLabel, choiceBox);
+		HBox.setHgrow(choiceField, Priority.ALWAYS);
+		choiceBox.getChildren().addAll(choiceField);
+		choicesBox.getChildren().addAll(choiceLabel, choiceBox);
 
-    Button saveButton = new Button();
-    saveButton.setText("Save");
-    saveButton.setOnAction(event -> {
-      if (doneButton.getText() == "Undo") {
-        quitPopUp(1);
-      } else if (doneButton.getText() == "Done") {
-        quitPopUp(1);
-      }
-    });
-    saveButton.getStyleClass().add("NormalButton");
+		Button saveButton = new Button();
+		saveButton.setText("Save");
+		saveButton.setOnAction(event -> {
+			boolean choiceIsDone = true;
+			boolean buttonIsDone = false;
 
-    // saveButton.setOnMouseClicked(event -> quizGenerator.loadFile()); TODO
+			for (int i = 1; i < choicesBox.getChildren().size(); i++) {
+				System.out.println(((TextField) ((HBox) choicesBox.getChildren().get(i)).getChildren().get(0)).getText()
+						.isEmpty());
+				if (((TextField) ((HBox) choicesBox.getChildren().get(i)).getChildren().get(0)).getText().isEmpty()) {
+					choiceIsDone = false;
+				}
+			}
 
-    // =========
-    // Bottom
-    // =========
-    Button backButton = new Button();
-    backButton.setText("Back");
-    backButton.getStyleClass().add("backButton");
+			if (doneButton.getText().equals("Undo")) {
+				for (int i = 1; i < choicesBox.getChildren().size(); i++) {
+					if (((ToggleButton) ((HBox) choicesBox.getChildren().get(i)).getChildren().get(1)).getText().equals("T")) {
+						buttonIsDone = true;
+					}
+				}
+			}
 
-    backButton.setOnAction(event -> {
-      quitPopUp(3);
-    });
+			if (topicField.getText().isEmpty()) {
+				Alert alert = new Alert(AlertType.INFORMATION, "Please enter your question topic before proceeding");
+				alert.initModality(Modality.APPLICATION_MODAL);
+				alert.initOwner(primaryStage);
+				alert.showAndWait().filter(response -> response == ButtonType.OK);
+			} else if (descriptionArea.getText().isEmpty()) {
+				Alert alert = new Alert(AlertType.INFORMATION,
+						"Please enter your question description before proceeding");
+				alert.initModality(Modality.APPLICATION_MODAL);
+				alert.initOwner(primaryStage);
+				alert.showAndWait().filter(response -> response == ButtonType.OK);
+			} else if (!choiceIsDone) {
+				Alert alert = new Alert(AlertType.INFORMATION,
+						"Please enter your question answer options before proceeding");
+				alert.initModality(Modality.APPLICATION_MODAL);
+				alert.initOwner(primaryStage);
+				alert.showAndWait().filter(response -> response == ButtonType.OK);
+			} else if (doneButton.getText() == "Done") {
+				Alert alert = new Alert(AlertType.INFORMATION, "Please press done and choose true choice");
+				alert.initModality(Modality.APPLICATION_MODAL);
+				alert.initOwner(primaryStage);
+				alert.showAndWait().filter(response -> response == ButtonType.OK);
+			} else if (!buttonIsDone) {
+				Alert alert = new Alert(AlertType.INFORMATION, "Please choose true choice");
+				alert.initModality(Modality.APPLICATION_MODAL);
+				alert.initOwner(primaryStage);
+				alert.showAndWait().filter(response -> response == ButtonType.OK);
+			} else {
+				final Stage dialog = new Stage();
+				dialog.initModality(Modality.APPLICATION_MODAL);
+				dialog.initOwner(primaryStage);
+				VBox dialogVbox = new VBox();
+				HBox dialogHbox = new HBox();
 
-    // Setting up the layout
-    topHBox.getChildren().add(title);
-    topHBox.setAlignment(Pos.CENTER);
-    topHBox.setPrefHeight(50);
-    topHBox.getStyleClass().add("topHBox");
+				Label prompt = new Label();
+				prompt.setText("Do you want to save?");
+				prompt.getStyleClass().add("smallText");
 
-    centerVBox.getChildren().addAll(topicBox, descriptionBox, choicesBox, addRemoveDoneBox,
-        saveButton);
-    centerVBox.setPadding(new Insets(30, 20, 30, 20));
-    centerVBox.setSpacing(30);
+				Button save = new Button();
+				save.setText("Yes");
+				save.getStyleClass().add("popUpButton");
 
-    bottomHBox.getChildren().addAll(backButton);
-    bottomHBox.getStyleClass().add("bottomHBox");
+				Button notSave = new Button();
+				notSave.setText("No");
+				notSave.getStyleClass().add("popUpButton");
 
-    root.setTop(topHBox);
-    root.setCenter(centerVBox);
-    root.setBottom(bottomHBox);
+				// Add question to question bank and reset
+				save.setOnMouseClicked(events -> {
+					topicField.setText("");
+					descriptionArea.setText("");
 
-    Scene sc = new Scene(root, 1200, 700);
-    sc.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-    // primaryStage.setScene(sc);
-    return sc;
-  }
+					for (int i = 1; i < choicesBox.getChildren().size(); i++) {
+						choicesBox.getChildren().remove(1);
+					}
+					((TextField) ((HBox) choicesBox.getChildren().get(1)).getChildren().get(0)).setText("");
+					doneButton.fire();
 
-  /*
-   * Flag: 1 - Save button in add question page, text filled in 2 - Save button in add question
-   * page, text not filled in 3 - Back button in add question page, not finished
-   */
-  private void quitPopUp(int flag) {
-    final Stage dialog = new Stage();
-    dialog.initModality(Modality.APPLICATION_MODAL);
-    dialog.initOwner(primaryStage);
-    VBox dialogVbox = new VBox();
-    HBox dialogHbox = new HBox();
+					dialog.close();
+				});
 
-    Label prompt = new Label();
-    prompt.getStyleClass().add("smallText");
+				// Go back without doing anything
+				notSave.setOnMouseClicked(events -> {
+					// primaryStage.setScene(addQuestion);
+					dialog.close();
+				});
 
-    Button exit = new Button();
-    exit.getStyleClass().add("popUpButton");
+				dialogHbox.getChildren().addAll(save, notSave);
+				dialogHbox.setAlignment(Pos.CENTER);
+				dialogHbox.setSpacing(10.0);
+				dialogVbox.getChildren().addAll(prompt, dialogHbox);
+				dialogVbox.setAlignment(Pos.CENTER);
 
-    Button notExit = new Button();
-    notExit.getStyleClass().add("popUpButton");
+				Scene dialogScene = new Scene(dialogVbox, 400, 100);
+				dialogScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+				dialog.setScene(dialogScene);
+				dialog.show();
+				// quitPopUp(1);
+			}
+		});
+		saveButton.getStyleClass().add("NormalButton");
 
-    // Save button in add question page, text filled in
-    if (flag == 1) {
-      // Someone help me with the prompt text...
-      prompt.setText("Do you want to save?");
-      exit.setText("Yes");
-      notExit.setText("No");
+		// saveButton.setOnMouseClicked(event -> quizGenerator.loadFile()); TODO
 
-      exit.setOnMouseClicked(event -> {
-        primaryStage.setScene(loadQuestion);
-        dialog.close();
-      });
-      notExit.setOnMouseClicked(event -> {
-        primaryStage.setScene(addQuestion);
-        dialog.close();
-      });
+		// =========
+		// Bottom
+		// =========
+		Button backButton = new Button();
+		backButton.setText("Back");
+		backButton.getStyleClass().add("backButton");
 
-      dialogHbox.getChildren().addAll(exit, notExit);
-      dialogHbox.setAlignment(Pos.CENTER);
-      dialogHbox.setSpacing(10.0);
-      dialogVbox.getChildren().addAll(prompt, dialogHbox);
-      dialogVbox.setAlignment(Pos.CENTER);
-    }
+		backButton.setOnAction(event -> {
+			popUpQuitAddQuestion(3);
+		});
 
-    // Save button in add question page, text not filled in
-    else if (flag == 2) {
-      prompt.setText("You need to fill in the \ninformation before saving");
+		// Setting up the layout
+		topHBox.getChildren().add(title);
+		topHBox.setAlignment(Pos.CENTER);
+		topHBox.setPrefHeight(50);
+		topHBox.getStyleClass().add("topHBox");
 
-      dialogVbox.getChildren().add(prompt);
-      dialogVbox.setAlignment(Pos.CENTER);
-    }
+		centerVBox.getChildren().addAll(topicBox, descriptionBox, choicesBox, addRemoveDoneBox, saveButton);
+		centerVBox.setPadding(new Insets(30, 20, 30, 20));
+		centerVBox.setSpacing(30);
 
-    // Back button in add question page, not finished
-    else if (flag == 3) {
-      prompt.setText("Are you sure you want to exit without finishing editing?");
-      exit.setText("Yes,exit");
-      notExit.setText("Keep editing");
+		bottomHBox.getChildren().addAll(backButton);
+		bottomHBox.getStyleClass().add("bottomHBox");
 
-      exit.setOnMouseClicked(event -> {
-        primaryStage.setScene(loadQuestion);
-        dialog.close();
-      });
-      notExit.setOnMouseClicked(event -> {
-        primaryStage.setScene(addQuestion);
-        dialog.close();
-      });
+		root.setTop(topHBox);
+		root.setCenter(centerVBox);
+		root.setBottom(bottomHBox);
 
-      dialogHbox.getChildren().addAll(exit, notExit);
-      dialogHbox.setAlignment(Pos.CENTER);
-      dialogHbox.setSpacing(10.0);
-      dialogVbox.getChildren().addAll(prompt, dialogHbox);
-      dialogVbox.setAlignment(Pos.CENTER);
-    }
+		Scene sc = new Scene(root, 1200, 700);
+		sc.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+		// primaryStage.setScene(sc);
+		return sc;
+	}
 
-    Scene dialogScene = new Scene(dialogVbox, 400, 100);
-    dialogScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-    dialog.setScene(dialogScene);
-    dialog.show();
-  }
 
   // Lucy
   // Marvin

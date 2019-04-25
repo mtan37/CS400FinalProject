@@ -67,3 +67,23 @@
 	-fx-font-size: 30px;
 	-fx-padding: 5px;
 }
+.greenButton {
+	-fx-background-color: #429243;
+	-fx-text-fill: white;
+}
+
+.greenButton:hover {
+	-fx-background-color: #31630a;
+	-fx-text-fill: white;
+}
+
+.redButton {
+	-fx-background-color: #ce0707;
+	-fx-text-fill: white;
+}
+
+.redButton:hover {
+	-fx-background-color: #870303;
+	-fx-text-fill: white;
+}
+
