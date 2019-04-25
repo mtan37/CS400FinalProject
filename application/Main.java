@@ -219,6 +219,11 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 		TextField topicField = new TextField();
 		topicBox.getChildren().addAll(topicLabel, topicField);
 
+		//save button 
+		Button saveButton = new Button();
+        saveButton.setText("Save question");
+        saveButton.setVisible(false);
+        
 		// Description
 		Label descriptionLabel = new Label("Description");
 		TextArea descriptionArea = new TextArea();
@@ -227,13 +232,16 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
 		// Choice
 		Label choiceLabel = new Label("Choices");
+		Label choicePrompt = new Label("Please edit your choice content/number");
+		choicePrompt.getStyleClass().add("smallText");
 		TextField choiceField1 = new TextField();
 		TextField choiceField2 = new TextField();
 
 		Button addButton = new Button();
 		addButton.setText("Add Choice");
 		addButton.setOnAction(event -> {
-			if (choicesBox.getChildren().size() < 6) {
+		  
+			if (choicesBox.getChildren().size() < 7) {
 				HBox newChoiceBox = new HBox();
 				TextField newChoiceField = new TextField();
 
@@ -246,27 +254,28 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 		Button removeButton = new Button();
 		removeButton.setText("Remove Choice");
 		removeButton.setOnAction(event -> {
-			if (choicesBox.getChildren().size() > 3) {
+			if (choicesBox.getChildren().size() > 4) {
 				choicesBox.getChildren().remove(choicesBox.getChildren().size() - 1);
 			}
 		});
 
 		Button doneButton = new Button();
-		doneButton.setText("Done");
+		doneButton.setText("Finish adding choices");
 		doneButton.setOnAction(event -> {
 			if (addRemoveDoneBox.getChildren().size() == 3) {
 				addRemoveDoneBox.getChildren().remove(0);
 				addRemoveDoneBox.getChildren().remove(0);
-
+				choicePrompt.setText("Please select which choice to be the correct answer");
+				saveButton.setVisible(true);
 				ToggleGroup toggleGroup = new ToggleGroup();
-				for (int i = 1; i < choicesBox.getChildren().size(); i++) {
+				for (int i = 2; i < choicesBox.getChildren().size(); i++) {
 					ToggleButton button = new ToggleButton();
-					button.setText("F");
+					button.setText("Select this to be the right answer");
 					button.setToggleGroup(toggleGroup);
 					button.getStyleClass().add("redButton");
 					button.setOnMouseClicked(events -> {
-						for (int j = 1; j < choicesBox.getChildren().size(); j++) {
-							((ToggleButton) ((HBox) choicesBox.getChildren().get(j)).getChildren().get(1)).setText("F");
+						for (int j = 2; j < choicesBox.getChildren().size(); j++) {
+							((ToggleButton) ((HBox) choicesBox.getChildren().get(j)).getChildren().get(1)).setText("Select this to be the right answer");
 							((ToggleButton) ((HBox) choicesBox.getChildren().get(j)).getChildren().get(1))
 									.getStyleClass().remove("redButton");
 							((ToggleButton) ((HBox) choicesBox.getChildren().get(j)).getChildren().get(1))
@@ -274,22 +283,23 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 							((ToggleButton) ((HBox) choicesBox.getChildren().get(j)).getChildren().get(1))
 									.getStyleClass().add("redButton");
 						}
-						button.setText("T");
+						button.setText("The right answer");
 						button.getStyleClass().remove("redButton");
 						button.getStyleClass().add("greenButton");
 					});
 					((HBox) choicesBox.getChildren().get(i)).getChildren().add(button);
 				}
-
-				doneButton.setText("Undo");
+				doneButton.setText("Go back to choice addition/remove");
 			} else if (addRemoveDoneBox.getChildren().size() == 1) {
-				for (int i = 1; i < choicesBox.getChildren().size(); i++) {
+				for (int i = 2; i < choicesBox.getChildren().size(); i++) {
 					((HBox) choicesBox.getChildren().get(i)).getChildren().remove(1);
 				}
 
 				addRemoveDoneBox.getChildren().remove(0);
 				addRemoveDoneBox.getChildren().addAll(addButton, removeButton, doneButton);
-				doneButton.setText("Done");
+				saveButton.setVisible(false);
+				choicePrompt.setText("Please edit your choice content/number");
+				doneButton.setText("Finish adding choices");
 			}
 		});
 
@@ -299,24 +309,23 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 		HBox.setHgrow(choiceField2, Priority.ALWAYS);
 		choiceBox1.getChildren().addAll(choiceField1);
 		choiceBox2.getChildren().addAll(choiceField2);
-		choicesBox.getChildren().addAll(choiceLabel, choiceBox1, choiceBox2);
+		choicesBox.getChildren().addAll(choiceLabel, choicePrompt, choiceBox1, choiceBox2);
 
-		Button saveButton = new Button();
-		saveButton.setText("Save");
+		
 		saveButton.setOnAction(event -> {
 			boolean choiceIsDone = true;
 			boolean buttonIsDone = false;
 
-			for (int i = 1; i < choicesBox.getChildren().size(); i++) {
+			for (int i = 2; i < choicesBox.getChildren().size(); i++) {
 				if (((TextField) ((HBox) choicesBox.getChildren().get(i)).getChildren().get(0)).getText().isEmpty()) {
 					choiceIsDone = false;
 				}
 			}
 
-			if (doneButton.getText().equals("Undo")) {
-				for (int i = 1; i < choicesBox.getChildren().size(); i++) {
+			if (doneButton.getText().equals("Go back to choice addition/remove")) {
+				for (int i = 2; i < choicesBox.getChildren().size(); i++) {
 					if (((ToggleButton) ((HBox) choicesBox.getChildren().get(i)).getChildren().get(1)).getText()
-							.equals("T")) {
+							.equals("The right answer")) {
 						buttonIsDone = true;
 					}
 				}
@@ -339,8 +348,8 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 				alert.initModality(Modality.APPLICATION_MODAL);
 				alert.initOwner(primaryStage);
 				alert.showAndWait().filter(response -> response == ButtonType.OK);
-			} else if (doneButton.getText() == "Done") {
-				Alert alert = new Alert(AlertType.INFORMATION, "Please press done and choose true choice");
+			} else if (doneButton.getText() == "Finish adding choices") {
+				Alert alert = new Alert(AlertType.INFORMATION, "Please select a true choice");
 				alert.initModality(Modality.APPLICATION_MODAL);
 				alert.initOwner(primaryStage);
 				alert.showAndWait().filter(response -> response == ButtonType.OK);
@@ -383,10 +392,10 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 					choiceBox2.getChildren().add(newChoiceField2);
 					HBox.setHgrow(newChoiceField1, Priority.ALWAYS);
 					HBox.setHgrow(newChoiceField2, Priority.ALWAYS);
-					choicesBox.getChildren().addAll(choiceLabel, choiceBox1, choiceBox2);
+					choicesBox.getChildren().addAll(choiceLabel, choicePrompt, choiceBox1, choiceBox2);
 					addRemoveDoneBox.getChildren().remove(0);
 					addRemoveDoneBox.getChildren().addAll(addButton, removeButton, doneButton);
-					doneButton.setText("Done");
+					doneButton.setText("Finish adding choices");
 
 					dialog.close();
 				});
@@ -425,13 +434,13 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 		backButton.setOnAction(event -> {
 			boolean choiceIsEmpty = true;
 
-			for (int i = 1; i < choicesBox.getChildren().size(); i++) {
+			for (int i = 2; i < choicesBox.getChildren().size(); i++) {
 				if (!((TextField) ((HBox) choicesBox.getChildren().get(i)).getChildren().get(0)).getText().isEmpty()) {
 					choiceIsEmpty = false;
 				}
 			}
 
-			if (topicField.getText().isEmpty() && descriptionArea.getText().isEmpty() && doneButton.getText() == "Done"
+			if (topicField.getText().isEmpty() && descriptionArea.getText().isEmpty() && doneButton.getText() == "Finish adding choices"
 					&& choiceIsEmpty) {
 				primaryStage.setScene(loadQuestion);
 			} else {
@@ -461,7 +470,6 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 		// primaryStage.setScene(sc);
 		return sc;
 	}
-
 	// Marvin
 	private Scene setUpQuestionFilterPage() {
 		BorderPane root = new BorderPane();// the root layout
