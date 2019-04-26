@@ -248,19 +248,18 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 		TextField[] choiceFields = new TextField[] { choiceField1, choiceField2, choiceField3, choiceField4,
 				choiceField5 };
 		ArrayList<String> choicesDescripList = new ArrayList<String>();
-
+		
 		Button finishAddChoiceBt = new Button("Finish adding choices");
 		finishAddChoiceBt.getStyleClass().add("NormalButton");
 		Button goBackToChoiceBt = new Button("Go back to choice addition/remove");
 		goBackToChoiceBt.getStyleClass().add("backButton");
-		goBackToChoiceBt.setVisible(false);
 		HBox buttonBox1 = new HBox();
 		buttonBox1.getChildren().addAll(finishAddChoiceBt);
 		buttonBox1.setAlignment(Pos.BASELINE_LEFT);
 		HBox buttonBox2 = new HBox();
 		buttonBox2.getChildren().addAll(goBackToChoiceBt);
 		buttonBox2.setAlignment(Pos.BASELINE_RIGHT);
-		buttonBox.getChildren().addAll(buttonBox1, buttonBox2);
+		buttonBox.getChildren().addAll(buttonBox1);
 		correctAnsSelected = false;
 
 		HBox.setHgrow(choiceField1, Priority.ALWAYS);
@@ -278,14 +277,15 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 		choiceBoxList3.getChildren().addAll(choiceField3);
 		choiceBoxList4.getChildren().addAll(choiceField4);
 		choiceBoxList5.getChildren().addAll(choiceField5);
-		HBox[] choiceBoxList = new HBox[] { choiceBoxList1, choiceBoxList2, choiceBoxList3, choiceBoxList4, choiceBoxList5 };
+		HBox[] choiceBoxList = new HBox[] { choiceBoxList1, choiceBoxList2, choiceBoxList3, choiceBoxList4,
+				choiceBoxList5 };
 		VBox choicesBox1 = new VBox();
 		choicesBox1.getChildren().addAll(choiceLabel, choicePrompt);
 		VBox choicesBox2 = new VBox();
 		choicesBox2.getChildren().addAll(choiceBoxList1, choiceBoxList2, choiceBoxList3, choiceBoxList4,
 				choiceBoxList5);
-		choicesBox.getChildren().addAll(choicesBox1,choicesBox2);
-		
+		choicesBox.getChildren().addAll(choicesBox1, choicesBox2);
+
 		finishAddChoiceBt.setOnAction(event -> {
 			// enter user's given choice descriptions
 			for (int i = 0; i < 5; i++) {
@@ -295,8 +295,8 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 				}
 			}
 			if (choicesDescripList.size() > 1) {
-				finishAddChoiceBt.setVisible(false);// if the user entered at least two choices
-				goBackToChoiceBt.setVisible(true);
+				buttonBox.getChildren().remove(0);
+				buttonBox.getChildren().add(buttonBox2);
 				choicePrompt.setText("Please select which choice to be the correct answer");
 				saveButton.setVisible(true);
 				choicesBox2.getChildren().clear();// clear choices box
@@ -348,84 +348,14 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 			choicesBox2.getChildren().addAll(choiceBoxList1, choiceBoxList2, choiceBoxList3, choiceBoxList4,
 					choiceBoxList5);
 			correctAnsSelected = true;
-			goBackToChoiceBt.setVisible(false);
-			finishAddChoiceBt.setVisible(true);
+			buttonBox.getChildren().remove(0);
+			buttonBox.getChildren().add(buttonBox1);
 			saveButton.setVisible(false);
 			choicePrompt.setText("Please edit your choice content/number");
 		});
 
 		saveButton.setOnAction(event -> {
-
-			if (topicField.getText().isEmpty()) {
-				Alert alert = new Alert(AlertType.INFORMATION, "Please enter your question topic before proceeding");
-				alert.initModality(Modality.APPLICATION_MODAL);
-				alert.initOwner(primaryStage);
-				alert.showAndWait().filter(response -> response == ButtonType.OK);
-			} else if (descriptionArea.getText().isEmpty()) {
-				Alert alert = new Alert(AlertType.INFORMATION,
-						"Please enter your question description before proceeding");
-				alert.initModality(Modality.APPLICATION_MODAL);
-				alert.initOwner(primaryStage);
-				alert.showAndWait().filter(response -> response == ButtonType.OK);
-			} else if (!correctAnsSelected) {
-				Alert alert = new Alert(AlertType.INFORMATION, "Please select a true choice");
-				alert.initModality(Modality.APPLICATION_MODAL);
-				alert.initOwner(primaryStage);
-				alert.showAndWait().filter(response -> response == ButtonType.OK);
-			} else {
-				final Stage dialog = new Stage();
-				dialog.initModality(Modality.APPLICATION_MODAL);
-				dialog.initOwner(primaryStage);
-				VBox dialogVbox = new VBox();
-				HBox dialogHbox = new HBox();
-
-				Label prompt = new Label();
-				prompt.setText("Do you want to save?");
-				prompt.getStyleClass().add("smallText");
-
-				Button save = new Button();
-				save.setText("Yes");
-				save.getStyleClass().add("popUpButton");
-
-				Button notSave = new Button();
-				notSave.setText("No");
-				notSave.getStyleClass().add("popUpButton");
-
-				// Add question to question bank and reset
-				save.setOnMouseClicked(events -> {
-					if (test) {
-						Alert alert = new Alert(AlertType.INFORMATION, "You question entry is correct. "
-								+ "However, this application is still under development, and you question entry is not save in the memory ");
-						alert.initModality(Modality.APPLICATION_MODAL);
-						alert.initOwner(primaryStage);
-						alert.showAndWait().filter(response -> response == ButtonType.OK);
-					}
-					// create a new question
-					// refresh question page
-					this.addQuestion = setUpAddQuestionPage();
-					primaryStage.setScene(addQuestion);
-					dialog.close();
-				});
-
-				// Go back without doing anything
-				notSave.setOnMouseClicked(events -> {
-					// primaryStage.setScene(addQuestion);
-					dialog.close();
-				});
-
-				dialogHbox.getChildren().addAll(save, notSave);
-				dialogHbox.setAlignment(Pos.CENTER);
-				dialogHbox.setSpacing(10.0);
-				dialogVbox.getChildren().addAll(prompt, dialogHbox);
-				dialogVbox.setSpacing(10.0);
-				dialogVbox.setAlignment(Pos.CENTER);
-
-				Scene dialogScene = new Scene(dialogVbox, 400, 100);
-				dialogScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-				dialog.setScene(dialogScene);
-				dialog.show();
-				// quitPopUp(1);
-			}
+			saveFunction(choicesBox, topicField, descriptionArea, choiceLabel, choicePrompt);
 		});
 		saveButton.getStyleClass().add("NormalButton");
 
@@ -462,6 +392,79 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 		sc.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 		// primaryStage.setScene(sc);
 		return sc;
+	}
+
+	private void saveFunction(VBox choicesBox, TextField topicField, TextArea descriptionArea, Label choiceLabel,
+			Label choicePrompt) {
+		if (topicField.getText().isEmpty()) {
+			Alert alert = new Alert(AlertType.INFORMATION, "Please enter your question topic before proceeding");
+			alert.initModality(Modality.APPLICATION_MODAL);
+			alert.initOwner(primaryStage);
+			alert.showAndWait().filter(response -> response == ButtonType.OK);
+		} else if (descriptionArea.getText().isEmpty()) {
+			Alert alert = new Alert(AlertType.INFORMATION, "Please enter your question description before proceeding");
+			alert.initModality(Modality.APPLICATION_MODAL);
+			alert.initOwner(primaryStage);
+			alert.showAndWait().filter(response -> response == ButtonType.OK);
+		} else if (!correctAnsSelected) {
+			Alert alert = new Alert(AlertType.INFORMATION, "Please select a true choice");
+			alert.initModality(Modality.APPLICATION_MODAL);
+			alert.initOwner(primaryStage);
+			alert.showAndWait().filter(response -> response == ButtonType.OK);
+		} else {
+			final Stage dialog = new Stage();
+			dialog.initModality(Modality.APPLICATION_MODAL);
+			dialog.initOwner(primaryStage);
+			VBox dialogVbox = new VBox();
+			HBox dialogHbox = new HBox();
+
+			Label prompt = new Label();
+			prompt.setText("Do you want to save?");
+			prompt.getStyleClass().add("smallText");
+
+			Button save = new Button();
+			save.setText("Yes");
+			save.getStyleClass().add("popUpButton");
+
+			Button notSave = new Button();
+			notSave.setText("No");
+			notSave.getStyleClass().add("popUpButton");
+
+			// Add question to question bank and reset
+			save.setOnMouseClicked(events -> {
+				if (test) {
+					Alert alert = new Alert(AlertType.INFORMATION, "You question entry is correct. "
+							+ "However, this application is still under development, and you question entry is not save in the memory ");
+					alert.initModality(Modality.APPLICATION_MODAL);
+					alert.initOwner(primaryStage);
+					alert.showAndWait().filter(response -> response == ButtonType.OK);
+				}
+				// create a new question
+				// refresh question page
+				this.addQuestion = setUpAddQuestionPage();
+				primaryStage.setScene(addQuestion);
+				dialog.close();
+			});
+
+			// Go back without doing anything
+			notSave.setOnMouseClicked(events -> {
+				// primaryStage.setScene(addQuestion);
+				dialog.close();
+			});
+
+			dialogHbox.getChildren().addAll(save, notSave);
+			dialogHbox.setAlignment(Pos.CENTER);
+			dialogHbox.setSpacing(10.0);
+			dialogVbox.getChildren().addAll(prompt, dialogHbox);
+			dialogVbox.setSpacing(10.0);
+			dialogVbox.setAlignment(Pos.CENTER);
+
+			Scene dialogScene = new Scene(dialogVbox, 400, 100);
+			dialogScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			dialog.setScene(dialogScene);
+			dialog.show();
+			// quitPopUp(1);
+		}
 	}
 
 	// Marvin
