@@ -1,5 +1,6 @@
 package application;
 
+
 /**
  * This Class represents Choice of a QUIZ
  * @author SHAO BIN DANIEL SHI HONG
@@ -8,9 +9,9 @@ package application;
 public class Choice {
    
    
-   private boolean isCorrect = false;  //  IndicatOR if this Choice is correct
+   private boolean isCorrect;  //  IndicatOR if this Choice is correct
    private String description = "";  //  The description of the choice
-  
+   
    /**
     * Choice Constructor
     * @param isCorrect indicates if the choice is correct 
@@ -50,5 +51,6 @@ public class Choice {
    public void setDescription(String des) {
      this.description = des;
    }
+   
    
 }

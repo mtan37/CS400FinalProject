@@ -1,5 +1,6 @@
 package application;
 
+
 import java.util.ArrayList;
 import javafx.scene.image.Image;
 
@@ -11,13 +12,14 @@ import javafx.scene.image.Image;
  *
  */
 public class Question {
-  private String topic; 
+  public String topic; 
   private String description; // description of the question
   private ArrayList<Choice> choices; // choices of the current Question
   private Image image; // Question image
   private boolean isFetched; // if this Question has been used
   private int userAnswer; // this indicates which answer has been chosen by the user
   private String metadata; // question meta-data
+ 
 
   /**
    * Default no-argument constructor (used in FileHandler)
@@ -51,24 +53,6 @@ public class Question {
   }
 
   /**
-   * Getter of topic
-   * 
-   * @return
-   */
-  public String getTopic() {
-    return topic;
-  }
-
-  /**
-   * Setter of topic
-   * 
-   * @param topic
-   */
-  public void setTopic(String topic) {
-    this.topic = topic;
-  }
-
-  /**
    * Getter of the Question Description
    * 
    * @return the Question Description
@@ -96,9 +80,46 @@ public class Question {
    * Adds one question choice to the choices ArrayList; will not add a choice beyond 5 total choices
    * @param choice
    */
-  public void addChoice(Choice choice) {
+  public void addChoice(Choice choice){ //To do, how many correct answers are allowed?
+                                       // need to change the code based on the number of cor ans.
+    if(choice == null) {
+      return;
+    }
     if (choices.size() < 5)
       choices.add(choice);
+  }
+  /**
+   * This method remove choice from choices
+   * based on the description of choice
+   * @param choiceDes
+   * @throws corAnsRemovedException 
+   */
+  public void removeChoice(String choiceDes) throws corAnsRemovedException {
+      if(choiceDes == null || choices.size() == 0) {
+        return;
+      }
+      Choice target = findChoice(choiceDes);
+      if(target == null) {
+        return;
+      }
+      //TO DO: what if the choice to be removed is the correct answer?
+      // need to prompt the user to decide a new answer or cancel this removal
+      // throw Exception
+      if(target.getIsCorrect()) {
+        throw new corAnsRemovedException();
+      }
+      choices.remove(target);    
+  }
+  private Choice findChoice(String des) {
+    for(int i = 0; i < choices.size(); i++) {
+       if(choices.get(i).getDescription().equals(des)) 
+         return choices.get(i);
+       
+    }
+    return null;
+  }
+  public Choice getChoice() {
+    return null; // TO DO, argument need to be discussed.
   }
 
   /**
@@ -172,5 +193,6 @@ public class Question {
   public String getMetadata() {
     return metadata;
   }
+  
 
 }
