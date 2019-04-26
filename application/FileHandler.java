@@ -7,21 +7,21 @@ import java.io.IOException;
 import java.util.Hashtable;
 import java.util.ArrayList;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+//import org.json.simple.JSONObject;
+//import org.json.simple.parser.JSONParser;
+//import org.json.simple.parser.ParseException;
 
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
 public class FileHandler {
 	
-	JSONParser parser;
+	//JSONParser parser;
 	Hashtable< String, ArrayList<Question> > questionBank;
 	
 	
 	public FileHandler(Hashtable< String, ArrayList<Question> > questionBank) {
-		parser = new JSONParser();
+		//parser = new JSONParser();
 		this.questionBank = questionBank;
 	}
 	
@@ -36,21 +36,21 @@ public class FileHandler {
 	}
 	
 	public boolean readFile(File file) {
-		try {
+		//try {
 
 		
-	    	Object obj = parser.parse(new FileReader(file));
-			JSONObject jo = (JSONObject) obj;
-			System.out.println(obj);
+	    	//Object obj = parser.parse(new FileReader(file));
+			//JSONObject jo = (JSONObject) obj;
+			//System.out.println(obj);
 		
 		//TODO:
-		} catch (FileNotFoundException e) {
+		/*} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ParseException e) {
 			e.printStackTrace();
-		}
+		}*/
 	    return false; // TODO:
 	}
 	

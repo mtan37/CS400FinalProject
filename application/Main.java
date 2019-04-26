@@ -367,7 +367,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 		backButton.getStyleClass().add("backButton");
 
 		backButton.setOnAction(event -> {
-			popUpQuitAddQuestion();
+			//popUpQuitAddQuestion();
 		});
 
 		// Setting up the layout
@@ -412,7 +412,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 			alert.initOwner(primaryStage);
 			alert.showAndWait().filter(response -> response == ButtonType.OK);
 		} else {
-			final Stage dialog = new Stage();
+			/*final Stage dialog = new Stage();
 			dialog.initModality(Modality.APPLICATION_MODAL);
 			dialog.initOwner(primaryStage);
 			VBox dialogVbox = new VBox();
@@ -464,7 +464,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 			dialog.setScene(dialogScene);
 			dialog.show();
 			// quitPopUp(1);
-		}
+*/		}
 	}
 
 	// Marvin
@@ -592,7 +592,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 			alert.initOwner(primaryStage);
 			alert.showAndWait().filter(response -> response == ButtonType.OK);
 		} else if (quizGenerator.currChosenTopics.size() > 0 && numQuestion > 0) {
-			final Stage dialog = new Stage();
+			/*final Stage dialog = new Stage();
 			dialog.initModality(Modality.APPLICATION_MODAL);
 			dialog.initOwner(primaryStage);
 			VBox dialogVbox = new VBox();
@@ -637,7 +637,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 			Scene dialogScene = new Scene(dialogVbox, 400, 100);
 			dialogScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			dialog.setScene(dialogScene);
-			dialog.show();
+			dialog.show();*/
 		}
 
 	}
@@ -742,7 +742,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
 		// set bsck button
 		backBt.setOnAction(e -> {
-			popUpQuitQuestion();
+			//popUpQuitQuestion();
 			// primaryStage.setScene(setUpMainMenuPage());
 		});
 
@@ -761,7 +761,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 	/**
 	 * A pop up window to warn user when the user quit the quiz before finish
 	 */
-	private void popUpQuitQuestion() {
+	/*private void popUpQuitQuestion() {
 		BorderPane popRt = new BorderPane();
 		Scene popSc = new Scene(popRt, 750, 300);
 		final Stage dialog = new Stage();
@@ -807,7 +807,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 		dialog.setScene(popSc);
 		dialog.show();
 
-	}
+	}*/
 
 	// Marvin
 	private Scene setUpScorePage() {
@@ -967,7 +967,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 	}
 
 	// Marvin
-	private void popUpQuitAddQuestion() {
+	/*private void popUpQuitAddQuestion() {
 		final Stage dialog = new Stage();
 		dialog.initModality(Modality.APPLICATION_MODAL);
 		dialog.initOwner(primaryStage);
@@ -1004,7 +1004,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 		dialogScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 		dialog.setScene(dialogScene);
 		dialog.show();
-	}
+	}*/
 
 	@Override
 	public void start(Stage primaryStage) {
