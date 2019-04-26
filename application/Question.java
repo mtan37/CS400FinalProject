@@ -115,7 +115,7 @@ public class Question {
    * 
    * @param image
    */
-  public void saveImgae(Image image) {
+  public void saveImage(Image image) {
     this.image = image;
   }
   
