@@ -1,14 +1,14 @@
-# CS400FinalProject
+README
 
-To clone the git repository:
-1) Open command line
-2) cd to your eclipse workspace (not the project folder)
-3) git clone https://github.com/Dorbeeee/CS400FinalProject.git
+Course: cs400
+Semester: Spring 2019
+Project name: Practice Quiz Generator
+Team number: ATeam-25
+Team Members:
+Marvin Tan, 002, A-25
+Nate Sackett, 004, A-25    
+Shao Bin Daniel Shi Hong, 004, A-25
+Hui Beom Kim, 004, A-25
+Zhengyi Chen, 004, A-25
 
-Now you have the project in the eclipse workspace. When you want to add changes:
-1) git add .
-2) git commit -m "Whatever change messages"
-3) git push
 
-If there is change by other people use:
-1) git pull
