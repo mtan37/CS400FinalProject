@@ -12,7 +12,7 @@ import javafx.scene.image.Image;
  *
  */
 public class Question {
-  public String topic; 
+  public String topic; // Question topic
   private String description; // description of the question
   private ArrayList<Choice> choices; // choices of the current Question
   private Image image; // Question image
@@ -31,7 +31,7 @@ public class Question {
     image = null; // No default image
     isFetched = false; // Initialize question not already having been used
     userAnswer = -1; // Default value indicates no answer chosen
-    metadata = null; // Default empty
+    metadata = null; // Default to empty
   }
   
   /**
@@ -48,10 +48,26 @@ public class Question {
     image = null; // No default image
     isFetched = false; // Initialize question not already having been used
     userAnswer = -1; // Default value indicates no answer chosen
-    metadata = null; // Dfault empty
+    metadata = null; // Default to empty
     
   }
 
+  /**
+   * Getter of the Question topic
+   * 
+   * @return the Question topic
+   */
+  public String getTopic() {
+    return topic;
+  }
+
+  /**
+   * Setter of the Question topic
+   */
+  public void setTopic(String topic) { // FileHandler
+    this.topic = topic;
+  }
+  
   /**
    * Getter of the Question Description
    * 
@@ -64,8 +80,8 @@ public class Question {
   /**
    * Setter of the Question Description
    */
-  public void setDescription(String des) {
-    description = des;
+  public void setDescription(String description) { // FileHandler
+    this.description = description;
   }
   
   /**
@@ -78,16 +94,15 @@ public class Question {
   
   /**
    * Adds one question choice to the choices ArrayList; will not add a choice beyond 5 total choices
+   * 
    * @param choice
    */
-  public void addChoice(Choice choice){ //To do, how many correct answers are allowed?
-                                       // need to change the code based on the number of cor ans.
-    if(choice == null) {
-      return;
-    }
+  public void addChoice(Choice choice){ // Method used in FileHandler, no other checks needed
     if (choices.size() < 5)
       choices.add(choice);
   }
+  
+  //TODO: Comment method parameters
   /**
    * This method remove choice from choices
    * based on the description of choice
@@ -110,6 +125,7 @@ public class Question {
       }
       choices.remove(target);    
   }
+  
   private Choice findChoice(String des) {
     for(int i = 0; i < choices.size(); i++) {
        if(choices.get(i).getDescription().equals(des)) 
@@ -118,6 +134,7 @@ public class Question {
     }
     return null;
   }
+  
   public Choice getChoice() {
     return null; // TO DO, argument need to be discussed.
   }
@@ -136,7 +153,7 @@ public class Question {
    * 
    * @param image
    */
-  public void saveImage(Image image) {
+  public void saveImage(Image image) { // FileHandler
     this.image = image;
   }
   
@@ -181,7 +198,7 @@ public class Question {
    * 
    * @param metadata
    */
-  public void setMetadata(String metadata) {
+  public void setMetadata(String metadata) { // FileHandler
     this.metadata = metadata;
   }
   
