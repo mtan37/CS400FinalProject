@@ -1,55 +1,98 @@
 package application;
+
 import java.util.ArrayList;
 
+/**
+ * Represents the choices of the user
+ * 
+ * @author Nate Sackett
+ *
+ */
 public class UserRecord {
-	 ArrayList<String> choices;
-	 private Integer numRqst;
-	 private Integer numAns;
-	 private Integer numCor;
-	 private boolean currQuizSaved;//show if the questions in current quiz have been saved by the user
-	 public UserRecord() {
-		 choices = new ArrayList<String>();
-		 numRqst = 0;
-		 numAns = 0;
-		 numCor = 0;
-	     currQuizSaved = false;
-	 }
-	 
-	 // Setters
-	 protected void setNumRqst(Integer numRqst) {
-		this.numRqst = numRqst;
-	 }
-	 
-	 protected void setNumAns(Integer numAns) {
-		this.numAns = numAns;
-	 }
-	 
-	 protected void setNumCor(Integer numCor) {
-		this.numCor = numCor;
-	 }
-	 
-	 // Getters
-	 protected Integer getNumRqst() {
-		return numRqst;
-	 }
-	 
-	 protected Integer getNumAns() {
-		return numAns;
-	 }
-	 
-	 protected Integer getNumCor() {
-		return numCor;
-	 }
-	 
-	 protected int getPercent() {
-		return (int) ((int)(float)numAns / (float)numCor * 100);
-	 }
+  ArrayList<String> topicsChosen; // ArrayList of topics chosen by the user
+  private Integer numRqst;
+  private Integer numCor;
+  private boolean currQuizSaved;// show if the questions in current quiz have been saved by the user
 
-	 protected boolean isCurrQuizSaved() {
+  /**
+   * No-arg constructor initializes UserRecord with no choices or topics chosen
+   */
+  public UserRecord() {
+    topicsChosen = new ArrayList<String>();
+    numRqst = 0;
+    numCor = 0;
+    currQuizSaved = false;
+  }
+
+  /**
+   * Specifies the number of questions requested by the user
+   * 
+   * @param numRqst integer number of questions requested
+   */
+  protected void setNumRqst(Integer numRqst) {
+    this.numRqst = numRqst;
+  }
+
+  /**
+   * Specifies the muber of questions answered correctly by the user
+   * 
+   * @param numCor integer number of questions answered correctly (< number of
+   *               questions requested)
+   */
+  protected void setNumCor(Integer numCor) {
+    this.numCor = numCor;
+  }
+
+  /**
+   * Increases the number of correctly answered questions by one
+   */
+  protected void incrementNumCor() {
+    numCor++;
+  }
+
+  /**
+   * Return the number of questions requested by the user
+   * 
+   * @return number of question requested
+   */
+  protected Integer getNumRqst() {
+    return numRqst;
+  }
+
+  /**
+   * Return the number questions answered correctly by the user
+   * 
+   * @return
+   */
+  protected Integer getNumCor() {
+    return numCor;
+  }
+
+  /**
+   * Get the integer percentage of questions answered correctly by the user
+   * 
+   * @return percentage of correct answers
+   */
+  protected int getPercent() {
+    return (int) ((int) (float) numRqst / (float) numCor * 100);
+  }
+
+  /**
+   * Returns true if current quiz question have been saved by the user, otherwise
+   * false
+   * 
+   * @return true if current quiz question have been saved by the user, otherwise
+   *         false
+   */
+  protected boolean isCurrQuizSaved() {
     return currQuizSaved;
   }
 
-	 protected void setCurrQuizSaved(boolean currQuizSaved) {
+  /**
+   * Sets if current quiz is saved by the user
+   * @param currQuizSaved boolean indicated whether quiz has been saved
+   */
+  protected void setCurrQuizSaved(boolean currQuizSaved) {
     this.currQuizSaved = currQuizSaved;
   }
 }
