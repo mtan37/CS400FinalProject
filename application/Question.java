@@ -17,6 +17,7 @@ public class Question {
   private Image image; // Question image
   private boolean isFetched; // if this Question has been used
   private int userAnswer; // this indicates which answer has been chosen by the user
+  private String metadata; // question meta-data
 
   /**
    * Default no-argument constructor (used in FileHandler)
@@ -28,6 +29,7 @@ public class Question {
     image = null; // No default image
     isFetched = false; // Initialize question not already having been used
     userAnswer = -1; // Default value indicates no answer chosen
+    metadata = null; // Default empty
   }
   
   /**
@@ -44,6 +46,7 @@ public class Question {
     image = null; // No default image
     isFetched = false; // Initialize question not already having been used
     userAnswer = -1; // Default value indicates no answer chosen
+    metadata = null; // Dfault empty
     
   }
 
