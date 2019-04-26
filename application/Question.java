@@ -154,5 +154,23 @@ public class Question {
   public int getUserAnswer() {
     return userAnswer;
   }
+  
+  /**
+   * This method sets the metadata String for the question
+   * 
+   * @param metadata
+   */
+  public void setMetadata(String metadata) {
+    this.metadata = metadata;
+  }
+  
+  /**
+   * This method returns the meta-data String for the question
+   * 
+   * @return metadata String for question
+   */
+  public String getMetadata() {
+    return metadata;
+  }
 
 }
