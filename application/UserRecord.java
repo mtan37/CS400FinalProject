@@ -10,6 +10,7 @@ import java.util.ArrayList;
  */
 public class UserRecord {
   ArrayList<String> topicsChosen; // ArrayList of topics chosen by the user
+  private Integer numAns;
   private Integer numRqst;
   private Integer numCor;
   private boolean currQuizSaved;// show if the questions in current quiz have been saved by the user
@@ -19,11 +20,22 @@ public class UserRecord {
    */
   public UserRecord() {
     topicsChosen = new ArrayList<String>();
+    numAns = 0;
     numRqst = 0;
     numCor = 0;
     currQuizSaved = false;
   }
 
+  
+  /**
+   * Specifies the number of questions answered by the user
+   * 
+   * @param numRqst integer number of questions answered
+   */
+  protected void setNumAns(Integer numAns) {
+    this.numAns = numAns;
+  }
+  
   /**
    * Specifies the number of questions requested by the user
    * 
@@ -50,6 +62,15 @@ public class UserRecord {
     numCor++;
   }
 
+  /**
+   * Return the number of questions answered by the user
+   * 
+   * @return number of question answered
+   */
+  protected Integer getNumAns() {
+    return numAns;
+  }
+  
   /**
    * Return the number of questions requested by the user
    * 
