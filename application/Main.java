@@ -521,6 +521,22 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 			// Add question to question bank and reset
 			save.setOnMouseClicked(events -> {
 				if (test) {
+					// Creating new question and adding it to data structure
+					Question newQuestion = new Question();
+					newQuestion.setTopic(topicField.getText());
+					newQuestion.setDescription(descriptionArea.getText());
+					
+					VBox tempChoices = ((VBox)choicesBox.getChildren().get(1));
+					for(int i=0; i<tempChoices.getChildren().size(); i++) {
+						HBox singleChoice = ((HBox)tempChoices.getChildren().get(i));
+						if( ((ToggleButton)singleChoice.getChildren().get(1)).getText().equals("The right answer") ) {
+							newQuestion.setUserAnswer(i);
+						}
+					}
+					
+					quizGenerator.addQuestion(newQuestion);
+					
+					// Alert Message
 					Alert alert = new Alert(AlertType.INFORMATION, "You question entry is correct. "
 							+ "However, this application is still under development, and you question entry is not save in the memory ");
 					alert.initModality(Modality.APPLICATION_MODAL);
