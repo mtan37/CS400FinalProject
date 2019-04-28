@@ -1,4 +1,3 @@
-package application;
 
 
 import java.util.ArrayList;
@@ -9,15 +8,14 @@ import javafx.scene.image.Image;
  * 
  * @author SHAO BIN DANIEL SHI HONG
  * @author Nate Sackett
- * @author Zhengyi Chen
  *
  */
 public class Question {
-  public String topic; // Question topic
+  public String topic; 
   private String description; // description of the question
   private ArrayList<Choice> choices; // choices of the current Question
   private Image image; // Question image
-  private boolean isFetched; // if this Question has been used
+  protected boolean isFetched; // if this Question has been used
   private int userAnswer; // this indicates which answer has been chosen by the user
   private String metadata; // question meta-data
  
@@ -32,7 +30,7 @@ public class Question {
     image = null; // No default image
     isFetched = false; // Initialize question not already having been used
     userAnswer = -1; // Default value indicates no answer chosen
-    metadata = null; // Default to empty
+    metadata = null; // Default empty
   }
   
   /**
@@ -49,26 +47,10 @@ public class Question {
     image = null; // No default image
     isFetched = false; // Initialize question not already having been used
     userAnswer = -1; // Default value indicates no answer chosen
-    metadata = null; // Default to empty
+    metadata = null; // Dfault empty
     
   }
 
-  /**
-   * Getter of the Question topic
-   * 
-   * @return the Question topic
-   */
-  public String getTopic() {
-    return topic;
-  }
-
-  /**
-   * Setter of the Question topic
-   */
-  public void setTopic(String topic) { // FileHandler
-    this.topic = topic;
-  }
-  
   /**
    * Getter of the Question Description
    * 
@@ -81,8 +63,8 @@ public class Question {
   /**
    * Setter of the Question Description
    */
-  public void setDescription(String description) { // FileHandler
-    this.description = description;
+  public void setDescription(String des) {
+    description = des;
   }
   
   /**
@@ -95,15 +77,16 @@ public class Question {
   
   /**
    * Adds one question choice to the choices ArrayList; will not add a choice beyond 5 total choices
-   * 
    * @param choice
    */
-  public void addChoice(Choice choice){ // Method used in FileHandler, no other checks needed
+  public void addChoice(Choice choice){ //To do, how many correct answers are allowed?
+                                       // need to change the code based on the number of cor ans.
+    if(choice == null) {
+      return;
+    }
     if (choices.size() < 5)
       choices.add(choice);
   }
-  
-  //TODO: Comment method parameters
   /**
    * This method remove choice from choices
    * based on the description of choice
@@ -126,7 +109,6 @@ public class Question {
       }
       choices.remove(target);    
   }
-  
   private Choice findChoice(String des) {
     for(int i = 0; i < choices.size(); i++) {
        if(choices.get(i).getDescription().equals(des)) 
@@ -135,7 +117,6 @@ public class Question {
     }
     return null;
   }
-  
   public Choice getChoice() {
     return null; // TO DO, argument need to be discussed.
   }
@@ -154,27 +135,10 @@ public class Question {
    * 
    * @param image
    */
-  public void saveImage(Image image) { // FileHandler
+  public void saveImage(Image image) {
     this.image = image;
   }
-  
-  /**
-   * Getter of IsFetched
-   * 
-   * @return true if this Question is fetched for use, false otherwise
-   */
-  public boolean getIsFetched() {
-    return isFetched;
-  }
 
-  /**
-   * Setter of isFetched
-   * 
-   * @param isFetchedOrNot
-   */
-  public void setIsFetched(boolean isFetchedOrNot) {
-    isFetched = isFetchedOrNot;
-  }
 
   /**
    * This method sets which number of choice the User is choosing
@@ -199,7 +163,7 @@ public class Question {
    * 
    * @param metadata
    */
-  public void setMetadata(String metadata) { // FileHandler
+  public void setMetadata(String metadata) {
     this.metadata = metadata;
   }
   
@@ -212,17 +176,5 @@ public class Question {
     return metadata;
   }
   
-  /**
-   * This method returns the correct choice for this question
-   * @return the correct choice; 
-   */
-  public Choice getCorrectChose() {
-    for (int i=0; i< choices.size(); i++) {
-      if(choices.get(i).getIsCorrect()) {
-        return choices.get(i);
-      }
-    }
-    return null;
-  }
 
 }
