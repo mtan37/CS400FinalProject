@@ -5,6 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -15,7 +18,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
+import javafx.scene.control.DatePicker;
 import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -164,7 +167,7 @@ public class FileHandler {
   public void saveFile(String saveAddress) {
     // TODO: May need catch other exceptions, but I'm not sure which
     try {
-
+      
       // Create printwriter immediately to check for valid address
       PrintWriter printWriter = new PrintWriter(saveAddress);
 
