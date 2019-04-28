@@ -9,6 +9,7 @@ import javafx.scene.image.Image;
  * 
  * @author SHAO BIN DANIEL SHI HONG
  * @author Nate Sackett
+ * @author Zhengyi Chen
  *
  */
 public class Question {
@@ -211,5 +212,17 @@ public class Question {
     return metadata;
   }
   
+  /**
+   * This method returns the correct choice for this question
+   * @return the correct choice; 
+   */
+  public Choice getCorrectChose() {
+    for (int i=0; i< choices.size(); i++) {
+      if(choices.get(i).getIsCorrect()) {
+        return choices.get(i);
+      }
+    }
+    return null;
+  }
 
 }
