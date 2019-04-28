@@ -71,6 +71,8 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
 	boolean correctAnsSelected = false;// if the user has selected a correct answer for an added
 										// question
+	private int currIndex; //the current location the user is at while doing the quiz
+
 
 	/**
 	 * Build a new main menu page
@@ -754,123 +756,136 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 	}
 
 	/**
-	 * Build a new question page
-	 * 
-	 * @return the Scene object of a new question page
-	 */
-	private Scene setUpQuestionPage() {
-		BorderPane root = new BorderPane();
-		root.getStyleClass().add("root");
-		question = new Scene(root, 1200, 800);
+	   * Build a new question page
+	   * @return the Scene object of a new question page
+	   */
+	  private Scene setUpQuestionPage(Question[] quizQls) {
+	    if (quizQls==null) return null;
+	    
+	    BorderPane root = new BorderPane();
+	    root.getStyleClass().add("root");
+	    question = new Scene(root, 1200, 800);
 
-		// top
+	    // top
 
-		Label l1 = new Label(); // hard code can get from data structure's index
-		l1.setText("Question " + (quizGenerator.numQUsed + 1));
-		l1.getStyleClass().add("normalText");
-		Label indicator = new Label();
-		indicator.setVisible(false);
+	    Label l1 = new Label(); // hard code can get from data structure's index
+	    l1.setText("Question " + (currIndex + 1));
+	    
+	    l1.getStyleClass().add("normalText");
+	    Label indicator = new Label();
+	    indicator.setVisible(false);
 
-		VBox topbox = new VBox(l1, indicator);
-		topbox.getStyleClass().add("topHBox");
-		root.setTop(topbox);
+	    VBox topbox = new VBox(l1, indicator);
+	    topbox.getStyleClass().add("topHBox");
+	    root.setTop(topbox);
 
-		// center
-		VBox centerBox = new VBox();
-		centerBox.setAlignment(Pos.CENTER);
-		Label l2 = new Label("Description");
-		l2.getStyleClass().add("normalText");
-		TextArea ta = new TextArea("If a good hash function is found and a reasonable table size "
-				+ "is used for a hash table, then the operations of put, remove, "
-				+ "and get should achieve an average time complexity of _____ "
-				+ "where $N$ is the number of items and $TS$ is the size of the table.");
-		ta.getStyleClass().add("smallText");
-		ta.setEditable(false);
-		ta.setMaxSize(500, 300);
-		ta.setWrapText(true);
-		// get from quiz generator data structure with index currIndex
+	    // center
+	    VBox centerBox = new VBox();
+	    centerBox.setAlignment(Pos.CENTER);
+	    Label l2 = new Label("Description");
+	    l2.getStyleClass().add("normalText");
+	    TextArea ta = new TextArea(quizQls[currIndex].getDescription());
+	    ta.getStyleClass().add("smallText");
+	    ta.setEditable(false);
+	    ta.setMaxSize(500, 300);
+	    ta.setWrapText(true);
+	    
+	  
+	    //create an observable list holding choice descriptions
+	    ObservableList<RadioButton> choices = FXCollections.observableArrayList();
+	    
+	//iterate through current question's choice list
+	    //put descriptions into RadioButtons and add the button to the observable list
+	    for (int i=0; i<quizQls[currIndex].getChoices().size(); i++) {
+	      choices.add(new RadioButton(
+	          quizQls[currIndex].getChoices().get(i).getDescription()));
+	    }
+	  
+	 
+	    ListView choiceLs = new ListView ();
+	    choiceLs.setItems(choices);
+	    choiceLs.setMaxSize(500, 300);
 
-		RadioButton c1 = new RadioButton("$O(1)$");// isCorrect=true
-		RadioButton c2 = new RadioButton("$O(log_{TS} N)$");
-		RadioButton c3 = new RadioButton("$O(N^{TS})$");
-		RadioButton c4 = new RadioButton("$O(N)$");
-		ObservableList<RadioButton> choices = FXCollections.observableArrayList(c1, c2, c3, c4);
-		ListView choiceLs = new ListView();
-		choiceLs.setItems(choices);
-		choiceLs.setMaxSize(500, 300);
+	    ToggleGroup tgG = new ToggleGroup();
+	    for (RadioButton c : choices) {
+	      c.setToggleGroup(tgG);
+	      c.setWrapText(true);
+	    }
 
-		ToggleGroup tgG = new ToggleGroup();
-		for (RadioButton c : choices) {
-			c.setToggleGroup(tgG);
-			c.setWrapText(true);
-		}
+	    centerBox.getChildren().addAll(l2, ta, choiceLs);
+	    root.setCenter(centerBox);
 
-		centerBox.getChildren().addAll(l2, ta, choiceLs);
-		root.setCenter(centerBox);
+	    // left
 
-		// left
+	    Image img = new Image(new File("wallPaper-icon.png").toURI().toString());
 
-		Image img = new Image(new File("wallPaper-icon.png").toURI().toString());
+	    ImageView quizImgV = new ImageView(img);
+	    VBox leftRg = new VBox();
+	    leftRg.setAlignment(Pos.CENTER);
 
-		ImageView quizImgV = new ImageView(img);
-		VBox leftRg = new VBox();
-		leftRg.setAlignment(Pos.CENTER);
+	    leftRg.getChildren().add(quizImgV);
+	    leftRg.setMargin(quizImgV, new Insets(50, 50, 50, 50));
 
-		leftRg.getChildren().add(quizImgV);
-		leftRg.setMargin(quizImgV, new Insets(50, 50, 50, 50));
+	    root.setLeft(leftRg);
 
-		root.setLeft(leftRg);
+	    // bottom
+	    Button backBt = new Button("Back to Main Menu");
+	    backBt.getStyleClass().add("backButton");
+	    Button nextBt = new Button("Next");
+	    nextBt.getStyleClass().add("NormalButton");
+	    Button submitBt = new Button("Submit");
+	    submitBt.getStyleClass().add("NormalButton");
+	    nextBt.setVisible(false); // visible after click submit
+	    HBox bottomBox = new HBox(submitBt, backBt, nextBt);
+	    bottomBox.setSpacing(20);
+	    bottomBox.setPadding(new Insets(20, 20, 20, 20));
+	    bottomBox.getStyleClass().add("bottomHBox");
+	    root.setBottom(bottomBox);
 
-		// bottom
-		Button backBt = new Button("Back to Main Menu");
-		backBt.getStyleClass().add("backButton");
-		Button nextBt = new Button("Next");
-		nextBt.getStyleClass().add("NormalButton");
-		Button submitBt = new Button("Submit");
-		submitBt.getStyleClass().add("NormalButton");
-		nextBt.setVisible(false); // visible after click submit
-		HBox bottomBox = new HBox(submitBt, backBt, nextBt);
-		bottomBox.setSpacing(20);
-		bottomBox.setPadding(new Insets(20, 20, 20, 20));
-		bottomBox.getStyleClass().add("bottomHBox");
-		root.setBottom(bottomBox);
+	    // events
 
-		// events
+	    submitBt.setOnAction(e -> {
+	      // set indicator button and next button
+	      if (tgG.getSelectedToggle()==null)
+	        return;
+	      //get correct description
+	      String correctDscr= quizQls[currIndex].getCorrectChose().getDescription();
+	      RadioButton s= (RadioButton) tgG.getSelectedToggle(); //get selected button
+	      
+	      if (s.getText().equals(correctDscr)) {
+	        indicator.setText("Correct");
+	        indicator.getStyleClass().add("correctLabel");
+	      } else {
+	        indicator.setText("Wrong");
+	        indicator.getStyleClass().add("wrongLabel");
+	      }
+	      indicator.setVisible(true);
+	      nextBt.setVisible(true);
+	      choiceLs.setDisable(true);
+	      submitBt.setDisable(true);
 
-		submitBt.setOnAction(e -> {
-			// set indicator button and next button
-			if (tgG.getSelectedToggle() == null)
-				return;
-			if (tgG.getSelectedToggle().equals(c1)) {
-				indicator.setText("Correct");
-				indicator.getStyleClass().add("correctLabel");
-			} else {
-				indicator.setText("Wrong");
-				indicator.getStyleClass().add("wrongLabel");
-			}
-			indicator.setVisible(true);
-			nextBt.setVisible(true);
-			choiceLs.setDisable(true);
-			submitBt.setDisable(true);
+	    });
 
-		});
+	    // set bsck button
+	    backBt.setOnAction(e -> {
+	      // popUpQuitQuestion();
+	      // primaryStage.setScene(setUpMainMenuPage());
+	    });
 
-		// set bsck button
-		backBt.setOnAction(e -> {
-			// popUpQuitQuestion();
-			// primaryStage.setScene(setUpMainMenuPage());
-		});
+	    nextBt.setOnAction(e -> {
+	      currIndex++;
+	      if(currIndex==quizGenerator.numQuestion) {
+	        popUpQuitQuestion();
+	      }
 
-		nextBt.setOnAction(e -> {
-			quizGenerator.numQUsed++;
+	      primaryStage.setScene(setUpQuestionPage( quizQls));
 
-			primaryStage.setScene(setUpQuestionPage());
+	    });
 
-		});
+	    question.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+	    return question;
+	  }
 
-		question.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-		return question;
-	}
 
 	/**
 	 * A pop up window to warn user when the user quit the quiz before finish
@@ -1143,7 +1158,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 			loadQuestion = setUpLoadQuestionPage();
 			addQuestion = setUpAddQuestionPage();
 			questionFilter = setUpQuestionFilterPage();
-			question = setUpQuestionPage();
+			
 			score = setUpScorePage();
 			currDataBase = setUpCurrDataBasePage();
 
