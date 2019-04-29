@@ -89,7 +89,7 @@ public class FileHandler {
         q.setTopic((String) jo.get("topic"));
 
         // Set image of question
-        q.saveImage((Image) jo.get("image"));
+        q.saveImage((String) jo.get("image"));
 
         // Store JSONArray of choices for the question and create iterator to parse
         // array

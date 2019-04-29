@@ -1,6 +1,7 @@
 package application;
 
 
+import java.io.File;
 import java.util.ArrayList;
 import javafx.scene.image.Image;
 
@@ -43,7 +44,7 @@ public class Question {
    * @param description
    */
   public Question(String topic, ArrayList<Choice> choices, String description) {
-    this.topic = topic;
+    this.topic = topic.trim().toLowerCase();
     this.description = description;
     this.choices = choices;
     image = null; // No default image
@@ -66,7 +67,7 @@ public class Question {
    * Setter of the Question topic
    */
   public void setTopic(String topic) { // FileHandler
-    this.topic = topic;
+    this.topic = topic.trim().toLowerCase();
   }
   
   /**
@@ -150,12 +151,13 @@ public class Question {
   }
 
   /**
-   * Setter of the image
+   * Setter of the image(assume the imageAddress is valid)
    * 
    * @param image
    */
-  public void saveImage(Image image) { // FileHandler
-    this.image = image;
+  public Image saveImage(String imageAddress) {
+    Image img = new Image(imageAddress);
+    return img;
   }
 
   /**
