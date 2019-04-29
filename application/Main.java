@@ -1094,7 +1094,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     Scene popSc = new Scene(popRt, 750, 300);
     final Stage dialog = new Stage();
 
-    Label prompt = new Label("Do you want to save the quiz before leaving?");
+    Label prompt = new Label("Do you want to quit quiz before finishing?");
     prompt.getStyleClass().add("normalText");
     prompt.isWrapText();
     Image warn = new Image(new File("warn.png").toURI().toString());
@@ -1105,21 +1105,16 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     topBox.getStyleClass().add("topHBox");
     popRt.setTop(topBox);
 
-    Button saveBt = new Button("Save");
-    Button leaveBt = new Button("Leave without saving");
+    
+    Button leaveBt = new Button("Leave immediately");
     Button cancelBt = new Button("Cancel");
-    HBox centerBox = new HBox(leaveBt, saveBt, cancelBt);
+    HBox centerBox = new HBox(leaveBt,  cancelBt);
     centerBox.setSpacing(30);
     centerBox.setAlignment(Pos.CENTER);
     centerBox.setPadding(new Insets(50, 50, 50, 50));
     popRt.setCenter(centerBox);
 
-    // event
-    saveBt.setOnAction(e -> {
-      quizGenerator.fileHandler.pickFile();
-      primaryStage.setScene(setUpMainMenuPage());
-
-    });
+    
 
     leaveBt.setOnAction(e -> {
       primaryStage.setScene(setUpMainMenuPage());
