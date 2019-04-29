@@ -99,7 +99,19 @@ public class QuizGenerator {
       }
     }
   }
-
+  /**
+   * This method returns size of questions under
+   * specified topic
+   * @param topicList List of topics requested by User
+   * @return number of questions associated with topicList
+   */
+  private int getQuestionSize(ArrayList<String> topicList) {
+          int size = 0;
+          for(int i = 0 ; i < topicList.size() ; i++) {
+              size += questionBank.get(topicList.get(i)).size();
+          }
+          return size;
+  }
   /**
    * This method generate a random QuestionList based on the currChosenTopic and numQuestions
    * requested by user
@@ -108,10 +120,12 @@ public class QuizGenerator {
    */
   public Question[] generateQuestionList() {
     // return null if we don't have enough questions.
-    if (questionBank.size() < numQuestion) {
-      return null;
+    int questionSize = getQuestionSize(currChosenTopics);
+    int numQuestionNeed = numQuestion;
+    if (questionSize < numQuestion) {
+        numQuestionNeed = questionSize;
     }
-
+    
     clear(); // clear the history data from last quiz
 
     ArrayList<String> topicList = new ArrayList<>();
@@ -122,7 +136,7 @@ public class QuizGenerator {
     }
 
     // list with random question
-    Question[] qList = new Question[numQuestion];
+    Question[] qList = new Question[numQuestionNeed];
 
     int numberQused = 0; // record how many questions have been generated
     int numTopic = topicList.size();
@@ -134,7 +148,7 @@ public class QuizGenerator {
     // pick random question in the list
     Question randQuestion = pickRandomQuestionOftopic(questionList);
 
-    while (numberQused < numQuestion) {
+    while (numberQused < numQuestionNeed) {
 
       if (randQuestion == null) {
         // remove the topic as all questions under it have been fetched
