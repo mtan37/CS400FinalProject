@@ -151,16 +151,17 @@ public class Question {
   }
 
   /**
-   * Setter of the image(assume the imageAddress is valid)
+   * Setter of the image(assume the imageAddress is valid
    * 
    * @param image
    */
   public void saveImage(String imageAddress) {
     imageAddress = imageAddress.trim().toLowerCase();
     if(imageAddress.compareTo("none") == 0 || imageAddress.compareTo("") == 0) {
-      imageAddress = ("application/wallpaper-icon.png");
+      imageAddress = ("application/noImage.png");
     }
-    image = new Image(imageAddress.trim());
+    System.out.println(imageAddress);
+    image = new Image(imageAddress);
   }
 
   /**

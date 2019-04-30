@@ -11,8 +11,7 @@ import java.util.ArrayList;
  */
 public class UserRecord {
   ArrayList<String> topicsChosen; // ArrayList of topics chosen by the user
-  private Integer numAns;
-  private Integer numRqst;
+  private Integer numRqst;//show total number of questions requested by the user
   private Integer numCor;
   private boolean currQuizSaved;// show if the questions in current quiz have been saved by the user
 
@@ -21,20 +20,9 @@ public class UserRecord {
    */
   public UserRecord() {
     topicsChosen = new ArrayList<String>();
-    numAns = 0;
     numRqst = 0;
     numCor = 0;
     currQuizSaved = false;
-  }
-
-  
-  /**
-   * Specifies the number of questions answered by the user
-   * 
-   * @param numRqst integer number of questions answered
-   */
-  protected void setNumAns(Integer numAns) {
-    this.numAns = numAns;
   }
   
   /**
@@ -42,8 +30,9 @@ public class UserRecord {
    * 
    * @param numRqst integer number of questions requested
    */
-  protected void setNumRqst(Integer numRqst) {
-    this.numRqst = numRqst;
+  protected void setNumRqst(int numRqst) 
+  {
+    this.numRqst = new Integer(numRqst);
   }
 
   /**
@@ -61,15 +50,6 @@ public class UserRecord {
    */
   protected void incrementNumCor() {
     numCor++;
-  }
-
-  /**
-   * Return the number of questions answered by the user
-   * 
-   * @return number of question answered
-   */
-  protected Integer getNumAns() {
-    return numAns;
   }
   
   /**
@@ -96,7 +76,8 @@ public class UserRecord {
    * @return percentage of correct answers
    */
   protected int getPercent() {
-    return (int) ((int) (float) numRqst / (float) numCor * 100);
+    int percent = (int)((float) numCor / (float) numRqst * 100);
+    return percent;
   }
 
   /**

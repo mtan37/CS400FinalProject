@@ -19,6 +19,7 @@
 // https://stackoverflow.com/questions/7555564/what-is-the-recommended-way-to-make-a-numeric-textfield-in-javafx
 // https://stackoverflow.com/questions/28843858/javafx-8-listview-with-checkboxes
 // https://stackoverflow.com/questions/20446026/get-value-from-date-picker
+// https://stackoverflow.com/questions/26619566/javafx-stage-close-handler
 // Known bugs: No known bugs
 ///////////////////////////////////////////////////////////////////////////////
 package application;
@@ -120,7 +121,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     Button currDataBaseBt = new Button();
     currDataBaseBt.setText("Check Loaded Question Database");
     currDataBaseBt.getStyleClass().add("NormalButton");
-    
+
     Button exitBt = new Button();
     exitBt.setText("Exit the Program");
     exitBt.getStyleClass().add("NormalButton");
@@ -144,7 +145,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     setUpBt.setOnMouseClicked(event -> primaryStage.setScene(loadQuestion));
     startNewBt.setOnMouseClicked(event -> startNewBt());
     currDataBaseBt.setOnMouseClicked(event -> {
-      if (quizGenerator.numQuestionReq == 0) {
+      if (quizGenerator.userRecord.getNumRqst() == 0) {
         Alert alert =
             new Alert(AlertType.INFORMATION, "You don't have any questions in your database yet");
         alert.initModality(Modality.APPLICATION_MODAL);
@@ -152,7 +153,8 @@ public class Main extends Application implements EventHandler<ActionEvent> {
         alert.showAndWait().filter(response -> response == ButtonType.OK);
         return;
       }
-      primaryStage.setScene(currDataBase);});
+      primaryStage.setScene(currDataBase);
+    });
     exitBt.setOnMouseClicked(event -> exitBt());
 
     // set up border pane by elements
@@ -166,11 +168,15 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
   }
 
+  /**
+   * When the exit button is clicked
+   */
   private void exitBt() {
     BorderPane popRt = new BorderPane();
     Scene popSc = new Scene(popRt, 750, 300);
     final Stage dialog = new Stage();
 
+    
     if (quizGenerator.questionBank.size() == 0 || quizGenerator.userRecord.isCurrQuizSaved()) {
       Platform.exit();
     }
@@ -178,7 +184,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     Label prompt = new Label("Do you want to save the quiz before leaving?");
     prompt.getStyleClass().add("normalText");
     prompt.isWrapText();
-    Image warn = new Image(new File("warn.png").toURI().toString());
+    Image warn = new Image("application/warn.png");
     ImageView warnV = new ImageView(warn);
     HBox topBox = new HBox(warnV, prompt);
     topBox.setAlignment(Pos.CENTER);
@@ -199,17 +205,15 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     saveBt.setOnAction(e -> {
       String saveAddress = generateSavingAddress();
       boolean saved = quizGenerator.saveFile(saveAddress);
-      if(saved) {
-      Alert alert =
-          new Alert(AlertType.INFORMATION, "You quiz has been saved under " + saveAddress);
-      alert.initModality(Modality.APPLICATION_MODAL);
-      alert.initOwner(primaryStage);
-      alert.showAndWait().filter(response -> response == ButtonType.OK);
-      quizGenerator.userRecord.setCurrQuizSaved(true);
-      }
-      else {
+      if (saved) {
         Alert alert =
-            new Alert(AlertType.INFORMATION, "Your quiz is not saved due to an error");
+            new Alert(AlertType.INFORMATION, "You quiz has been saved under " + saveAddress);
+        alert.initModality(Modality.APPLICATION_MODAL);
+        alert.initOwner(primaryStage);
+        alert.showAndWait().filter(response -> response == ButtonType.OK);
+        quizGenerator.userRecord.setCurrQuizSaved(true);
+      } else {
+        Alert alert = new Alert(AlertType.INFORMATION, "Your quiz is not saved due to an error");
         alert.initModality(Modality.APPLICATION_MODAL);
         alert.initOwner(primaryStage);
         alert.showAndWait().filter(response -> response == ButtonType.OK);
@@ -231,6 +235,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     dialog.setScene(popSc);
     dialog.show();
   }
+
   /**
    * Generate a saving address under application/savedQuiz for the current unsaved quiz
    * 
@@ -245,12 +250,11 @@ public class Main extends Application implements EventHandler<ActionEvent> {
   }
 
   /**
- 
-  /**
-   * Define the behavior of startNew button on the main menu page
+   * 
+   * /** Define the behavior of startNew button on the main menu page
    */
   private void startNewBt() {
-    if (quizGenerator.numQuestionReq == 0) {
+    if (quizGenerator.userRecord.getNumRqst() == 0) {
       Alert alert =
           new Alert(AlertType.INFORMATION, "Please load at least one question before start a quiz");
       alert.initModality(Modality.APPLICATION_MODAL);
@@ -486,8 +490,8 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
     centerVBox.getChildren().addAll(topicBox, descriptionBox, imageBox, choicesBox, buttonBox,
         saveButton);
-    centerVBox.setPadding(new Insets(30, 20, 30, 20));
-    centerVBox.setSpacing(30);
+    centerVBox.setPadding(new Insets(20, 20, 30, 10));
+    centerVBox.setSpacing(15);
 
     bottomHBox.getChildren().addAll(backButton);
     bottomHBox.getStyleClass().add("bottomHBox");
@@ -499,7 +503,6 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
     Scene sc = new Scene(root, 1200, 800);
     sc.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-    // primaryStage.setScene(sc);
     return sc;
   }
 
@@ -551,7 +554,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
       HBox buttonBox, Button goBackToChoiceBt, Label choicePrompt, Button saveButton,
       VBox choicesBox2, HBox[] choiceBoxList) {
     // reset choice Description list
-    choicesList = new ArrayList<Choice>();
+    choicesList.clear();
     // Store user's given choice descriptions into arrayList
     for (int i = 0; i < 5; i++) {
       if (choiceFields[i].getText().trim().compareTo("") != 0) {
@@ -705,13 +708,12 @@ public class Main extends Application implements EventHandler<ActionEvent> {
         String description = descriptionArea.getText();
         Question q = new Question(topic, choicesList, description);
         quizGenerator.addQuestion(q);
-        if (imageField.getText().compareTo("") != 0)
-          q.saveImage(imageField.getText());
-        else// empty image URL
-          q.saveImage("application/wallpaper-icon.png");
+        q.saveImage(imageField.getText());
 
         // reset whether current quiz saved
         quizGenerator.userRecord.setCurrQuizSaved(false);
+        
+        System.out.print("haha");
 
         // Refresh question page and current database page
         this.currDataBase = setUpCurrDataBasePage();
@@ -944,7 +946,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
       // Save Button Action Events
       save.setOnMouseClicked(event -> {
-        quizGenerator.numQuestionReq = Integer.parseInt(numTxt);
+        quizGenerator.userRecord.setNumRqst(Integer.parseInt(numTxt));
         currIndex = 0;
         Question[] quizQls = quizGenerator.generateQuestionList();
         question = setUpQuestionPage(quizQls);
@@ -972,8 +974,8 @@ public class Main extends Application implements EventHandler<ActionEvent> {
       return null;
     BorderPane root = new BorderPane();
     root.getStyleClass().add("root");
-    Scene sc = new Scene(root,1200, 800);
-    
+    Scene sc = new Scene(root, 1200, 800);
+
     Question currQ = quizQls[currIndex];
     // =========
     // Top
@@ -993,14 +995,16 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     // =========
     // Center
     // =========
-    VBox centerBox = new VBox();
+    HBox centerBox = new HBox();
     centerBox.setAlignment(Pos.CENTER);
+    VBox centerBoxRight = new VBox();
+    VBox centerBoxLeft = new VBox();
     Label l2 = new Label("Description");
     l2.getStyleClass().add("normalText");
     TextArea ta = new TextArea(currQ.getDescription());
     ta.getStyleClass().add("smallText");
     ta.setEditable(false);
-    ta.setMaxSize(500, 300);
+    ta.setMaxSize(600, 300);
     ta.setWrapText(true);
 
     // create an observable list holding choice descriptions
@@ -1009,40 +1013,41 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     // iterate through current question's choice list
     // put descriptions into RadioButtons and add the button to the observable list
     ArrayList<Choice> choiceList = currQ.getChoices();
-    //ArrayList<String> choiceDescriptList = new ArrayList<String>();
+    // ArrayList<String> choiceDescriptList = new ArrayList<String>();
     for (int i = 0; i < choiceList.size(); i++) {
-      //choiceDescriptList.set(i, choiceList.get(i).getDescription());
+      // choiceDescriptList.set(i, choiceList.get(i).getDescription());
       choices.add(new RadioButton(choiceList.get(i).getDescription()));
     }
 
     ListView<RadioButton> choiceLs = new ListView<RadioButton>();
     choiceLs.setItems(choices);
-    choiceLs.setMaxSize(500, 300);
+    choiceLs.setMaxSize(600, 250);
 
     ToggleGroup tgG = new ToggleGroup();
     for (RadioButton c : choices) {
       c.setToggleGroup(tgG);
       c.setWrapText(true);
     }
+    centerBoxRight.getChildren().addAll(l2, ta, choiceLs);
+    centerBoxRight.setAlignment(Pos.CENTER_RIGHT);
 
-    centerBox.getChildren().addAll(l2, ta, choiceLs);
-    root.setCenter(centerBox);
-
-    // ===========
-    // Center Left
-    // ===========
-    // Add image to left of center borderPane
+    // Add image center Hbox at the left
     Image img = currQ.loadImage();
-
     ImageView quizImgV = new ImageView(img);
+    quizImgV.setPreserveRatio(true);
+    quizImgV.setFitHeight(400.0);
+    quizImgV.setFitWidth(400.0);
     VBox leftRg = new VBox();
-    leftRg.setAlignment(Pos.CENTER);
-
+    leftRg.setAlignment(Pos.CENTER_LEFT);
     leftRg.getChildren().add(quizImgV);
-    //VBox.setMargin(quizImgV, new Insets(50, 50, 50, 50));
-
-    root.setLeft(leftRg);
-
+    centerBoxLeft.getChildren().add(leftRg);
+    centerBoxLeft.setAlignment(Pos.CENTER_LEFT);
+    
+    centerBox.getChildren().addAll(centerBoxLeft,centerBoxRight);
+    centerBox.setSpacing(20.0);
+    root.setCenter(centerBox);
+    
+    
     // =========
     // Bottom
     // =========
@@ -1053,12 +1058,14 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     // Next (Button)
     Button nextBt = new Button("Next");
     nextBt.getStyleClass().add("NormalButton");
-    nextBt.setVisible(false);//next button is invisible by default. Not visible until submit the question
-    if (currIndex == (quizGenerator.numQuestionReq - 1)) {//if the last question, next Bt shows different text
+    nextBt.setVisible(false);// next button is invisible by default. Not visible until submit the
+                             // question
+    if (currIndex == (quizGenerator.userRecord.getNumRqst() - 1)) {// if the last question, next Bt
+                                                                   // shows different text
       nextBt.setText("Check Score");
       nextBt.getStyleClass().add("checkScoreBt");
     }
-    
+
     // Submit (Button)
     Button submitBt = new Button("Submit Answer");
     submitBt.getStyleClass().add("NormalButton");
@@ -1070,7 +1077,6 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     bottomBox.getStyleClass().add("bottomHBox");
     root.setBottom(bottomBox);
 
-    System.out.println(quizGenerator.numQuestionReq);
     // Submit Button Action Events
     submitBt.setOnAction(e -> {
       // Set indicator button and next button
@@ -1081,6 +1087,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
       RadioButton s = (RadioButton) tgG.getSelectedToggle(); // get selected button
 
       if (s.getText().equals(correctDscr)) {
+        quizGenerator.userRecord.incrementNumCor();
         indicator.setText("Correct");
         indicator.getStyleClass().add("correctLabel");
       } else {
@@ -1099,13 +1106,14 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     });
 
     nextBt.setOnAction(e -> {
-      //if there is a next question
-      if (currIndex < (quizGenerator.numQuestionReq - 1)) {
-      currIndex++;
-      question = setUpQuestionPage(quizQls);
-      primaryStage.setScene(question);
-      }
-      else if(currIndex == (quizGenerator.numQuestionReq - 1)){//if the last question
+      // if there is a next question
+      if (currIndex < (quizGenerator.userRecord.getNumRqst() - 1)) {
+        // load the next question
+        currIndex++;
+        question = setUpQuestionPage(quizQls);
+        primaryStage.setScene(question);
+      } // else if there is no next question
+      else if (currIndex == (quizGenerator.userRecord.getNumRqst() - 1)) {
         score = setUpScorePage();
         primaryStage.setScene(score);
       }
@@ -1142,7 +1150,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     centerBox.setPadding(new Insets(50, 50, 50, 50));
     popRt.setCenter(centerBox);
 
-    
+
     leaveBt.setOnAction(e -> {
       primaryStage.setScene(setUpMainMenuPage());
       dialog.close();
@@ -1186,10 +1194,10 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     // =========
     // Center
     // =========
-    int answered = quizGenerator.userRecord.getNumAns();
+    int requested = quizGenerator.userRecord.getNumRqst();
     int correct = quizGenerator.userRecord.getNumCor();
     int correctPercentage = quizGenerator.userRecord.getPercent();
-    Label numAnswered = new Label("#Answered question: " + answered);
+    Label numReqsted = new Label("#Answered question: " + requested);
     Label numCorrect = new Label("#Correct question: " + correct);
     Label numCorrectPercentage = new Label("%Correct: " + correctPercentage + "%");
 
@@ -1203,7 +1211,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     endBt.setText("End the program");
     endBt.getStyleClass().add("NormalButton");
 
-    centerVBox.getChildren().addAll(numCorrect, numAnswered, numCorrectPercentage, startNewQuizBt,
+    centerVBox.getChildren().addAll(numCorrect, numReqsted, numCorrectPercentage, startNewQuizBt,
         changeSettingBt, endBt);
     centerVBox.setAlignment(Pos.CENTER);
     centerVBox.setSpacing(30);
@@ -1223,12 +1231,12 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     startNewQuizBt.setOnMouseClicked(event -> {
       primaryStage.setScene(question);
       quizGenerator.userRecord.setNumRqst(0);
-      quizGenerator.userRecord.setNumAns(0);
+      quizGenerator.userRecord.setNumRqst(0);
       quizGenerator.userRecord.setNumCor(0);
     });
     changeSettingBt.setOnMouseClicked(event -> {
       primaryStage.setScene(questionFilter);
-      quizGenerator.userRecord.setNumAns(0);
+      quizGenerator.userRecord.setNumRqst(0);
       quizGenerator.userRecord.setNumCor(0);
     });
     endBt.setOnMouseClicked(event -> {
@@ -1326,7 +1334,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     Button saveQBt = new Button();
     saveQBt.setText("Write Current Question Database Into File");
     saveQBt.getStyleClass().add("NormalButton");
-    
+
     bottomHBox.getChildren().addAll(saveQBt, backBt);
     bottomHBox.getStyleClass().add("bottomHBox");
     bottomHBox.setAlignment(Pos.BASELINE_RIGHT);
@@ -1339,21 +1347,19 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     backBt.setOnMouseClicked(event -> {
       primaryStage.setScene(mainMenu);
     });
-    
+
     saveQBt.setOnMouseClicked(event -> {
       String saveAddress = generateSavingAddress();
       boolean saved = quizGenerator.saveFile(saveAddress);
-      if(saved) {
-      Alert alert =
-          new Alert(AlertType.INFORMATION, "You quiz has been saved under " + saveAddress);
-      alert.initModality(Modality.APPLICATION_MODAL);
-      alert.initOwner(primaryStage);
-      alert.showAndWait().filter(response -> response == ButtonType.OK);
-      quizGenerator.userRecord.setCurrQuizSaved(true);
-      }
-      else {
+      if (saved) {
         Alert alert =
-            new Alert(AlertType.INFORMATION, "Your quiz is not saved due to an error");
+            new Alert(AlertType.INFORMATION, "You quiz has been saved under " + saveAddress);
+        alert.initModality(Modality.APPLICATION_MODAL);
+        alert.initOwner(primaryStage);
+        alert.showAndWait().filter(response -> response == ButtonType.OK);
+        quizGenerator.userRecord.setCurrQuizSaved(true);
+      } else {
+        Alert alert = new Alert(AlertType.INFORMATION, "Your quiz is not saved due to an error");
         alert.initModality(Modality.APPLICATION_MODAL);
         alert.initOwner(primaryStage);
         alert.showAndWait().filter(response -> response == ButtonType.OK);
@@ -1425,9 +1431,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
       currDataBase = setUpCurrDataBasePage();
 
       primaryStage.setScene(mainMenu);
-      // primaryStage.setScene(score);
-      // primaryStage.setScene(question);
-
+      
       primaryStage.show();
     } catch (Exception e) {
       e.printStackTrace();
