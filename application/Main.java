@@ -76,6 +76,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
   private Scene currDataBase;
   private int currIndex;
 
+  boolean test = false;
   boolean correctAnsSelected = false;// if the user has selected a correct answer for an added
                                      // question
 
@@ -119,8 +120,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     Button currDataBaseBt = new Button();
     currDataBaseBt.setText("Check Loaded Question Database");
     currDataBaseBt.getStyleClass().add("NormalButton");
-
-
+    
     Button exitBt = new Button();
     exitBt.setText("Exit the Program");
     exitBt.getStyleClass().add("NormalButton");
@@ -143,7 +143,16 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     // Lambda Expression
     setUpBt.setOnMouseClicked(event -> primaryStage.setScene(loadQuestion));
     startNewBt.setOnMouseClicked(event -> startNewBt());
-    currDataBaseBt.setOnMouseClicked(event -> primaryStage.setScene(currDataBase));
+    currDataBaseBt.setOnMouseClicked(event -> {
+      if (quizGenerator.numQuestionReq == 0) {
+        Alert alert =
+            new Alert(AlertType.INFORMATION, "You don't have any questions in your database yet");
+        alert.initModality(Modality.APPLICATION_MODAL);
+        alert.initOwner(primaryStage);
+        alert.showAndWait().filter(response -> response == ButtonType.OK);
+        return;
+      }
+      primaryStage.setScene(currDataBase);});
     exitBt.setOnMouseClicked(event -> exitBt());
 
     // set up border pane by elements
@@ -189,14 +198,23 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     // event
     saveBt.setOnAction(e -> {
       String saveAddress = generateSavingAddress();
-      quizGenerator.fileHandler.saveFile(saveAddress);
+      boolean saved = quizGenerator.saveFile(saveAddress);
+      if(saved) {
       Alert alert =
           new Alert(AlertType.INFORMATION, "You quiz has been saved under " + saveAddress);
       alert.initModality(Modality.APPLICATION_MODAL);
       alert.initOwner(primaryStage);
       alert.showAndWait().filter(response -> response == ButtonType.OK);
       quizGenerator.userRecord.setCurrQuizSaved(true);
-      Platform.exit();
+      }
+      else {
+        Alert alert =
+            new Alert(AlertType.INFORMATION, "Your quiz is not saved due to an error");
+        alert.initModality(Modality.APPLICATION_MODAL);
+        alert.initOwner(primaryStage);
+        alert.showAndWait().filter(response -> response == ButtonType.OK);
+        quizGenerator.userRecord.setCurrQuizSaved(false);
+      }
     });
 
     leaveBt.setOnAction(e -> {
@@ -213,7 +231,6 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     dialog.setScene(popSc);
     dialog.show();
   }
-
   /**
    * Generate a saving address under application/savedQuiz for the current unsaved quiz
    * 
@@ -227,6 +244,8 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     return saveAddress;
   }
 
+  /**
+ 
   /**
    * Define the behavior of startNew button on the main menu page
    */
@@ -1302,7 +1321,11 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     // =========
     Button backBt = new Button("Back to Main Menu");
     backBt.getStyleClass().add("backButton");
-    bottomHBox.getChildren().addAll(backBt);
+    Button saveQBt = new Button();
+    saveQBt.setText("Write Current Question Database Into File");
+    saveQBt.getStyleClass().add("NormalButton");
+    
+    bottomHBox.getChildren().addAll(saveQBt, backBt);
     bottomHBox.getStyleClass().add("bottomHBox");
     bottomHBox.setAlignment(Pos.BASELINE_RIGHT);
 
@@ -1313,6 +1336,27 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     // events
     backBt.setOnMouseClicked(event -> {
       primaryStage.setScene(mainMenu);
+    });
+    
+    saveQBt.setOnMouseClicked(event -> {
+      String saveAddress = generateSavingAddress();
+      boolean saved = quizGenerator.saveFile(saveAddress);
+      if(saved) {
+      Alert alert =
+          new Alert(AlertType.INFORMATION, "You quiz has been saved under " + saveAddress);
+      alert.initModality(Modality.APPLICATION_MODAL);
+      alert.initOwner(primaryStage);
+      alert.showAndWait().filter(response -> response == ButtonType.OK);
+      quizGenerator.userRecord.setCurrQuizSaved(true);
+      }
+      else {
+        Alert alert =
+            new Alert(AlertType.INFORMATION, "Your quiz is not saved due to an error");
+        alert.initModality(Modality.APPLICATION_MODAL);
+        alert.initOwner(primaryStage);
+        alert.showAndWait().filter(response -> response == ButtonType.OK);
+        quizGenerator.userRecord.setCurrQuizSaved(false);
+      }
     });
 
     // set scene

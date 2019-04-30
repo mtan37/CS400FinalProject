@@ -1,10 +1,18 @@
 package application;
 
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Random;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Alert.AlertType;
+import javafx.stage.Modality;
 
 /**
  * This class generates and manipulate the quizzes
@@ -46,6 +54,10 @@ public class QuizGenerator {
     return true;
   }
 
+  public boolean saveFile(String saveAddress) {
+    return fileHandler.saveFile(saveAddress);
+  }
+  
   public Question loadQuestion() {// return null if no more question needed(numQUsed == numQuestionReq)
     return null;
 

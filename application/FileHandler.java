@@ -146,7 +146,7 @@ public class FileHandler {
    * 
    * @param saveAddress: location in the computer to save the json file
    */
-  public void saveFile(String saveAddress) {
+  public boolean saveFile(String saveAddress) {
     // TODO: May need catch other exceptions, but I'm not sure which
     try {
       
@@ -216,10 +216,12 @@ public class FileHandler {
 
       // Use printWriter created at beginning of program to save json object
       printWriter.write(jsonOutput.toJSONString());
-      
+      return true;
     } catch (FileNotFoundException e) {
+      return false;
       // TODO: Not a valid save address
     } catch (IOException e) {
+      return false;
       // TODO: 
     }
   }
