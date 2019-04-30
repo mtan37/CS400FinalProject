@@ -1009,12 +1009,14 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     // iterate through current question's choice list
     // put descriptions into RadioButtons and add the button to the observable list
     ArrayList<Choice> choiceList = currQ.getChoices();
+    //ArrayList<String> choiceDescriptList = new ArrayList<String>();
     for (int i = 0; i < choiceList.size(); i++) {
+      //choiceDescriptList.set(i, choiceList.get(i).getDescription());
       choices.add(new RadioButton(choiceList.get(i).getDescription()));
     }
 
-    ListView<String> choiceLs = new ListView<String>();
-    //choiceLs.setItems(choices);
+    ListView<RadioButton> choiceLs = new ListView<RadioButton>();
+    choiceLs.setItems(choices);
     choiceLs.setMaxSize(500, 300);
 
     ToggleGroup tgG = new ToggleGroup();
@@ -1068,6 +1070,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     bottomBox.getStyleClass().add("bottomHBox");
     root.setBottom(bottomBox);
 
+    System.out.println(quizGenerator.numQuestionReq);
     // Submit Button Action Events
     submitBt.setOnAction(e -> {
       // Set indicator button and next button
@@ -1087,7 +1090,6 @@ public class Main extends Application implements EventHandler<ActionEvent> {
       indicator.setVisible(true);
       nextBt.setVisible(true);
       choiceLs.setDisable(true);
-      submitBt.setDisable(true);
       submitBt.setVisible(false);
     });
 
