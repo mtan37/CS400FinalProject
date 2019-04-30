@@ -231,7 +231,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
    * Define the behavior of startNew button on the main menu page
    */
   private void startNewBt() {
-    if (quizGenerator.numQuestion == 0) {
+    if (quizGenerator.numQuestionReq == 0) {
       Alert alert =
           new Alert(AlertType.INFORMATION, "Please load at least one question before start a quiz");
       alert.initModality(Modality.APPLICATION_MODAL);
@@ -857,20 +857,20 @@ public class Main extends Application implements EventHandler<ActionEvent> {
    */
   private void addBtQuestionFilter(String numTxt) {
     // Number of Questions User want to test on
-    int numQuestion;
+    int numQuestionReq;
 
     // Change the number string to integer
     try {
-      numQuestion = Integer.parseInt(numTxt);
+      numQuestionReq = Integer.parseInt(numTxt);
     } catch (NumberFormatException e) {
-      numQuestion = -1;
+      numQuestionReq = -1;
     }
 
     // ===============
     // Alert Messages
     // ===============
     // If the user didn't select topic and # of questions is less than 0
-    if (quizGenerator.currChosenTopics.size() == 0 && !(numQuestion > 0)) {
+    if (quizGenerator.currChosenTopics.size() == 0 && !(numQuestionReq > 0)) {
       Alert alert = new Alert(AlertType.INFORMATION,
           "Please choose a topic and enter the number of questions you want before proceed");
       alert.initModality(Modality.APPLICATION_MODAL);
@@ -878,14 +878,14 @@ public class Main extends Application implements EventHandler<ActionEvent> {
       alert.showAndWait().filter(response -> response == ButtonType.OK);
     }
     // If the user didn't select topic
-    else if (quizGenerator.currChosenTopics.size() == 0 && numQuestion > 0) {
+    else if (quizGenerator.currChosenTopics.size() == 0 && numQuestionReq > 0) {
       Alert alert = new Alert(AlertType.INFORMATION, "Please choose at least one topic");
       alert.initModality(Modality.APPLICATION_MODAL);
       alert.initOwner(primaryStage);
       alert.showAndWait().filter(response -> response == ButtonType.OK);
     }
     // If the # of questions is less than 0
-    else if (quizGenerator.currChosenTopics.size() > 0 && !(numQuestion > 0)) {
+    else if (quizGenerator.currChosenTopics.size() > 0 && !(numQuestionReq > 0)) {
       Alert alert = new Alert(AlertType.INFORMATION,
           "Please enter a number greater than 0 for the number of requested questions");
       alert.initModality(Modality.APPLICATION_MODAL);
@@ -893,7 +893,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
       alert.showAndWait().filter(response -> response == ButtonType.OK);
     }
     // If the user entered correctly
-    else if (quizGenerator.currChosenTopics.size() > 0 && numQuestion > 0) {
+    else if (quizGenerator.currChosenTopics.size() > 0 && numQuestionReq > 0) {
       // Make a pop up for asking user if he want to proceed
       final Stage dialog = new Stage();
       dialog.initModality(Modality.APPLICATION_MODAL);
@@ -925,7 +925,10 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
       // Save Button Action Events
       save.setOnMouseClicked(event -> {
-        quizGenerator.numQuestion = Integer.parseInt(numTxt);
+        quizGenerator.numQuestionReq = Integer.parseInt(numTxt);
+        currIndex = 0;
+        Question[] quizQls = quizGenerator.generateQuestionList();
+        question = setUpQuestionPage(quizQls);
         dialog.close();
         primaryStage.setScene(question);
       });
@@ -948,11 +951,11 @@ public class Main extends Application implements EventHandler<ActionEvent> {
   private Scene setUpQuestionPage(Question[] quizQls) {
     if (quizQls == null)
       return null;
-
     BorderPane root = new BorderPane();
     root.getStyleClass().add("root");
-    question = new Scene(root, 1200, 800);
-
+    Scene sc = new Scene(root,1200, 800);
+    
+    Question currQ = quizQls[currIndex];
     // =========
     // Top
     // =========
@@ -975,7 +978,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     centerBox.setAlignment(Pos.CENTER);
     Label l2 = new Label("Description");
     l2.getStyleClass().add("normalText");
-    TextArea ta = new TextArea(quizQls[currIndex].getDescription());
+    TextArea ta = new TextArea(currQ.getDescription());
     ta.getStyleClass().add("smallText");
     ta.setEditable(false);
     ta.setMaxSize(500, 300);
@@ -986,12 +989,13 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
     // iterate through current question's choice list
     // put descriptions into RadioButtons and add the button to the observable list
-    for (int i = 0; i < quizQls[currIndex].getChoices().size(); i++) {
-      choices.add(new RadioButton(quizQls[currIndex].getChoices().get(i).getDescription()));
+    ArrayList<Choice> choiceList = currQ.getChoices();
+    for (int i = 0; i < choiceList.size(); i++) {
+      choices.add(new RadioButton(choiceList.get(i).getDescription()));
     }
 
-    ListView choiceLs = new ListView();
-    choiceLs.setItems(choices);
+    ListView<String> choiceLs = new ListView<String>();
+    //choiceLs.setItems(choices);
     choiceLs.setMaxSize(500, 300);
 
     ToggleGroup tgG = new ToggleGroup();
@@ -1007,14 +1011,14 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     // Center Left
     // ===========
     // Add image to left of center borderPane
-    Image img = new Image(new File("wallPaper-icon.png").toURI().toString());
+    Image img = currQ.loadImage();
 
     ImageView quizImgV = new ImageView(img);
     VBox leftRg = new VBox();
     leftRg.setAlignment(Pos.CENTER);
 
     leftRg.getChildren().add(quizImgV);
-    leftRg.setMargin(quizImgV, new Insets(50, 50, 50, 50));
+    //VBox.setMargin(quizImgV, new Insets(50, 50, 50, 50));
 
     root.setLeft(leftRg);
 
@@ -1028,13 +1032,15 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     // Next (Button)
     Button nextBt = new Button("Next");
     nextBt.getStyleClass().add("NormalButton");
-
+    nextBt.setVisible(false);//next button is invisible by default. Not visible until submit the question
+    if (currIndex == (quizGenerator.numQuestionReq - 1)) {//if the last question, next Bt shows different text
+      nextBt.setText("Check Score");
+      nextBt.getStyleClass().add("checkScoreBt");
+    }
+    
     // Submit (Button)
-    Button submitBt = new Button("Submit");
+    Button submitBt = new Button("Submit Answer");
     submitBt.getStyleClass().add("NormalButton");
-
-    // Next Button is not visible when submit button is clicked
-    nextBt.setVisible(false);
 
     // Layout Set Up
     HBox bottomBox = new HBox(submitBt, backBt, nextBt);
@@ -1063,27 +1069,29 @@ public class Main extends Application implements EventHandler<ActionEvent> {
       nextBt.setVisible(true);
       choiceLs.setDisable(true);
       submitBt.setDisable(true);
-
+      submitBt.setVisible(false);
     });
 
     // set back button
     backBt.setOnAction(e -> {
       popUpQuitQuestion();
-      primaryStage.setScene(setUpMainMenuPage());
     });
 
     nextBt.setOnAction(e -> {
+      //if there is a next question
+      if (currIndex < (quizGenerator.numQuestionReq - 1)) {
       currIndex++;
-      if (currIndex == quizGenerator.numQuestion) {
-        popUpQuitQuestion();
+      question = setUpQuestionPage(quizQls);
+      primaryStage.setScene(question);
       }
-
-      primaryStage.setScene(setUpQuestionPage(quizQls));
-
+      else if(currIndex == (quizGenerator.numQuestionReq - 1)){//if the last question
+        score = setUpScorePage();
+        primaryStage.setScene(score);
+      }
     });
 
-    question.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-    return question;
+    sc.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+    return sc;
   }
 
   /**
@@ -1094,7 +1102,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     Scene popSc = new Scene(popRt, 750, 300);
     final Stage dialog = new Stage();
 
-    Label prompt = new Label("Do you want to quit quiz before finishing?");
+    Label prompt = new Label("Do you want to exit the quiz?");
     prompt.getStyleClass().add("normalText");
     prompt.isWrapText();
     Image warn = new Image(new File("warn.png").toURI().toString());
@@ -1105,19 +1113,18 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     topBox.getStyleClass().add("topHBox");
     popRt.setTop(topBox);
 
-    
-    Button leaveBt = new Button("Leave immediately");
+    Button leaveBt = new Button("Leave without saving");
     Button cancelBt = new Button("Cancel");
-    HBox centerBox = new HBox(leaveBt,  cancelBt);
+    HBox centerBox = new HBox(leaveBt, cancelBt);
     centerBox.setSpacing(30);
     centerBox.setAlignment(Pos.CENTER);
     centerBox.setPadding(new Insets(50, 50, 50, 50));
     popRt.setCenter(centerBox);
 
     
-
     leaveBt.setOnAction(e -> {
       primaryStage.setScene(setUpMainMenuPage());
+      dialog.close();
     });
 
     cancelBt.setOnAction(e -> {

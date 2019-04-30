@@ -85,4 +85,11 @@
 	-fx-background-color: #870303;
 	-fx-text-fill: white;
 }
-
+.checkScoreBt{
+	-fx-background-color: #ef9139;
+	-fx-text-fill: white;
+}
+.checkScoreBt:hover{
+	-fx-background-color: #d16729;
+	-fx-text-fill: white;
+}

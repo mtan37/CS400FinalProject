@@ -18,6 +18,9 @@ Nate Sackett, 004, A-25, nsackett@wisc.edu
 
 Shao Bin Daniel Shi Hong, 004, A-25, shong78@wisc.edu
 
-Hui Beom Kim, 004, A-25, hkim788@wisc.edu
+Hui Beom Kim, 004, A-25,
+ hkim788@wisc.edu
 
-Zhengyi Chen, 004, A-25, zchen597@wisc.edu
+Zhengyi Chen, 004, A-25
+
+, zchen597@wisc.edu

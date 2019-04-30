@@ -155,9 +155,12 @@ public class Question {
    * 
    * @param image
    */
-  public Image saveImage(String imageAddress) {
-    Image img = new Image(imageAddress);
-    return img;
+  public void saveImage(String imageAddress) {
+    imageAddress = imageAddress.trim().toLowerCase();
+    if(imageAddress.compareTo("none") == 0 || imageAddress.compareTo("") == 0) {
+      imageAddress = ("application/wallpaper-icon.png");
+    }
+    image = new Image(imageAddress.trim());
   }
 
   /**

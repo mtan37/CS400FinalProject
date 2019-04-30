@@ -3,6 +3,7 @@ package application;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Random;
 
 /**
@@ -16,7 +17,7 @@ public class QuizGenerator {
   Hashtable<String, ArrayList<Question>> questionBank;
   ArrayList<String> topic; // all topics in the questionBank
   protected ArrayList<String> currChosenTopics;// The topics the user chosen for the current quiz
-  protected Integer numQuestion;// show total number of questions, added by Marvin
+  protected Integer numQuestionReq;// show total number of questions requested by the user, added by Marvin
 
 
   public QuizGenerator() {
@@ -25,15 +26,27 @@ public class QuizGenerator {
     this.questionBank = new Hashtable<String, ArrayList<Question>>();
     this.topic = new ArrayList<String>();
     this.currChosenTopics = new ArrayList<String>();
-    this.numQuestion = new Integer(0);
+    this.numQuestionReq = new Integer(0);
 
   }
 
-  public void loadFile() {
-    fileHandler.pickFile();
+  /**
+   * Load file from a JSON file
+   * @return true if file successfully loaded
+   */
+  public boolean loadFile() {
+    ArrayList<Question> questionList = fileHandler.pickFile();
+    if(questionList == null)//if file not load successfully
+      return false;
+    Iterator<Question> it = questionList.iterator();
+    while(it.hasNext()) {
+      Question currQ = it.next();
+      addQuestion(currQ);
+    }
+    return true;
   }
 
-  public Question loadQuestion() {// return null if no more question needed(numQUsed == numQuestion)
+  public Question loadQuestion() {// return null if no more question needed(numQUsed == numQuestionReq)
     return null;
 
   }
@@ -73,7 +86,7 @@ public class QuizGenerator {
 
     }
 
-    numQuestion++;
+    numQuestionReq++;
     return true;
   }
 
@@ -113,7 +126,7 @@ public class QuizGenerator {
           return size;
   }
   /**
-   * This method generate a random QuestionList based on the currChosenTopic and numQuestions
+   * This method generate a random QuestionList based on the currChosenTopic and numQuestionReqs
    * requested by user
    * 
    * @return a list of random questions, null if failed.
@@ -121,9 +134,11 @@ public class QuizGenerator {
   public Question[] generateQuestionList() {
     // return null if we don't have enough questions.
     int questionSize = getQuestionSize(currChosenTopics);
-    int numQuestionNeed = numQuestion;
-    if (questionSize < numQuestion) {
-        numQuestionNeed = questionSize;
+    if (questionSize < numQuestionReq) {
+      numQuestionReq = questionSize;
+  }
+    if (questionSize < numQuestionReq) {
+        numQuestionReq = questionSize;
     }
     
     clear(); // clear the history data from last quiz
@@ -136,7 +151,7 @@ public class QuizGenerator {
     }
 
     // list with random question
-    Question[] qList = new Question[numQuestionNeed];
+    Question[] qList = new Question[numQuestionReq];
 
     int numberQused = 0; // record how many questions have been generated
     int numTopic = topicList.size();
@@ -147,9 +162,10 @@ public class QuizGenerator {
 
     // pick random question in the list
     Question randQuestion = pickRandomQuestionOftopic(questionList);
+    
+    while (numberQused < numQuestionReq) {
 
-    while (numberQused < numQuestionNeed) {
-
+      
       if (randQuestion == null) {
         // remove the topic as all questions under it have been fetched
         topicList.remove(randTopic);
@@ -181,11 +197,11 @@ public class QuizGenerator {
   private Question pickRandomQuestionOftopic(ArrayList<Question> questionList) {
     // This method returns a list of questions not yet fetched
     ArrayList<Question> notFetchedQuestion = checkAllFetched(questionList);
-    int numQuestion = notFetchedQuestion.size();
-    if (numQuestion == 0)
+    int numQuestionReq = notFetchedQuestion.size();
+    if (numQuestionReq == 0)
       return null; // all question fetched, return null
     Random rand = new Random();
-    Question randQuestion = notFetchedQuestion.get(rand.nextInt(numQuestion));
+    Question randQuestion = notFetchedQuestion.get(rand.nextInt(numQuestionReq));
     randQuestion.isFetched = true;
     return randQuestion;
 
