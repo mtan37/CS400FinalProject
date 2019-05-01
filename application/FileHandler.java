@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-
+import java.time.LocalDate;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -16,6 +16,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
+import javafx.scene.control.DatePicker;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
@@ -39,7 +41,6 @@ public class FileHandler {
   public FileHandler(Hashtable<String, ArrayList<Question>> questionBank) {
 
     this.questionBank = questionBank;
-    
   }
 
   /**
@@ -61,7 +62,7 @@ public class FileHandler {
    * Reads a json file and inserts question data into bank of questions
    * 
    * @param file: file to be read from
-   * @return ArrayList<Question> a list of questions generated from the JSON file or null if exception occur
+   * @return ArrayList<Question> a list of questions generated from the JSON file or null if exception occurs
    */
   public ArrayList<Question> readFile(File file) {
     try {
@@ -130,6 +131,7 @@ public class FileHandler {
         questionList.add(q);
       }
       return questionList;
+      
     } catch (FileNotFoundException e) {
       e.printStackTrace();
       return null;
@@ -144,12 +146,11 @@ public class FileHandler {
 
   /**
    * Saves questions in the question bank to a json file
-   * 
-   * @param saveAddress: location in the computer to save the json file
    */
-  public boolean saveFile(String saveAddress) {
-    // TODO: May need catch other exceptions, but I'm not sure which
+  public boolean saveFile() {
     try {
+      
+      File saveAddress = pickSaveFile();
       
       // Create printwriter immediately to check for valid address
       PrintWriter printWriter = new PrintWriter(saveAddress);
@@ -217,13 +218,39 @@ public class FileHandler {
 
       // Use printWriter created at beginning of program to save json object
       printWriter.write(jsonOutput.toJSONString());
+      
+      printWriter.flush();
+      printWriter.close();
       return true;
+      
     } catch (FileNotFoundException e) {
+      e.printStackTrace();
       return false;
-      // TODO: Not a valid save address
     } catch (IOException e) {
+      e.printStackTrace();
       return false;
-      // TODO: 
     }
+  }
+  
+  /**
+   * Helper method for saveFile opens user dialog to select save location
+   * 
+   * @return File for save address
+   */
+  private File pickSaveFile() {
+    // Initialize a FileChooser to choose a save location
+    FileChooser fileChooser = new FileChooser();
+    
+    // Set title so user knows to pick a save location
+    fileChooser.setTitle("Save File:");
+    
+    // Set default save name
+    fileChooser.setInitialFileName("questionBank.json");
+
+    // Prompt user for save location
+    File saveAddress = fileChooser.showSaveDialog(null);
+    
+    // Return the save address
+    return saveAddress;
   }
 }
