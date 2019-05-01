@@ -1,18 +1,9 @@
 package application;
 
-
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Random;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Alert.AlertType;
-import javafx.stage.Modality;
 
 /**
  * This class generates and manipulate the quizzes
@@ -52,21 +43,6 @@ public class QuizGenerator {
     return true;
   }
 
-  
-  public Question loadQuestion() {// return null if no more question needed(numQUsed == numRqst)
-    return null;
-
-  }
-
-  public Question testLoadQuestion() {
-    return null;
-
-  }
-
-  public void keepRecord() {
-
-  }
-
   /**
    * Added by Daniel This method searches based on the topic and add the question under this topic
    * 
@@ -102,12 +78,7 @@ public class QuizGenerator {
     // what argument is most convenient
     return false;
   }
-
-  public Question getQuestion() {
-    // to-do//
-    return null;
-  }
-
+  
   /**
    * This method clear isFetched for all questions, prepare for next quiz.
    */

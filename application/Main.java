@@ -124,7 +124,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
     // View Current Questions (Button)
     Button currDataBaseBt = new Button();
-    currDataBaseBt.setText("Check Loaded Question Database");
+    currDataBaseBt.setText("Check Loaded Question Bank");
     currDataBaseBt.getStyleClass().add("NormalButton");
 
     Button exitBt = new Button();
