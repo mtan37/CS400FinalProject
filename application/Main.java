@@ -1028,6 +1028,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
       rb.setWrapText(true);
       choices.add(rb);
 
+      choices.add(new RadioButton(choiceList.get(i).getDescription()));
     }
 
     ListView<RadioButton> choiceLs = new ListView<RadioButton>();
