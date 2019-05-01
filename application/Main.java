@@ -1024,7 +1024,6 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     ArrayList<Choice> choiceList = currQ.getChoices();
     // ArrayList<String> choiceDescriptList = new ArrayList<String>();
     for (int i = 0; i < choiceList.size(); i++) {
-      // choiceDescriptList.set(i, choiceList.get(i).getDescription());
       choices.add(new RadioButton(choiceList.get(i).getDescription()));
     }
 
