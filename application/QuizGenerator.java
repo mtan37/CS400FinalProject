@@ -52,9 +52,6 @@ public class QuizGenerator {
     return true;
   }
 
-  public boolean saveFile() {
-    return fileHandler.saveFile();
-  }
   
   public Question loadQuestion() {// return null if no more question needed(numQUsed == numRqst)
     return null;

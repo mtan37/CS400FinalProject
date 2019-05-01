@@ -147,7 +147,7 @@ public class FileHandler {
   /**
    * Saves questions in the question bank to a json file
    */
-  public boolean saveFile() {
+  public boolean saveFile(Hashtable<String, ArrayList<Question>> questionBank) {
     try {
       
       File saveAddress = pickSaveFile();
@@ -161,6 +161,9 @@ public class FileHandler {
       // Create new json array for the questions
       JSONArray questionArray = new JSONArray();
 
+      if(questionBank == null) {
+        System.out.println("null");
+      }
       // Parse the hash table of questions by topic
       questionBank.forEach((topic, questionList) -> { // String topic, ArrayList<Question> questionList
 

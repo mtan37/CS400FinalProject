@@ -25,9 +25,6 @@
 package application;
 
 import java.io.File;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -49,7 +46,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
@@ -113,9 +109,9 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     startNewBt.getStyleClass().add("NormalButton");
 
     // Set Up (Button)
-    Button setUpBt = new Button();
-    setUpBt.setText("Add question");
-    setUpBt.getStyleClass().add("NormalButton");
+    Button loadQBt = new Button();
+    loadQBt.setText("Add question");
+    loadQBt.getStyleClass().add("NormalButton");
 
     // View Current Questions (Button)
     Button currDataBaseBt = new Button();
@@ -127,7 +123,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     exitBt.getStyleClass().add("NormalButton");
 
     // Layout Set Up
-    centerVBox.getChildren().addAll(startNewBt, setUpBt, currDataBaseBt, exitBt);
+    centerVBox.getChildren().addAll(startNewBt, loadQBt, currDataBaseBt, exitBt);
     centerVBox.setAlignment(Pos.CENTER);
     centerVBox.setSpacing(30);
 
@@ -141,9 +137,13 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     bottomHBox.getStyleClass().add("bottomHBox");
 
     // define functions when different buttons on this page is triggered
-    // Lambda Expression
-    setUpBt.setOnMouseClicked(event -> primaryStage.setScene(loadQuestion));
+    // when load question button is clicked
+    loadQBt.setOnMouseClicked(event -> primaryStage.setScene(loadQuestion));
+    
+    //when start a new quiz button is clicked
     startNewBt.setOnMouseClicked(event -> startNewBt());
+    
+    //when check current question bank button is clicked
     currDataBaseBt.setOnMouseClicked(event -> {
       if (quizGenerator.topic.size() == 0) {
         Alert alert =
@@ -203,11 +203,10 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
     // event
     saveBt.setOnAction(e -> {
-      String saveAddress = generateSavingAddress();
-      boolean saved = quizGenerator.saveFile(saveAddress);
+      boolean saved = quizGenerator.fileHandler.saveFile(quizGenerator.questionBank);
       if (saved) {
         Alert alert =
-            new Alert(AlertType.INFORMATION, "You quiz has been saved under " + saveAddress);
+            new Alert(AlertType.INFORMATION, "You quiz has been saved");
         alert.initModality(Modality.APPLICATION_MODAL);
         alert.initOwner(primaryStage);
         alert.showAndWait().filter(response -> response == ButtonType.OK);
@@ -234,19 +233,6 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     dialog.initOwner(primaryStage);
     dialog.setScene(popSc);
     dialog.show();
-  }
-
-  /**
-   * Generate a saving address under application/savedQuiz for the current unsaved quiz
-   * 
-   * @return a saving address generated base on the local machine time
-   */
-  private String generateSavingAddress() {
-    DatePicker datePicker = new DatePicker(LocalDate.now());
-    LocalDate localDate = datePicker.getValue();
-    Instant instant = Instant.from(localDate.atStartOfDay(ZoneId.systemDefault()));
-    String saveAddress = "application/savedQuiz" + instant + ".json";
-    return saveAddress;
   }
 
   /**
@@ -509,12 +495,12 @@ public class Main extends Application implements EventHandler<ActionEvent> {
   /**
    * Define the go back choice button behavior in the add question page
    * 
-   * @param choicesBox2
-   * @param choiceBoxList
-   * @param buttonBox
-   * @param finishAddChoiceBt
-   * @param saveButton
-   * @param choicePrompt
+   * @param choicesBox2 is the box to include choice options
+   * @param choiceBoxList is the list for all choices box
+   * @param buttonBox is the box that includes all the buttons
+   * @param finishAddChoiceBt is the button to click when user finish adding choice
+   * @param saveButton is the user to click on when to save stuff
+   * @param choicePrompt the the text label to prompt user to add/remove choices
    */
   private void goBackToChoiceBt(VBox choicesBox2, HBox[] choiceBoxList, HBox buttonBox,
       Button finishAddChoiceBt, Button saveButton, Label choicePrompt) {
@@ -541,14 +527,14 @@ public class Main extends Application implements EventHandler<ActionEvent> {
   /**
    * Define the finish add choice button behavior in the add question page
    * 
-   * @param choiceFields
-   * @param choicesList
-   * @param buttonBox
-   * @param goBackToChoiceBt
-   * @param choicePrompt
-   * @param saveButton
-   * @param choicesBox2
-   * @param choiceBoxList
+   * @param choiceFields is the list of textfields of all choices
+   * @param choicesList is the list for all choices
+   * @param buttonBox is the box that includes all the buttons
+   * @param goBackToChoiceBt is the button to click when user wants to go back to adding/remove choices
+   * @param choicePrompt the text label to prompt user to add/remove choices
+   * @param saveButton is the user to click on when to save stuff
+   * @param choicesBox2 is the box to include choice options
+   * @param choiceBoxList is the list for all choices
    */
   private void finishAddChoiceBt(TextField[] choiceFields, ArrayList<Choice> choicesList,
       HBox buttonBox, Button goBackToChoiceBt, Label choicePrompt, Button saveButton,
@@ -982,7 +968,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     // =========
     // Hard coded, can get from data structure's index
     Label l1 = new Label();
-    l1.setText("Question " + (currIndex + 1));
+    l1.setText("Question " + (currIndex + 1) + "out of " + quizGenerator.userRecord.getNumRqst());
 
     l1.getStyleClass().add("normalText");
     Label indicator = new Label();
@@ -1363,11 +1349,10 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     });
 
     saveQBt.setOnMouseClicked(event -> {
-      String saveAddress = generateSavingAddress();
-      boolean saved = quizGenerator.saveFile(saveAddress);
+      boolean saved = quizGenerator.fileHandler.saveFile(quizGenerator.questionBank);
       if (saved) {
         Alert alert =
-            new Alert(AlertType.INFORMATION, "You quiz has been saved under " + saveAddress);
+            new Alert(AlertType.INFORMATION, "You quiz has been saved");
         alert.initModality(Modality.APPLICATION_MODAL);
         alert.initOwner(primaryStage);
         alert.showAndWait().filter(response -> response == ButtonType.OK);
