@@ -61,9 +61,17 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
+/**
+ * This class is the main application interface where our quiz generator program lauches
+ * 
+ * @author Marvin Tan, Nate Sackett, Shao Bin Daniel Shi Hong, Hui Beom Kim, Zhengyi Chen
+ *
+ */
 public class Main extends Application implements EventHandler<ActionEvent> {
+
   private Stage primaryStage;
-  private QuizGenerator quizGenerator;
+  private QuizGenerator quizGenerator; // back end quiz generator
+  // Scenes for different GUI pages
   private Scene mainMenu;
   private Scene loadQuestion;
   private Scene addQuestion;
@@ -73,7 +81,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
   private Scene currDataBase;
   private int currIndex;
 
-  boolean test = false;
+ 
   boolean correctAnsSelected = false;// if the user has selected a correct answer for an added
                                      // question
 
@@ -83,6 +91,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
    * @return the Scene object of a new main menu page
    */
   private Scene setUpMainMenuPage() {
+
     BorderPane root = new BorderPane();
     VBox centerVBox = new VBox();
     HBox topHBox = new HBox();
@@ -139,13 +148,16 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     // define functions when different buttons on this page is triggered
     // when load question button is clicked
     loadQBt.setOnMouseClicked(event -> primaryStage.setScene(loadQuestion));
-    
-    //when start a new quiz button is clicked
+
+    // when start a new quiz button is clicked
     startNewBt.setOnMouseClicked(event -> startNewBt());
-    
-    //when check current question bank button is clicked
+
+    // when check current question bank button is clicked
     currDataBaseBt.setOnMouseClicked(event -> {
+     
+      
       if (quizGenerator.topic.size() == 0) {
+     // set up a pop up alert when no question in question bank
         Alert alert =
             new Alert(AlertType.INFORMATION, "You don't have any questions in your database yet");
         alert.initModality(Modality.APPLICATION_MODAL);
@@ -153,6 +165,8 @@ public class Main extends Application implements EventHandler<ActionEvent> {
         alert.showAndWait().filter(response -> response == ButtonType.OK);
         return;
       }
+     
+      //change to current data base page
       primaryStage.setScene(currDataBase);
     });
     exitBt.setOnMouseClicked(event -> exitBt());
@@ -169,18 +183,21 @@ public class Main extends Application implements EventHandler<ActionEvent> {
   }
 
   /**
-   * When the exit button is clicked
+   * A private method that will be called when exit button is clicked 
    */
   private void exitBt() {
+    
     BorderPane popRt = new BorderPane();
     Scene popSc = new Scene(popRt, 750, 300);
     final Stage dialog = new Stage();
 
-    
+//exit directly if no quiz to save or quiz already saved 
     if (quizGenerator.questionBank.size() == 0 || quizGenerator.userRecord.isCurrQuizSaved()) {
       Platform.exit();
     }
 
+    
+    //set up pop up window for unsaved quiz 
     Label prompt = new Label("Do you want to save the quiz before leaving?");
     prompt.getStyleClass().add("normalText");
     prompt.isWrapText();
@@ -191,7 +208,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     topBox.setPadding(new Insets(50, 20, 20, 20));
     topBox.getStyleClass().add("topHBox");
     popRt.setTop(topBox);
-
+    
     Button saveBt = new Button("Save");
     Button leaveBt = new Button("Leave without saving");
     Button cancelBt = new Button("Go back to the Program");
@@ -201,12 +218,13 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     centerBox.setPadding(new Insets(50, 50, 50, 50));
     popRt.setCenter(centerBox);
 
-    // event
+    // events
+    
+    //feedback whether saving quiz successfully or not 
     saveBt.setOnAction(e -> {
       boolean saved = quizGenerator.fileHandler.saveFile(quizGenerator.questionBank);
       if (saved) {
-        Alert alert =
-            new Alert(AlertType.INFORMATION, "You quiz has been saved");
+        Alert alert = new Alert(AlertType.INFORMATION, "You quiz has been saved");
         alert.initModality(Modality.APPLICATION_MODAL);
         alert.initOwner(primaryStage);
         alert.showAndWait().filter(response -> response == ButtonType.OK);
@@ -220,10 +238,13 @@ public class Main extends Application implements EventHandler<ActionEvent> {
       }
     });
 
+    
+    //leave without saving 
     leaveBt.setOnAction(e -> {
       Platform.exit();
     });
 
+    //continue remaining in the current page
     cancelBt.setOnAction(e -> {
       dialog.close();
     });
@@ -237,7 +258,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
   /**
    * 
-   * /** Define the behavior of startNew button on the main menu page
+   *  Define the behavior of startNew button on the main menu page
    */
   private void startNewBt() {
     if (quizGenerator.topic.size() == 0) {
@@ -530,7 +551,8 @@ public class Main extends Application implements EventHandler<ActionEvent> {
    * @param choiceFields is the list of textfields of all choices
    * @param choicesList is the list for all choices
    * @param buttonBox is the box that includes all the buttons
-   * @param goBackToChoiceBt is the button to click when user wants to go back to adding/remove choices
+   * @param goBackToChoiceBt is the button to click when user wants to go back to adding/remove
+   *        choices
    * @param choicePrompt the text label to prompt user to add/remove choices
    * @param saveButton is the user to click on when to save stuff
    * @param choicesBox2 is the box to include choice options
@@ -612,7 +634,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
       button.getStyleClass().add("greenButton");
     }
   }
-  
+
   /**
    * Define the save button behavior in the add question page
    * 
@@ -698,7 +720,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
         // reset whether current quiz saved
         quizGenerator.userRecord.setCurrQuizSaved(false);
-        
+
         System.out.print("haha");
 
         // Refresh question page and current database page
@@ -956,6 +978,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
    * @return the Scene object of a new question page
    */
   private Scene setUpQuestionPage(Question[] quizQls) {
+
     if (quizQls == null)
       return null;
     BorderPane root = new BorderPane();
@@ -1028,12 +1051,12 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     leftRg.getChildren().add(quizImgV);
     centerBoxLeft.getChildren().add(leftRg);
     centerBoxLeft.setAlignment(Pos.CENTER_LEFT);
-    
-    centerBox.getChildren().addAll(centerBoxLeft,centerBoxRight);
+
+    centerBox.getChildren().addAll(centerBoxLeft, centerBoxRight);
     centerBox.setSpacing(20.0);
     root.setCenter(centerBox);
-    
-    
+
+
     // =========
     // Bottom
     // =========
@@ -1238,6 +1261,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     // primaryStage.setScene(sc);
     return sc;
   }
+
   /**
    * Reset the program fields if user want to restart quiz with a different setting
    */
@@ -1248,6 +1272,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     questionFilter = setUpQuestionFilterPage();
     primaryStage.setScene(questionFilter);
   }
+
   /**
    * Reset the program fields if user want to restart quiz with the same setting
    */
@@ -1258,12 +1283,13 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     question = setUpQuestionPage(quizQls);
     primaryStage.setScene(question);
   }
+
   /**
    * Build a new current database page
    * 
    * @return the Scene object of a new current database page
    */
- private Scene setUpCurrDataBasePage() {
+  private Scene setUpCurrDataBasePage() {
     BorderPane root = new BorderPane();// the root layout
     HBox centerHBox = new HBox();
     HBox topHBox = new HBox();
@@ -1351,8 +1377,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     saveQBt.setOnMouseClicked(event -> {
       boolean saved = quizGenerator.fileHandler.saveFile(quizGenerator.questionBank);
       if (saved) {
-        Alert alert =
-            new Alert(AlertType.INFORMATION, "You quiz has been saved");
+        Alert alert = new Alert(AlertType.INFORMATION, "You quiz has been saved");
         alert.initModality(Modality.APPLICATION_MODAL);
         alert.initOwner(primaryStage);
         alert.showAndWait().filter(response -> response == ButtonType.OK);
@@ -1430,7 +1455,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
       currDataBase = setUpCurrDataBasePage();
 
       primaryStage.setScene(mainMenu);
-      
+
       primaryStage.show();
     } catch (Exception e) {
       e.printStackTrace();
