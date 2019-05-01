@@ -32,6 +32,7 @@ public class UserRecord {
    */
   protected void setNumRqst(int numRqst) 
   {
+    System.out.println("numRqst set from " + this.numRqst + "to" + numRqst);
     this.numRqst = new Integer(numRqst);
   }
 

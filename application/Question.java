@@ -18,6 +18,7 @@ public class Question {
   private String description; // description of the question
   private ArrayList<Choice> choices; // choices of the current Question
   private Image image; // Question image
+  private String imageAddress; // Question image
   protected boolean isFetched; // if this Question has been used
   private int userAnswer; // this indicates which answer has been chosen by the user
   private String metadata; // question meta-data
@@ -34,6 +35,7 @@ public class Question {
     isFetched = false; // Initialize question not already having been used
     userAnswer = -1; // Default value indicates no answer chosen
     metadata = null; // Default to empty
+    imageAddress = "";
   }
   
   /**
@@ -150,6 +152,9 @@ public class Question {
     return image;
   }
 
+  public String getImageAddress() {
+    return imageAddress;
+  }
   /**
    * Setter of the image(assume the imageAddress is valid
    * 
@@ -160,8 +165,8 @@ public class Question {
     if(imageAddress.compareTo("none") == 0 || imageAddress.compareTo("") == 0) {
       imageAddress = ("application/noImage.png");
     }
-    System.out.println(imageAddress);
     image = new Image(imageAddress);
+    this.imageAddress = imageAddress;
   }
 
   /**

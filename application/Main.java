@@ -805,9 +805,9 @@ public class Main extends Application implements EventHandler<ActionEvent> {
             BooleanProperty observable = new SimpleBooleanProperty();
             observable.addListener((obs, wasSelected, isNowSelected) -> {
               if (!wasSelected && isNowSelected)
-                quizGenerator.currChosenTopics.add(item);
+                quizGenerator.userRecord.topicsChosen.add(item);
               else if (!isNowSelected && wasSelected)
-                quizGenerator.currChosenTopics.remove(item);
+                quizGenerator.userRecord.topicsChosen.remove(item);
             });
             return observable;
           }
@@ -898,7 +898,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     // Alert Messages
     // ===============
     // If the user didn't select topic and # of questions is less than 0
-    if (quizGenerator.currChosenTopics.size() == 0 && !(numQuestionReq > 0)) {
+    if (quizGenerator.userRecord.topicsChosen.size() == 0 && !(numQuestionReq > 0)) {
       Alert alert = new Alert(AlertType.INFORMATION,
           "Please choose a topic and enter the number of questions you want before proceed");
       alert.initModality(Modality.APPLICATION_MODAL);
@@ -906,14 +906,14 @@ public class Main extends Application implements EventHandler<ActionEvent> {
       alert.showAndWait().filter(response -> response == ButtonType.OK);
     }
     // If the user didn't select topic
-    else if (quizGenerator.currChosenTopics.size() == 0 && numQuestionReq > 0) {
+    else if (quizGenerator.userRecord.topicsChosen.size() == 0 && numQuestionReq > 0) {
       Alert alert = new Alert(AlertType.INFORMATION, "Please choose at least one topic");
       alert.initModality(Modality.APPLICATION_MODAL);
       alert.initOwner(primaryStage);
       alert.showAndWait().filter(response -> response == ButtonType.OK);
     }
     // If the # of questions is less than 0
-    else if (quizGenerator.currChosenTopics.size() > 0 && !(numQuestionReq > 0)) {
+    else if (quizGenerator.userRecord.topicsChosen.size() > 0 && !(numQuestionReq > 0)) {
       Alert alert = new Alert(AlertType.INFORMATION,
           "Please enter a number greater than 0 for the number of requested questions");
       alert.initModality(Modality.APPLICATION_MODAL);
@@ -921,7 +921,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
       alert.showAndWait().filter(response -> response == ButtonType.OK);
     }
     // If the user entered correctly
-    else if (quizGenerator.currChosenTopics.size() > 0 && numQuestionReq > 0) {
+    else if (quizGenerator.userRecord.topicsChosen.size() > 0 && numQuestionReq > 0) {
       // Make a pop up for asking user if he want to proceed
       final Stage dialog = new Stage();
       dialog.initModality(Modality.APPLICATION_MODAL);
@@ -1027,8 +1027,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
       rb.setPrefWidth(590);
       rb.setWrapText(true);
       choices.add(rb);
-
-      choices.add(new RadioButton(choiceList.get(i).getDescription()));
+      //choices.add(new RadioButton(choiceList.get(i).getDescription()));
     }
 
     ListView<RadioButton> choiceLs = new ListView<RadioButton>();

@@ -183,7 +183,7 @@ public class FileHandler {
           jsonQuestion.put("topic", topic);
 
           // Add image to question
-          jsonQuestion.put("image", question.loadImage());
+          jsonQuestion.put("image", question.getImageAddress());
 
           // Prepare to add choices to question
           // Create choiceArray for the question
@@ -192,22 +192,24 @@ public class FileHandler {
           // Populate choiceArray
           ArrayList<Choice> choices = question.getChoices();
           for (Choice c : choices) {
-
-            // Create a map for each choice
-            Map mChoice = new LinkedHashMap(2);
-
+            //create the JSONObject represents choices at position i of choiceArray
+            JSONObject currChoice = new JSONObject();
+            
             // Add truth value to map
-            mChoice.put("isCorrect", c.getIsCorrect());
+            if(c.getIsCorrect())
+              currChoice.put("isCorrect", "T");
+            else
+              currChoice.put("isCorrect", "F");
 
             // Add choice description to map
-            mChoice.put("choice", c.getDescription());
+            currChoice.put("choice", c.getDescription());
 
             // Add choice map to choiceArray
-            choiceArray.add(mChoice);
+            choiceArray.add(currChoice);
           }
 
           // Add choices to question
-          jsonQuestion.put("choiceArray", choices);
+          jsonQuestion.put("choiceArray", choiceArray);
 
           // Add question to questionArray
           questionArray.add(jsonQuestion);

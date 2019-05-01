@@ -15,15 +15,14 @@ public class QuizGenerator {
   UserRecord userRecord;
   Hashtable<String, ArrayList<Question>> questionBank;
   ArrayList<String> topic; // all topics in the questionBank
-  protected ArrayList<String> currChosenTopics;// The topics the user chosen for the current quiz
-
+ 
 
   public QuizGenerator() {
     this.fileHandler = new FileHandler(questionBank);
     this.userRecord = new UserRecord();
     this.questionBank = new Hashtable<String, ArrayList<Question>>();
     this.topic = new ArrayList<String>();
-    this.currChosenTopics = new ArrayList<String>();
+    this.userRecord.topicsChosen = new ArrayList<String>();
 
   }
 
@@ -68,8 +67,6 @@ public class QuizGenerator {
       topic.add(qTopic); // add the new topic
 
     }
-
-    userRecord.setNumRqst(userRecord.getNumRqst() + 1);
     return true;
   }
 
@@ -111,21 +108,18 @@ public class QuizGenerator {
    */
   public Question[] generateQuestionList() {
     // return null if we don't have enough questions.
-    int questionSize = getQuestionSize(currChosenTopics);
+    int questionSize = getQuestionSize(userRecord.topicsChosen);
     if (questionSize < userRecord.getNumRqst()) {
       userRecord.setNumRqst(questionSize);
   }
-    if (questionSize < userRecord.getNumRqst()) {
-      userRecord.setNumRqst(questionSize);
-    }
     
     clear(); // clear the history data from last quiz
 
     ArrayList<String> topicList = new ArrayList<>();
     Random rand = new Random();
     // copy the topic List
-    for (int i = 0; i < currChosenTopics.size(); i++) {
-      topicList.add(currChosenTopics.get(i));
+    for (int i = 0; i < userRecord.topicsChosen.size(); i++) {
+      topicList.add(userRecord.topicsChosen.get(i));
     }
 
     // list with random question
@@ -141,8 +135,9 @@ public class QuizGenerator {
     // pick random question in the list
     Question randQuestion = pickRandomQuestionOftopic(questionList);
     
+    System.out.println("numberQused" + numberQused);
+    System.out.println("request num Q" + userRecord.getNumRqst());
     while (numberQused < userRecord.getNumRqst()) {
-
       
       if (randQuestion == null) {
         // remove the topic as all questions under it have been fetched
