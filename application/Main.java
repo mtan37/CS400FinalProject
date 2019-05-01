@@ -73,7 +73,6 @@ public class Main extends Application implements EventHandler<ActionEvent> {
   private Scene currDataBase;
   private int currIndex;
 
-  boolean test = false;
   boolean correctAnsSelected = false;// if the user has selected a correct answer for an added
                                      // question
 
@@ -115,7 +114,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
     // View Current Questions (Button)
     Button currDataBaseBt = new Button();
-    currDataBaseBt.setText("Check Loaded Question Database");
+    currDataBaseBt.setText("Check Loaded Question Bank");
     currDataBaseBt.getStyleClass().add("NormalButton");
 
     Button exitBt = new Button();

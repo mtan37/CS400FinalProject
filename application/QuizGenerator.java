@@ -52,21 +52,6 @@ public class QuizGenerator {
     return true;
   }
 
-  
-  public Question loadQuestion() {// return null if no more question needed(numQUsed == numRqst)
-    return null;
-
-  }
-
-  public Question testLoadQuestion() {
-    return null;
-
-  }
-
-  public void keepRecord() {
-
-  }
-
   /**
    * Added by Daniel This method searches based on the topic and add the question under this topic
    * 

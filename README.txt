@@ -42,7 +42,7 @@ GENERATE QUIZ: CLICK "Generate a New Quiz" button. (make sure there exist at lea
 CHECK QUESTION DATABASE: CLICK "Check Loaded Question Database" button.
                     	  |
 			 (1)-------> All topics and associated number of questions would be displayed
-                         (2)-------> SAVE FILE: CLICK "Write Current Question Database into File" Button.
+                         (2)-------> SAVE FILE: CLICK "Check Loaded Question Bank" Button.
 						 |
 						 --------> All questions in the Database will be written into a Jason File.
 
