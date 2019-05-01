@@ -69,21 +69,26 @@
 .greenButton {
 	-fx-background-color: #429243;
 	-fx-text-fill: white;
+	-fx-border-radius: 5%;
 }
 
 .greenButton:hover {
 	-fx-background-color: #31630a;
 	-fx-text-fill: white;
+	-fx-border-radius: 5%;
 }
 
 .redButton {
 	-fx-background-color: #ce0707;
 	-fx-text-fill: white;
+	-fx-border-radius: 5%;
+	
 }
 
 .redButton:hover {
 	-fx-background-color: #870303;
 	-fx-text-fill: white;
+	-fx-border-radius: 5%;
 }
 .checkScoreBt{
 	-fx-background-color: #ef9139;

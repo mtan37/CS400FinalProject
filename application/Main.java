@@ -81,7 +81,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
   private Scene currDataBase;
   private int currIndex;
 
- 
+
   boolean correctAnsSelected = false;// if the user has selected a correct answer for an added
                                      // question
 
@@ -154,10 +154,10 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
     // when check current question bank button is clicked
     currDataBaseBt.setOnMouseClicked(event -> {
-     
-      
+
+
       if (quizGenerator.topic.size() == 0) {
-     // set up a pop up alert when no question in question bank
+        // set up a pop up alert when no question in question bank
         Alert alert =
             new Alert(AlertType.INFORMATION, "You don't have any questions in your database yet");
         alert.initModality(Modality.APPLICATION_MODAL);
@@ -165,8 +165,8 @@ public class Main extends Application implements EventHandler<ActionEvent> {
         alert.showAndWait().filter(response -> response == ButtonType.OK);
         return;
       }
-     
-      //change to current data base page
+
+      // change to current data base page
       primaryStage.setScene(currDataBase);
     });
     exitBt.setOnMouseClicked(event -> exitBt());
@@ -183,21 +183,21 @@ public class Main extends Application implements EventHandler<ActionEvent> {
   }
 
   /**
-   * A private method that will be called when exit button is clicked 
+   * A private method that will be called when exit button is clicked
    */
   private void exitBt() {
-    
+
     BorderPane popRt = new BorderPane();
     Scene popSc = new Scene(popRt, 750, 300);
     final Stage dialog = new Stage();
 
-//exit directly if no quiz to save or quiz already saved 
+    // exit directly if no quiz to save or quiz already saved
     if (quizGenerator.questionBank.size() == 0 || quizGenerator.userRecord.isCurrQuizSaved()) {
       Platform.exit();
     }
 
-    
-    //set up pop up window for unsaved quiz 
+
+    // set up pop up window for unsaved quiz
     Label prompt = new Label("Do you want to save the quiz before leaving?");
     prompt.getStyleClass().add("normalText");
     prompt.isWrapText();
@@ -208,7 +208,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     topBox.setPadding(new Insets(50, 20, 20, 20));
     topBox.getStyleClass().add("topHBox");
     popRt.setTop(topBox);
-    
+
     Button saveBt = new Button("Save");
     Button leaveBt = new Button("Leave without saving");
     Button cancelBt = new Button("Go back to the Program");
@@ -219,8 +219,8 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     popRt.setCenter(centerBox);
 
     // events
-    
-    //feedback whether saving quiz successfully or not 
+
+    // feedback whether saving quiz successfully or not
     saveBt.setOnAction(e -> {
       boolean saved = quizGenerator.fileHandler.saveFile(quizGenerator.questionBank);
       if (saved) {
@@ -238,13 +238,13 @@ public class Main extends Application implements EventHandler<ActionEvent> {
       }
     });
 
-    
-    //leave without saving 
+
+    // leave without saving
     leaveBt.setOnAction(e -> {
       Platform.exit();
     });
 
-    //continue remaining in the current page
+    // continue remaining in the current page
     cancelBt.setOnAction(e -> {
       dialog.close();
     });
@@ -257,8 +257,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
   }
 
   /**
-   * 
-   *  Define the behavior of startNew button on the main menu page
+   * This method defines the behavior of startNew button on the main menu page
    */
   private void startNewBt() {
     if (quizGenerator.topic.size() == 0) {
@@ -1022,10 +1021,13 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     // iterate through current question's choice list
     // put descriptions into RadioButtons and add the button to the observable list
     ArrayList<Choice> choiceList = currQ.getChoices();
-    // ArrayList<String> choiceDescriptList = new ArrayList<String>();
+
     for (int i = 0; i < choiceList.size(); i++) {
-      // choiceDescriptList.set(i, choiceList.get(i).getDescription());
-      choices.add(new RadioButton(choiceList.get(i).getDescription()));
+      RadioButton rb = new RadioButton(choiceList.get(i).getDescription());
+      rb.setPrefWidth(590);
+      rb.setWrapText(true);
+      choices.add(rb);
+
     }
 
     ListView<RadioButton> choiceLs = new ListView<RadioButton>();
@@ -1103,11 +1105,30 @@ public class Main extends Application implements EventHandler<ActionEvent> {
         indicator.setText("Wrong");
         indicator.getStyleClass().add("wrongLabel");
       }
+
+
+      // display correct and wrong answers
+      for (RadioButton b : choices) {
+
+        if (b.getText().equals(correctDscr)) {
+          // set correct answer green
+          b.getStyleClass().add("greenButton");
+        } else {
+          // set wrong answer red
+          b.getStyleClass().add("redButton");
+        }
+
+
+      }
+      choiceLs.setItems(choices);
+
+
       indicator.setVisible(true);
       nextBt.setVisible(true);
-      choiceLs.setDisable(true);
+      // choiceLs.setDisable(true);
       submitBt.setVisible(false);
     });
+
 
     // set back button
     backBt.setOnAction(e -> {
