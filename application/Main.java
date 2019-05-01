@@ -145,7 +145,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     setUpBt.setOnMouseClicked(event -> primaryStage.setScene(loadQuestion));
     startNewBt.setOnMouseClicked(event -> startNewBt());
     currDataBaseBt.setOnMouseClicked(event -> {
-      if (quizGenerator.userRecord.getNumRqst() == 0) {
+      if (quizGenerator.topic.size() == 0) {
         Alert alert =
             new Alert(AlertType.INFORMATION, "You don't have any questions in your database yet");
         alert.initModality(Modality.APPLICATION_MODAL);
@@ -254,7 +254,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
    * /** Define the behavior of startNew button on the main menu page
    */
   private void startNewBt() {
-    if (quizGenerator.userRecord.getNumRqst() == 0) {
+    if (quizGenerator.topic.size() == 0) {
       Alert alert =
           new Alert(AlertType.INFORMATION, "Please load at least one question before start a quiz");
       alert.initModality(Modality.APPLICATION_MODAL);
@@ -626,7 +626,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
       button.getStyleClass().add("greenButton");
     }
   }
-
+  
   /**
    * Define the save button behavior in the add question page
    * 
@@ -1229,15 +1229,10 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     // define functions when different buttons on this page is triggered
     // Lambda Expression
     startNewQuizBt.setOnMouseClicked(event -> {
-      primaryStage.setScene(question);
-      quizGenerator.userRecord.setNumRqst(0);
-      quizGenerator.userRecord.setNumRqst(0);
-      quizGenerator.userRecord.setNumCor(0);
+      resetSameSetting();
     });
     changeSettingBt.setOnMouseClicked(event -> {
-      primaryStage.setScene(questionFilter);
-      quizGenerator.userRecord.setNumRqst(0);
-      quizGenerator.userRecord.setNumCor(0);
+      resetDifferentSetting();
     });
     endBt.setOnMouseClicked(event -> {
       try {
@@ -1257,13 +1252,32 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     // primaryStage.setScene(sc);
     return sc;
   }
-
+  /**
+   * Reset the program fields if user want to restart quiz with a different setting
+   */
+  private void resetDifferentSetting() {
+    quizGenerator.userRecord.setNumRqst(0);
+    quizGenerator.userRecord.setNumCor(0);
+    quizGenerator.userRecord.topicsChosen = new ArrayList<String>();
+    questionFilter = setUpQuestionFilterPage();
+    primaryStage.setScene(questionFilter);
+  }
+  /**
+   * Reset the program fields if user want to restart quiz with the same setting
+   */
+  private void resetSameSetting() {
+    quizGenerator.userRecord.setNumCor(0);
+    currIndex = 0;
+    Question[] quizQls = quizGenerator.generateQuestionList();
+    question = setUpQuestionPage(quizQls);
+    primaryStage.setScene(question);
+  }
   /**
    * Build a new current database page
    * 
    * @return the Scene object of a new current database page
    */
-  private Scene setUpCurrDataBasePage() {
+ private Scene setUpCurrDataBasePage() {
     BorderPane root = new BorderPane();// the root layout
     HBox centerHBox = new HBox();
     HBox topHBox = new HBox();

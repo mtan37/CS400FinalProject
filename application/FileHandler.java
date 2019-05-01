@@ -39,6 +39,7 @@ public class FileHandler {
   public FileHandler(Hashtable<String, ArrayList<Question>> questionBank) {
 
     this.questionBank = questionBank;
+    
   }
 
   /**

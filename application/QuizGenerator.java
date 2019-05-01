@@ -96,7 +96,7 @@ public class QuizGenerator {
 
     }
 
-    userRecord.setNumRqst(userRecord.getNumRqst() + 1);
+    //userRecord.setNumRqst(userRecord.getNumRqst() + 1);
     return true;
   }
 
@@ -147,9 +147,6 @@ public class QuizGenerator {
     if (questionSize < userRecord.getNumRqst()) {
       userRecord.setNumRqst(questionSize);
   }
-    if (questionSize < userRecord.getNumRqst()) {
-      userRecord.setNumRqst(questionSize);
-    }
     
     clear(); // clear the history data from last quiz
 
@@ -173,6 +170,8 @@ public class QuizGenerator {
     // pick random question in the list
     Question randQuestion = pickRandomQuestionOftopic(questionList);
     
+    System.out.println("numberQused" + numberQused);
+    System.out.println("request num Q" + userRecord.getNumRqst());
     while (numberQused < userRecord.getNumRqst()) {
 
       
