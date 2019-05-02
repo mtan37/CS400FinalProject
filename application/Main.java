@@ -22,6 +22,8 @@
 // https://stackoverflow.com/questions/26619566/javafx-stage-close-handler
 // https://www.java-tips.org/java-se-tips-100019/24-java-lang/480-the-enhanced-for-loop.html
 // https://www.geeksforgeeks.org/parse-json-java/
+// https://www.youtube.com/watch?v=hNz8Xf4tMI4
+// https://www.geeksforgeeks.org/parse-json-java/
 // Known bugs: No known bugs
 ///////////////////////////////////////////////////////////////////////////////
 
