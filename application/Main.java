@@ -67,7 +67,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 /**
- * This class is the main application interface where our quiz generator program lauches
+ * This class is the main application interface where our quiz generator program launches
  * 
  * @author Marvin Tan, Nate Sackett, Shao Bin Daniel Shi Hong, Hui Beom Kim, Zhengyi Chen
  *
