@@ -5,11 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.time.LocalDate;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.ArrayList;
 
 import org.json.simple.JSONArray;
@@ -17,43 +14,45 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import javafx.scene.control.DatePicker;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
 /**
- * Handles files for the QuizGenerator class
+ * Handles files for the QuizGenerator class; reads/writes json files
  * 
- * @author Nate Sackett
- * @author Hui Beom
- *
+ * @author Nate Sackett, Hui Beom, Marvin Tan
  */
 public class FileHandler {
 
-  Hashtable<String, ArrayList<Question>> questionBank; // Hash table-- key: question topic, value: ArrayList of
-                                                       // questions
+  // Hash table uses the Question topics as the keys and stores ArrayLists of Questions as values
+  Hashtable<String, ArrayList<Question>> questionBank; 
 
   /**
-   * Constructor adds hash table containing the bank of questions for the quiz
-   * 
-   * @param questionBank
+   * Basic constructor (no-argument)
    */
-  public FileHandler(Hashtable<String, ArrayList<Question>> questionBank) {
-
-    this.questionBank = questionBank;
-  }
+  public FileHandler() {}
 
   /**
    * Show user dialog to select file to be read in
-   * @return ArrayList<Question> a list of questions generated from the JSON file or null if exception occur
+   * 
+   * @return ArrayList<Question> a list of questions generated from the json file or null if an exception occurs
    */
   public ArrayList<Question> pickFile() {
+    // Initialize a FileChooser
     FileChooser fileChooser = new FileChooser();
+    
+    // Set the window title, initial directory, and only allow json files
     fileChooser.setTitle("Open JSON file");
     fileChooser.setInitialDirectory(new File("./"));
-    fileChooser.getExtensionFilters().addAll(new ExtensionFilter("JSON Files", "*.JSON"));
+    fileChooser.getExtensionFilters().addAll(new ExtensionFilter("JSON Files", "*.JSON", "*.json"));
 
+    // Create a File object and 
     File file = fileChooser.showOpenDialog(null);
+    
+    // Return null when the fileChooser dialog is exited
+    if (file == null)
+      return null;
+    
     ArrayList<Question> questionList = readFile(file);
     return questionList;
   }
@@ -64,6 +63,7 @@ public class FileHandler {
    * @param file: file to be read from
    * @return ArrayList<Question> a list of questions generated from the JSON file or null if exception occurs
    */
+  @SuppressWarnings("rawtypes")
   public ArrayList<Question> readFile(File file) {
     try {
       ArrayList<Question> questionList = new ArrayList<Question>();
@@ -147,10 +147,15 @@ public class FileHandler {
   /**
    * Saves questions in the question bank to a json file
    */
+  @SuppressWarnings("unchecked") // For multiple unchecked type casts in making json objects
   public boolean saveFile(Hashtable<String, ArrayList<Question>> questionBank) {
     try {
-      
+      // Get save name and location from user
       File saveAddress = pickSaveFile();
+      
+      // Check that a save location was specified
+      if (saveAddress == null)
+        throw new FileNotFoundException();
       
       // Create printwriter immediately to check for valid address
       PrintWriter printWriter = new PrintWriter(saveAddress);
@@ -214,9 +219,8 @@ public class FileHandler {
           // Add question to questionArray
           questionArray.add(jsonQuestion);
 
-        });
-
-      });
+        }); // End lambda for Questions
+      }); // End lambda for HashTable
 
       // Add questionArray to main json object
       jsonOutput.put("questionArray", questionArray);
@@ -224,15 +228,13 @@ public class FileHandler {
       // Use printWriter created at beginning of program to save json object
       printWriter.write(jsonOutput.toJSONString());
       
+      // Remove everything from printWriter stream and close
       printWriter.flush();
       printWriter.close();
       return true;
       
     } catch (FileNotFoundException e) {
-      e.printStackTrace();
-      return false;
-    } catch (IOException e) {
-      e.printStackTrace();
+      // No save location selected. This is okay. Do nothing.
       return false;
     }
   }
@@ -254,6 +256,10 @@ public class FileHandler {
 
     // Prompt user for save location
     File saveAddress = fileChooser.showSaveDialog(null);
+    
+    // If saveAddress is null don't proceed
+    if (saveAddress == null)
+      return null;
     
     // Return the save address
     return saveAddress;

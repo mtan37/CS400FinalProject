@@ -18,7 +18,7 @@ public class QuizGenerator {
  
 
   public QuizGenerator() {
-    this.fileHandler = new FileHandler(questionBank);
+    this.fileHandler = new FileHandler();
     this.userRecord = new UserRecord();
     this.questionBank = new Hashtable<String, ArrayList<Question>>();
     this.topic = new ArrayList<String>();

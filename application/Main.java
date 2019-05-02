@@ -20,12 +20,17 @@
 // https://stackoverflow.com/questions/28843858/javafx-8-listview-with-checkboxes
 // https://stackoverflow.com/questions/20446026/get-value-from-date-picker
 // https://stackoverflow.com/questions/26619566/javafx-stage-close-handler
+// https://www.java-tips.org/java-se-tips-100019/24-java-lang/480-the-enhanced-for-loop.html
+// https://www.geeksforgeeks.org/parse-json-java/
 // Known bugs: No known bugs
 ///////////////////////////////////////////////////////////////////////////////
+
 package application;
 
 import java.io.File;
+
 import java.util.ArrayList;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -114,21 +119,21 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     // =========
     // Start Quiz (Button)
     Button startNewBt = new Button();
-    startNewBt.setText("Generate a New Quiz");
+    startNewBt.setText("Start a New Quiz");
     startNewBt.getStyleClass().add("NormalButton");
 
     // Set Up (Button)
     Button loadQBt = new Button();
-    loadQBt.setText("Add question");
+    loadQBt.setText("Add Question(s)");
     loadQBt.getStyleClass().add("NormalButton");
 
     // View Current Questions (Button)
     Button currDataBaseBt = new Button();
-    currDataBaseBt.setText("Check Loaded Question Bank");
+    currDataBaseBt.setText("View/Save Current Questions");
     currDataBaseBt.getStyleClass().add("NormalButton");
 
     Button exitBt = new Button();
-    exitBt.setText("Exit the Program");
+    exitBt.setText("Exit Quiz Generator");
     exitBt.getStyleClass().add("NormalButton");
 
     // Layout Set Up
@@ -159,7 +164,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
       if (quizGenerator.topic.size() == 0) {
         // set up a pop up alert when no question in question bank
         Alert alert =
-            new Alert(AlertType.INFORMATION, "You don't have any questions in your database yet");
+            new Alert(AlertType.INFORMATION, "There are no questions in Quiz Generator");
         alert.initModality(Modality.APPLICATION_MODAL);
         alert.initOwner(primaryStage);
         alert.showAndWait().filter(response -> response == ButtonType.OK);
@@ -210,8 +215,8 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     popRt.setTop(topBox);
 
     Button saveBt = new Button("Save");
-    Button leaveBt = new Button("Leave without saving");
-    Button cancelBt = new Button("Go back to the Program");
+    Button leaveBt = new Button("Exit without saving");
+    Button cancelBt = new Button("Cancel");
     HBox centerBox = new HBox(leaveBt, saveBt, cancelBt);
     centerBox.setSpacing(30);
     centerBox.setAlignment(Pos.CENTER);
@@ -262,7 +267,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
   private void startNewBt() {
     if (quizGenerator.topic.size() == 0) {
       Alert alert =
-          new Alert(AlertType.INFORMATION, "Please load at least one question before start a quiz");
+          new Alert(AlertType.INFORMATION, "Add questions before starting a new quiz");
       alert.initModality(Modality.APPLICATION_MODAL);
       alert.initOwner(primaryStage);
       alert.showAndWait().filter(response -> response == ButtonType.OK);
@@ -383,7 +388,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     topicBox.getChildren().addAll(topicLabel, topicField);
 
     // Description (Label, TextArea)
-    Label descriptionLabel = new Label("Description");
+    Label descriptionLabel = new Label("Question");
     TextArea descriptionArea = new TextArea();
     descriptionBox.setPrefHeight(100);
     descriptionBox.getChildren().addAll(descriptionLabel, descriptionArea);
@@ -401,7 +406,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
     // Choices (Label, TextField)
     Label choiceLabel = new Label("Choices");
-    Label choicePrompt = new Label("Please edit your choice content/number");
+    Label choicePrompt = new Label("Edit number/content of choices:");
     choicePrompt.getStyleClass().add("smallText");
     TextField choiceField1 = new TextField();
     choiceField1.setPromptText("Please enter at least two choices");
@@ -427,7 +432,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     finishAddChoiceBt.getStyleClass().add("NormalButton");
 
     // Displayed when the user is choosing correct choice button
-    Button goBackToChoiceBt = new Button("Go back to choice addition/remove");
+    Button goBackToChoiceBt = new Button("Return to add/remove choices");
     goBackToChoiceBt.getStyleClass().add("backButton");
 
     buttonBox.getChildren().addAll(finishAddChoiceBt);// Initially display the finishAddChoiceBt
@@ -481,7 +486,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     // =========
     // Go Back (Button)
     Button backButton = new Button();
-    backButton.setText("Back to Last Page");
+    backButton.setText("Return");
     backButton.getStyleClass().add("backButton");
 
     backButton.setOnAction(event -> {
@@ -576,7 +581,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
       buttonBox.getChildren().add(goBackToChoiceBt);
 
       // Change the text in the prompt label
-      choicePrompt.setText("Please select which choice to be the correct answer");
+      choicePrompt.setText("Please select the correct answer:");
 
       // Now user can click save button
       saveButton.setVisible(true);
@@ -598,7 +603,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
         final ArrayList<Choice> choicesListInner = choicesList;
         // Make a toggle button
         ToggleButton button = new ToggleButton();
-        button.setText("Select this to be the right answer");
+        button.setText("This is the correct answer");
         button.setToggleGroup(toggleGroup);
         button.getStyleClass().add("redButton");
         button.setOnMouseClicked(events -> trueBt(index, choicesBox2, choicesListInner, button));
@@ -617,7 +622,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     {
       for (int j = 0; j < choicesBox2.getChildren().size(); j++) {
         ((ToggleButton) ((HBox) choicesBox2.getChildren().get(j)).getChildren().get(1))
-            .setText("Select this to be the right answer");
+            .setText("This is the correct answer");
         ((ToggleButton) ((HBox) choicesBox2.getChildren().get(j)).getChildren().get(1))
             .getStyleClass().remove("redButton");
         ((ToggleButton) ((HBox) choicesBox2.getChildren().get(j)).getChildren().get(1))
@@ -628,7 +633,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
       }
       correctAnsSelected = true;
       choicesList.get(i).setIsCorrect(true);
-      button.setText("The right answer");
+      button.setText("Correct answer");
       button.getStyleClass().remove("redButton");
       button.getStyleClass().add("greenButton");
     }
@@ -653,7 +658,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     // If topic field is empty
     if (topicField.getText().isEmpty()) {
       Alert alert =
-          new Alert(AlertType.INFORMATION, "Please enter your question topic before proceeding");
+          new Alert(AlertType.INFORMATION, "Please enter a topic for the question");
       alert.initModality(Modality.APPLICATION_MODAL);
       alert.initOwner(primaryStage);
       alert.showAndWait().filter(response -> response == ButtonType.OK);
@@ -661,7 +666,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     // If the description area is empty
     else if (descriptionArea.getText().isEmpty()) {
       Alert alert = new Alert(AlertType.INFORMATION,
-          "Please enter your question description before proceeding");
+          "Please enter the question before proceeding");
       alert.initModality(Modality.APPLICATION_MODAL);
       alert.initOwner(primaryStage);
       alert.showAndWait().filter(response -> response == ButtonType.OK);
@@ -680,7 +685,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
         if (imageField.getText().compareTo("") != 0)
           new Image(imageField.getText());
       } catch (IllegalArgumentException e) {
-        Alert alert = new Alert(AlertType.INFORMATION, "Please eneter a valid image URL");
+        Alert alert = new Alert(AlertType.INFORMATION, "Image file path not valid");
         alert.initModality(Modality.APPLICATION_MODAL);
         alert.initOwner(primaryStage);
         alert.showAndWait().filter(response -> response == ButtonType.OK);
@@ -787,7 +792,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     // Center Left
     // ============
     // Prompt Message for choosing topics (Label)
-    Label topic = new Label("Choose Topic(s):");
+    Label topic = new Label("Choose topic(s):");
     topic.setPrefHeight(50);
 
     ObservableList<String> cmLs = FXCollections.observableArrayList();
@@ -819,7 +824,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     // Center Right
     // ============
     // Prompt Message for # of questions (Label)
-    Label num = new Label("Enter number of questions in quiz: ");
+    Label num = new Label("Choose number of questions to answer: ");
     num.setPrefHeight(50);
 
     // TextField for entering # of questions
@@ -990,7 +995,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     // =========
     // Hard coded, can get from data structure's index
     Label l1 = new Label();
-    l1.setText("Question " + (currIndex + 1) + "out of " + quizGenerator.userRecord.getNumRqst());
+    l1.setText("Question " + (currIndex + 1) + " out of " + quizGenerator.userRecord.getNumRqst());
 
     l1.getStyleClass().add("normalText");
     Label indicator = new Label();
@@ -1007,7 +1012,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     centerBox.setAlignment(Pos.CENTER);
     VBox centerBoxRight = new VBox();
     VBox centerBoxLeft = new VBox();
-    Label l2 = new Label("Description");
+    Label l2 = new Label("Question");
     l2.getStyleClass().add("normalText");
     TextArea ta = new TextArea(currQ.getDescription());
     ta.getStyleClass().add("smallText");
@@ -1172,7 +1177,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     topBox.getStyleClass().add("topHBox");
     popRt.setTop(topBox);
 
-    Button leaveBt = new Button("Leave without saving");
+    Button leaveBt = new Button("Exit without saving");
     Button cancelBt = new Button("Cancel");
     HBox centerBox = new HBox(leaveBt, cancelBt);
     centerBox.setSpacing(30);
@@ -1227,18 +1232,18 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     int requested = quizGenerator.userRecord.getNumRqst();
     int correct = quizGenerator.userRecord.getNumCor();
     int correctPercentage = quizGenerator.userRecord.getPercent();
-    Label numReqsted = new Label("#Answered question: " + requested);
-    Label numCorrect = new Label("#Correct question: " + correct);
-    Label numCorrectPercentage = new Label("%Correct: " + correctPercentage + "%");
+    Label numReqsted = new Label("Number of Questions Answered: " + requested);
+    Label numCorrect = new Label("Number of Questions Answered Correctly: " + correct);
+    Label numCorrectPercentage = new Label("Percentage Correct: " + correctPercentage + "%");
 
     Button startNewQuizBt = new Button();
-    startNewQuizBt.setText("Start a New Quiz With the Same Setting");
+    startNewQuizBt.setText("Start a New Quiz with the same settings");
     startNewQuizBt.getStyleClass().add("NormalButton");
     Button changeSettingBt = new Button();
-    changeSettingBt.setText("Start a New Quiz With a Different Setting");
+    changeSettingBt.setText("Start a New Quiz with different settings");
     changeSettingBt.getStyleClass().add("NormalButton");
     Button endBt = new Button();
-    endBt.setText("End the program");
+    endBt.setText("End Quiz Generator");
     endBt.getStyleClass().add("NormalButton");
 
     centerVBox.getChildren().addAll(numCorrect, numReqsted, numCorrectPercentage, startNewQuizBt,
@@ -1404,7 +1409,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
         alert.showAndWait().filter(response -> response == ButtonType.OK);
         quizGenerator.userRecord.setCurrQuizSaved(true);
       } else {
-        Alert alert = new Alert(AlertType.INFORMATION, "Your quiz is not saved due to an error");
+        Alert alert = new Alert(AlertType.INFORMATION, "Your quiz was not saved");
         alert.initModality(Modality.APPLICATION_MODAL);
         alert.initOwner(primaryStage);
         alert.showAndWait().filter(response -> response == ButtonType.OK);
@@ -1428,14 +1433,14 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     VBox dialogVbox = new VBox();
     HBox dialogHbox = new HBox();
 
-    Label prompt = new Label("Are you sure you want to exit without finishing editing?");
+    Label prompt = new Label("Are you sure you want to exit?/nQuestion will not be saved");
     prompt.getStyleClass().add("smallText");
 
     Button exit = new Button();
-    exit.setText("Yes,exit");
+    exit.setText("Exit");
     exit.getStyleClass().add("popUpButton");
     Button notExit = new Button();
-    notExit.setText("Keep editing");
+    notExit.setText("Continue adding questions");
     notExit.getStyleClass().add("popUpButton");
 
     dialogHbox.getChildren().addAll(exit, notExit);

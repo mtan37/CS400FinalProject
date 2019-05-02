@@ -1,16 +1,12 @@
 package application;
 
-
-import java.io.File;
 import java.util.ArrayList;
 import javafx.scene.image.Image;
 
 /**
  * This class represents the Question of the Quiz
  * 
- * @author SHAO BIN DANIEL SHI HONG
- * @author Nate Sackett
- * @author Zhengyi Chen
+ * @author Shao Bin Daniel Shi Hong, Nate Sackett, Zhengyi Chen
  *
  */
 public class Question {
@@ -22,7 +18,6 @@ public class Question {
   protected boolean isFetched; // if this Question has been used
   private int userAnswer; // this indicates which answer has been chosen by the user
   private String metadata; // question meta-data
- 
 
   /**
    * Default no-argument constructor (used in FileHandler)
@@ -35,15 +30,15 @@ public class Question {
     isFetched = false; // Initialize question not already having been used
     userAnswer = -1; // Default value indicates no answer chosen
     metadata = null; // Default to empty
-    imageAddress = "";
+    imageAddress = ""; // Empty image location
   }
-  
+
   /**
    * 3 argument constructor
    * 
-   * @param topic       = question topic
-   * @param choices     = array list of
-   * @param description
+   * @param topic:       topic String for the Question
+   * @param choices:     ArrayList of Choices for the question
+   * @param description: the description/text for the question
    */
   public Question(String topic, ArrayList<Choice> choices, String description) {
     this.topic = topic.trim().toLowerCase();
@@ -53,7 +48,7 @@ public class Question {
     isFetched = false; // Initialize question not already having been used
     userAnswer = -1; // Default value indicates no answer chosen
     metadata = null; // Default to empty
-    
+    imageAddress = ""; // Empty image location
   }
 
   /**
@@ -71,7 +66,7 @@ public class Question {
   public void setTopic(String topic) { // FileHandler
     this.topic = topic.trim().toLowerCase();
   }
-  
+
   /**
    * Getter of the Question Description
    * 
@@ -87,60 +82,74 @@ public class Question {
   public void setDescription(String description) { // FileHandler
     this.description = description;
   }
-  
+
   /**
    * Getter of the Question choices
-   * @return
+   * 
+   * @return ArrayList of Question Choices
    */
   public ArrayList<Choice> getChoices() {
     return choices;
   }
-  
+
   /**
-   * Adds one question choice to the choices ArrayList; will not add a choice beyond 5 total choices
+   * Adds one question choice to the choices ArrayList; will not add a choice
+   * beyond 5 total choices
    * 
    * @param choice
    */
-  public void addChoice(Choice choice){ // Method used in FileHandler, no other checks needed
+  public void addChoice(Choice choice) { // Method used in FileHandler, no other checks needed
     if (choices.size() < 5)
       choices.add(choice);
   }
-  
-  //TODO: Comment method parameters
+
   /**
-   * This method remove choice from choices
-   * based on the description of choice
-   * @param choiceDes
-   * @throws corAnsRemovedException 
+   * This method removes a Choice from choices ArrayList based on the description
+   * 
+   * @param choiceDes: the description String for choice
+   * @throws corAnsRemovedException when the choice marked as correct is removed
    */
   public void removeChoice(String choiceDes) throws corAnsRemovedException {
-      if(choiceDes == null || choices.size() == 0) {
-        return;
-      }
-      Choice target = findChoice(choiceDes);
-      if(target == null) {
-        return;
-      }
-      //TO DO: what if the choice to be removed is the correct answer?
-      // need to prompt the user to decide a new answer or cancel this removal
-      // throw Exception
-      if(target.getIsCorrect()) {
-        throw new corAnsRemovedException();
-      }
-      choices.remove(target);    
-  }
-  
-  private Choice findChoice(String des) {
-    for(int i = 0; i < choices.size(); i++) {
-       if(choices.get(i).getDescription().equals(des)) 
-         return choices.get(i);
-       
+    // Check that there is a choice to remove and the description is non-null
+    if (choiceDes == null || choices.size() == 0) {
+      return;
     }
-    return null;
+
+    // Call findChoice to get the choice matching the description or null if no
+    // match
+    Choice target = findChoice(choiceDes);
+
+    // If the choice is not found, exit removeChoice
+    if (target == null)
+      return;
+    
+    // Throw Exception if the choice to be removed is the correct answer and
+    // prompt the user to decide a new answer or cancel this removal
+    if (target.getIsCorrect())
+      throw new corAnsRemovedException();
+
+    // If choice has passed all checks, remove target choice
+    choices.remove(target);
   }
-  
-  public Choice getChoice() {
-    return null; // TO DO, argument need to be discussed.
+
+  /**
+   * Helper method for removeChoice returns the Choice object in the choices
+   * ArrayList with the matching description or null if not found
+   * 
+   * @param des: the choice description
+   * @return matching choice if found, otherwise null
+   */
+  private Choice findChoice(String des) {
+    
+    // Search choices ArrayList for Choice with matching description
+    for (int i = 0; i < choices.size(); i++) {
+      
+      // Return matching choice if found
+      if (choices.get(i).getDescription().equals(des))
+        return choices.get(i);
+    }
+    // Return null if choice not found
+    return null;
   }
 
   /**
@@ -155,6 +164,7 @@ public class Question {
   public String getImageAddress() {
     return imageAddress;
   }
+
   /**
    * Setter of the image(assume the imageAddress is valid
    * 
@@ -162,7 +172,7 @@ public class Question {
    */
   public void saveImage(String imageAddress) {
     imageAddress = imageAddress.trim().toLowerCase();
-    if(imageAddress.compareTo("none") == 0 || imageAddress.compareTo("") == 0) {
+    if (imageAddress.compareTo("none") == 0 || imageAddress.compareTo("") == 0) {
       imageAddress = ("application/noImage.png");
     }
     image = new Image(imageAddress);
@@ -186,7 +196,7 @@ public class Question {
   public int getUserAnswer() {
     return userAnswer;
   }
-  
+
   /**
    * This method sets the metadata String for the question
    * 
@@ -195,7 +205,7 @@ public class Question {
   public void setMetadata(String metadata) { // FileHandler
     this.metadata = metadata;
   }
-  
+
   /**
    * This method returns the meta-data String for the question
    * 
@@ -204,14 +214,15 @@ public class Question {
   public String getMetadata() {
     return metadata;
   }
-  
+
   /**
    * This method returns the correct choice for this question
-   * @return the correct choice; 
+   * 
+   * @return the correct choice;
    */
   public Choice getCorrectChose() {
-    for (int i=0; i< choices.size(); i++) {
-      if(choices.get(i).getIsCorrect()) {
+    for (int i = 0; i < choices.size(); i++) {
+      if (choices.get(i).getIsCorrect()) {
         return choices.get(i);
       }
     }
