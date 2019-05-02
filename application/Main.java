@@ -381,7 +381,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     // =========
     // Go Back Button
     Button backButton = new Button();
-    backButton.setText("Back to Main Menu");
+    backButton.setText("Return");
     backButton.getStyleClass().add("backButton");
 
     backButton.setOnAction(event -> primaryStage.setScene(mainMenu));
@@ -919,7 +919,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     add.getStyleClass().add("NormalButton");
 
     // Go Back (Button)
-    Button backBt = new Button("Back to Main Menu");
+    Button backBt = new Button("Return");
     backBt.getStyleClass().add("backButton");
 
     // Layout Set Up
@@ -1131,7 +1131,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     // Bottom
     // =========
     // Go Back (Button)
-    Button backBt = new Button("Back to Main Menu");
+    Button backBt = new Button("Return");
     backBt.getStyleClass().add("backButton");
 
     // Next (Button)
@@ -1318,7 +1318,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     // Bottom
     // =========
     Button backButton = new Button();
-    backButton.setText("Back to Main Menu");
+    backButton.setText("Return");
     backButton.getStyleClass().add("backButton");
     bottomHBox.getChildren().addAll(backButton);
     bottomHBox.getStyleClass().add("bottomHBox");
@@ -1447,7 +1447,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     // =========
     // Bottom
     // =========
-    Button backBt = new Button("Back to Main Menu");
+    Button backBt = new Button("Return");
     backBt.getStyleClass().add("backButton");
     Button saveQBt = new Button();
     saveQBt.setText("Write Current Question Database Into File");
