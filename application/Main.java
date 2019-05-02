@@ -163,20 +163,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
     // when check current question bank button is clicked
     currDataBaseBt.setOnMouseClicked(event -> {
-
-
-      if (quizGenerator.topic.size() == 0) {
-        // set up a pop up alert when no question in question bank
-        Alert alert =
-            new Alert(AlertType.INFORMATION, "There are no questions in Quiz Generator");
-        alert.initModality(Modality.APPLICATION_MODAL);
-        alert.initOwner(primaryStage);
-        alert.showAndWait().filter(response -> response == ButtonType.OK);
-        return;
-      }
-
-      // change to current data base page
-      primaryStage.setScene(currDataBase);
+      currDataBaseBt();
     });
     exitBt.setOnMouseClicked(event -> exitBt());
 
@@ -190,6 +177,23 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     return sc;
 
   }
+
+  /**
+   * Define the behavior of open current question bank button in the main menu page
+   */
+  private void currDataBaseBt() {
+    if (quizGenerator.topic.size() == 0) {
+      // set up a pop up alert when no question in question bank
+      Alert alert =
+          new Alert(AlertType.INFORMATION, "There are no questions in Quiz Generator");
+      alert.initModality(Modality.APPLICATION_MODAL);
+      alert.initOwner(primaryStage);
+      alert.showAndWait().filter(response -> response == ButtonType.OK);
+      return;
+    }
+    // change to current data base page
+    primaryStage.setScene(currDataBase);
+    }
 
   /**
    * A private method that will be called when exit button is clicked
@@ -291,8 +295,8 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     Scene popSc = new Scene(popRt, 400, 100);
     final Stage dialog = new Stage();
     
-    String q1="Question added. \n You can continue adding questions or return to the main menu.";
-    String f= "File loaded. \n You can continue adding questions or return to the main menu.";
+    String q1="Question added. \nYou can continue adding questions or return to the main menu.";
+    String f= "File loaded. \nYou can continue adding questions or return to the main menu.";
     Label prompt = new Label();
     
     if(num==1) {
@@ -453,9 +457,9 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     descriptionBox.getChildren().addAll(descriptionLabel, descriptionArea);
 
     // Image (Label, TextField)
-    Label imageLabel = new Label("Image File Path");
+    Label imageLabel = new Label("Image File Name(Please make sure image is in project source folder)");
     TextField imageField = new TextField();
-    imageField.setPromptText("Ex. application/goodhash2_AK.jpg");
+    imageField.setPromptText("Ex: goodhash2_AK.jpg");
     imageBox.getChildren().addAll(imageLabel, imageField);
 
     // Save (Button)
@@ -536,7 +540,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     goBackToChoiceBt(choicesBox2, choiceBoxList, buttonBox, finishAddChoiceBt, saveButton,
         choicePrompt));
 
-    saveButton.setOnAction(event -> saveFunction(choicesBox, topicField, imageField,
+    saveButton.setOnAction(event -> saveFunction(topicField, imageField,
         descriptionArea, choiceLabel, choicePrompt, choicesList));
     saveButton.getStyleClass().add("NormalButton");
 
@@ -701,13 +705,12 @@ public class Main extends Application implements EventHandler<ActionEvent> {
   /**
    * Define the save button behavior in the add question page
    * 
-   * @param choicesBox
-   * @param topicField
-   * @param descriptionArea
-   * @param choiceLabel
-   * @param choicePrompt
+   * @param topicField is the textField box for user to enter a topic for a question
+   * @param descriptionArea is the text field for user to enter description for a question
+   * @param choiceLabel is the label "Choices"
+   * @param choicePrompt is the text label to prompt user to add/remove choices
    */
-  private void saveFunction(VBox choicesBox, TextField topicField, TextField imageField,
+  private void saveFunction(TextField topicField, TextField imageField,
       TextArea descriptionArea, Label choiceLabel, Label choicePrompt,
       ArrayList<Choice> choicesList) {
 
@@ -774,26 +777,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
       // Add question to question bank and reset
       save.setOnMouseClicked(events -> {
-        // Creating new question and adding it to data structure
-        String topic = topicField.getText();
-        String description = descriptionArea.getText();
-        Question q = new Question(topic, choicesList, description);
-        boolean saved =quizGenerator.addQuestion(q);
-        q.saveImage(imageField.getText());
-        
-        if(saved) {
-          popUpSaveLoadSuccess(1);
-        }
-
-        // reset whether current quiz saved
-        quizGenerator.userRecord.setCurrQuizSaved(false);
-
-        System.out.print("haha");
-
-        // Refresh question page and current database page
-        this.currDataBase = setUpCurrDataBasePage();
-        this.addQuestion = setUpAddQuestionPage();
-        primaryStage.setScene(loadQuestion);
+        saveBtDialog(topicField,descriptionArea,choicesList,imageField);
         dialog.close();
       });
 
@@ -815,6 +799,36 @@ public class Main extends Application implements EventHandler<ActionEvent> {
       dialog.setScene(dialogScene);
       dialog.show();
     }
+  }
+
+  /**
+   * Define the behavior of the save button in the pop up dialog in add question page
+   * @param topicField is the textField box for user to enter a topic for a question
+   * @param descriptionArea is the text field for user to enter description for a question
+   * @param choicesList is the list for all choices
+   * @param imageField is the text field for user to enter image address
+   */
+  private void saveBtDialog(TextField topicField, TextArea descriptionArea, ArrayList<Choice> choicesList, TextField imageField) {
+    // Creating new question and adding it to data structure
+    String topic = topicField.getText();
+    String description = descriptionArea.getText();
+    Question q = new Question(topic, choicesList, description);
+    boolean saved =quizGenerator.addQuestion(q);
+    q.saveImage(imageField.getText());
+    
+    if(saved) {
+      popUpSaveLoadSuccess(1);
+    }
+
+    // reset whether current quiz saved
+    quizGenerator.userRecord.setCurrQuizSaved(false);
+
+    System.out.print("haha");
+
+    // Refresh question page and current database page
+    this.currDataBase = setUpCurrDataBasePage();
+    this.addQuestion = setUpAddQuestionPage();
+    primaryStage.setScene(loadQuestion);
   }
 
   /**
@@ -1158,49 +1172,14 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
     // Submit Button Action Events
     submitBt.setOnAction(e -> {
-      // Set indicator button and next button
-      if (tgG.getSelectedToggle() == null)
-        return;
-      // get correct description
-      String correctDscr = quizQls[currIndex].getCorrectChose().getDescription();
-      RadioButton s = (RadioButton) tgG.getSelectedToggle(); // get selected button
-
-      if (s.getText().equals(correctDscr)) {
-        quizGenerator.userRecord.incrementNumCor();
-        indicator.setText("Correct");
-        indicator.getStyleClass().add("correctLabel");
-      } else {
-        indicator.setText("Wrong");
-        indicator.getStyleClass().add("wrongLabel");
-      }
-
-
-      // display correct and wrong answers
-      for (RadioButton b : choices) {
-
-        if (b.getText().equals(correctDscr)) {
-          // set correct answer green
-          b.getStyleClass().add("greenButton");
-        } else {
-          // set wrong answer red
-          b.getStyleClass().add("redButton");
-        }
-
-
-      }
-      choiceLs.setItems(choices);
-
-
-      indicator.setVisible(true);
-      nextBt.setVisible(true);
-      // choiceLs.setDisable(true);
-      submitBt.setVisible(false);
+      submitQuestionBt(tgG,quizQls,indicator,choices,nextBt, submitBt,choiceLs);
     });
 
 
     // set back button
     backBt.setOnAction(e -> {
       popUpQuitQuestion();
+      resetDifferentSetting();
     });
 
     nextBt.setOnAction(e -> {
@@ -1219,6 +1198,56 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
     sc.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
     return sc;
+  }
+
+  /**
+   * Define the behavior of submit button on question page
+   * @param tgG is the toggle group for choices
+   * @param quizQls is the question array for generated list of questions
+   * @param indicator is the label to indicate whether the user has answered the question right
+   * @param choices is the readioButton obervableList of choices
+   * @param nextBt is the button to click on to go to the next question
+   * @param submitBt is the button to click to submit the current question
+   * @param choiceLs is a list of choices in ListView form
+   */
+  private void submitQuestionBt(ToggleGroup tgG, Question[] quizQls, Label indicator, ObservableList<RadioButton> choices, Button nextBt, Button submitBt, ListView<RadioButton> choiceLs) {
+ // Set indicator button and next button
+    if (tgG.getSelectedToggle() == null)
+      return;
+    // get correct description
+    String correctDscr = quizQls[currIndex].getCorrectChose().getDescription();
+    RadioButton s = (RadioButton) tgG.getSelectedToggle(); // get selected button
+
+    if (s.getText().equals(correctDscr)) {
+      quizGenerator.userRecord.incrementNumCor();
+      indicator.setText("Correct");
+      indicator.getStyleClass().add("correctLabel");
+    } else {
+      indicator.setText("Wrong");
+      indicator.getStyleClass().add("wrongLabel");
+    }
+
+
+    // display correct and wrong answers
+    for (RadioButton b : choices) {
+
+      if (b.getText().equals(correctDscr)) {
+        // set correct answer green
+        b.getStyleClass().add("greenButton");
+      } else {
+        // set wrong answer red
+        b.getStyleClass().add("redButton");
+      }
+
+
+    }
+    choiceLs.setItems(choices);
+
+
+    indicator.setVisible(true);
+    nextBt.setVisible(true);
+    // choiceLs.setDisable(true);
+    submitBt.setVisible(false);
   }
 
   /**
@@ -1467,26 +1496,34 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     });
 
     saveQBt.setOnMouseClicked(event -> {
-      boolean saved = quizGenerator.fileHandler.saveFile(quizGenerator.questionBank);
-      if (saved) {
-        Alert alert = new Alert(AlertType.INFORMATION, "You quiz has been saved");
-        alert.initModality(Modality.APPLICATION_MODAL);
-        alert.initOwner(primaryStage);
-        alert.showAndWait().filter(response -> response == ButtonType.OK);
-        quizGenerator.userRecord.setCurrQuizSaved(true);
-      } else {
-        Alert alert = new Alert(AlertType.INFORMATION, "Your quiz was not saved");
-        alert.initModality(Modality.APPLICATION_MODAL);
-        alert.initOwner(primaryStage);
-        alert.showAndWait().filter(response -> response == ButtonType.OK);
-        quizGenerator.userRecord.setCurrQuizSaved(false);
-      }
+      saveCurrQuestionBankBt();
     });
 
     // set scene
     Scene sc = new Scene(root, 1200, 800);
     sc.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
     return sc;
+  }
+
+  /**
+   * Define the save current question bank button behavior in the curr database page
+   */
+  private void saveCurrQuestionBankBt() {
+    boolean saved = quizGenerator.fileHandler.saveFile(quizGenerator.questionBank);
+    if (saved) {
+      Alert alert = new Alert(AlertType.INFORMATION, "You quiz has been saved");
+      alert.initModality(Modality.APPLICATION_MODAL);
+      alert.initOwner(primaryStage);
+      alert.showAndWait().filter(response -> response == ButtonType.OK);
+      quizGenerator.userRecord.setCurrQuizSaved(true);
+    } else {
+      Alert alert = new Alert(AlertType.INFORMATION, "Your quiz was not saved");
+      alert.initModality(Modality.APPLICATION_MODAL);
+      alert.initOwner(primaryStage);
+      alert.showAndWait().filter(response -> response == ButtonType.OK);
+      quizGenerator.userRecord.setCurrQuizSaved(false);
+    }
+    
   }
 
   /**
