@@ -66,8 +66,8 @@ public class Question {
   /**
    * 3 argument constructor
    * 
-   * @param topic:       topic String for the Question
-   * @param choices:     ArrayList of Choices for the question
+   * @param topic: topic String for the Question
+   * @param choices: ArrayList of Choices for the question
    * @param description: the description/text for the question
    */
   public Question(String topic, ArrayList<Choice> choices, String description) {
@@ -123,8 +123,7 @@ public class Question {
   }
 
   /**
-   * Adds one question choice to the choices ArrayList; will not add a choice
-   * beyond 5 total choices
+   * Adds one question choice to the choices ArrayList; will not add a choice beyond 5 total choices
    * 
    * @param choice
    */
@@ -152,7 +151,7 @@ public class Question {
     // If the choice is not found, exit removeChoice
     if (target == null)
       return;
-    
+
     // Throw Exception if the choice to be removed is the correct answer and
     // prompt the user to decide a new answer or cancel this removal
     if (target.getIsCorrect())
@@ -163,17 +162,17 @@ public class Question {
   }
 
   /**
-   * Helper method for removeChoice returns the Choice object in the choices
-   * ArrayList with the matching description or null if not found
+   * Helper method for removeChoice returns the Choice object in the choices ArrayList with the
+   * matching description or null if not found
    * 
    * @param des: the choice description
    * @return matching choice if found, otherwise null
    */
   private Choice findChoice(String des) {
-    
+
     // Search choices ArrayList for Choice with matching description
     for (int i = 0; i < choices.size(); i++) {
-      
+
       // Return matching choice if found
       if (choices.get(i).getDescription().equals(des))
         return choices.get(i);

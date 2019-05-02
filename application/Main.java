@@ -32,9 +32,7 @@
 package application;
 
 import java.io.File;
-
 import java.util.ArrayList;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -184,8 +182,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
   private void currDataBaseBt() {
     if (quizGenerator.topic.size() == 0) {
       // set up a pop up alert when no question in question bank
-      Alert alert =
-          new Alert(AlertType.INFORMATION, "There are no questions in Quiz Generator");
+      Alert alert = new Alert(AlertType.INFORMATION, "There are no questions in Quiz Generator");
       alert.initModality(Modality.APPLICATION_MODAL);
       alert.initOwner(primaryStage);
       alert.showAndWait().filter(response -> response == ButtonType.OK);
@@ -193,7 +190,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     }
     // change to current data base page
     primaryStage.setScene(currDataBase);
-    }
+  }
 
   /**
    * A private method that will be called when exit button is clicked
@@ -242,12 +239,14 @@ public class Main extends Application implements EventHandler<ActionEvent> {
         alert.initOwner(primaryStage);
         alert.showAndWait().filter(response -> response == ButtonType.OK);
         quizGenerator.userRecord.setCurrQuizSaved(true);
+        Platform.exit();
       } else {
         Alert alert = new Alert(AlertType.INFORMATION, "Your quiz is not saved due to an error");
         alert.initModality(Modality.APPLICATION_MODAL);
         alert.initOwner(primaryStage);
         alert.showAndWait().filter(response -> response == ButtonType.OK);
         quizGenerator.userRecord.setCurrQuizSaved(false);
+        dialog.close();
       }
     });
 
@@ -274,8 +273,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
    */
   private void startNewBt() {
     if (quizGenerator.topic.size() == 0) {
-      Alert alert =
-          new Alert(AlertType.INFORMATION, "Add questions before starting a new quiz");
+      Alert alert = new Alert(AlertType.INFORMATION, "Add questions before starting a new quiz");
       alert.initModality(Modality.APPLICATION_MODAL);
       alert.initOwner(primaryStage);
       alert.showAndWait().filter(response -> response == ButtonType.OK);
@@ -284,44 +282,45 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     questionFilter = setUpQuestionFilterPage();
     primaryStage.setScene(questionFilter);
   }
-  
+
 
   /**
    * A pop up window to inform user that question(s) is(are) added to the bank
+   * 
    * @param num: if num=1, prompt add 1 question, other number indicating adding a file
    */
   private void popUpSaveLoadSuccess(int num) {
     BorderPane popRt = new BorderPane();
     Scene popSc = new Scene(popRt, 400, 100);
     final Stage dialog = new Stage();
-    
-    String q1="Question added. \nYou can continue adding questions or return to the main menu.";
-    String f= "File loaded. \nYou can continue adding questions or return to the main menu.";
+
+    String q1 = "Question added. \nYou can continue adding questions or return to the main menu.";
+    String f = "File loaded. \nYou can continue adding questions or return to the main menu.";
     Label prompt = new Label();
-    
-    if(num==1) {
+
+    if (num == 1) {
       prompt.setText(q1);
-    }else {
+    } else {
       prompt.setText(f);
     }
     prompt.getStyleClass().add("smallText");
     prompt.setWrapText(true);
-    
-   
-    HBox topBox = new HBox( prompt);
+
+
+    HBox topBox = new HBox(prompt);
     topBox.setAlignment(Pos.CENTER);
-    topBox.setPadding(new Insets(5,0,0,0));
-   
-    
+    topBox.setPadding(new Insets(5, 0, 0, 0));
+
+
     popRt.setTop(topBox);
-    
-    Button closeBt= new Button("Close");
+
+    Button closeBt = new Button("Close");
     closeBt.getStyleClass().add("popUpButton");
-    HBox centerBox= new HBox(closeBt);
+    HBox centerBox = new HBox(closeBt);
     centerBox.setAlignment(Pos.CENTER_RIGHT);
-    centerBox.setPadding(new Insets(1,10,0,10));
+    centerBox.setPadding(new Insets(1, 10, 0, 10));
     popRt.setCenter(centerBox);
-    
+
     closeBt.setOnAction(e -> {
       dialog.close();
     });
@@ -332,8 +331,8 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     dialog.setScene(popSc);
     dialog.show();
 
-    
-    
+
+
   }
 
   /**
@@ -367,9 +366,9 @@ public class Main extends Application implements EventHandler<ActionEvent> {
       boolean loaded = quizGenerator.loadFile();
       quizGenerator.userRecord.setCurrQuizSaved(false);
       currDataBase = setUpCurrDataBasePage();
-      
-      if(loaded) {
-       popUpSaveLoadSuccess(2);
+
+      if (loaded) {
+        popUpSaveLoadSuccess(2);
       }
     });
 
@@ -457,7 +456,8 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     descriptionBox.getChildren().addAll(descriptionLabel, descriptionArea);
 
     // Image (Label, TextField)
-    Label imageLabel = new Label("Image File Name(Please make sure image is in project source folder)");
+    Label imageLabel =
+        new Label("Image File Name(Please make sure image is in project source folder)");
     TextField imageField = new TextField();
     imageField.setPromptText("Ex: goodhash2_AK.jpg");
     imageBox.getChildren().addAll(imageLabel, imageField);
@@ -540,8 +540,8 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     goBackToChoiceBt(choicesBox2, choiceBoxList, buttonBox, finishAddChoiceBt, saveButton,
         choicePrompt));
 
-    saveButton.setOnAction(event -> saveFunction(topicField, imageField,
-        descriptionArea, choiceLabel, choicePrompt, choicesList));
+    saveButton.setOnAction(event -> saveFunction(topicField, imageField, descriptionArea,
+        choiceLabel, choicePrompt, choicesList));
     saveButton.getStyleClass().add("NormalButton");
 
     // =========
@@ -654,7 +654,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
       // Display only the boxes with entry
       for (int i = 0; i < choiceFields.length; i++) {
-        if (choiceFields[i].getText().trim().compareTo("") != 0) {// how to detect no entry 
+        if (choiceFields[i].getText().trim().compareTo("") != 0) {// how to detect no entry
           choicesBox2.getChildren().add(choiceBoxList[i]);
         }
       }
@@ -710,25 +710,22 @@ public class Main extends Application implements EventHandler<ActionEvent> {
    * @param choiceLabel is the label "Choices"
    * @param choicePrompt is the text label to prompt user to add/remove choices
    */
-  private void saveFunction(TextField topicField, TextField imageField,
-      TextArea descriptionArea, Label choiceLabel, Label choicePrompt,
-      ArrayList<Choice> choicesList) {
+  private void saveFunction(TextField topicField, TextField imageField, TextArea descriptionArea,
+      Label choiceLabel, Label choicePrompt, ArrayList<Choice> choicesList) {
 
     // ===============
     // Alert Messages
     // ===============
     // If topic field is empty
     if (topicField.getText().isEmpty()) {
-      Alert alert =
-          new Alert(AlertType.INFORMATION, "Please enter a topic for the question");
+      Alert alert = new Alert(AlertType.INFORMATION, "Please enter a topic for the question");
       alert.initModality(Modality.APPLICATION_MODAL);
       alert.initOwner(primaryStage);
       alert.showAndWait().filter(response -> response == ButtonType.OK);
     }
     // If the description area is empty
     else if (descriptionArea.getText().isEmpty()) {
-      Alert alert = new Alert(AlertType.INFORMATION,
-          "Please enter the question before proceeding");
+      Alert alert = new Alert(AlertType.INFORMATION, "Please enter the question before proceeding");
       alert.initModality(Modality.APPLICATION_MODAL);
       alert.initOwner(primaryStage);
       alert.showAndWait().filter(response -> response == ButtonType.OK);
@@ -777,7 +774,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
       // Add question to question bank and reset
       save.setOnMouseClicked(events -> {
-        saveBtDialog(topicField,descriptionArea,choicesList,imageField);
+        saveBtDialog(topicField, descriptionArea, choicesList, imageField);
         dialog.close();
       });
 
@@ -803,20 +800,22 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
   /**
    * Define the behavior of the save button in the pop up dialog in add question page
+   * 
    * @param topicField is the textField box for user to enter a topic for a question
    * @param descriptionArea is the text field for user to enter description for a question
    * @param choicesList is the list for all choices
    * @param imageField is the text field for user to enter image address
    */
-  private void saveBtDialog(TextField topicField, TextArea descriptionArea, ArrayList<Choice> choicesList, TextField imageField) {
+  private void saveBtDialog(TextField topicField, TextArea descriptionArea,
+      ArrayList<Choice> choicesList, TextField imageField) {
     // Creating new question and adding it to data structure
     String topic = topicField.getText();
     String description = descriptionArea.getText();
     Question q = new Question(topic, choicesList, description);
-    boolean saved =quizGenerator.addQuestion(q);
+    boolean saved = quizGenerator.addQuestion(q);
     q.saveImage(imageField.getText());
-    
-    if(saved) {
+
+    if (saved) {
       popUpSaveLoadSuccess(1);
     }
 
@@ -1109,7 +1108,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
       rb.setPrefWidth(590);
       rb.setWrapText(true);
       choices.add(rb);
-      //choices.add(new RadioButton(choiceList.get(i).getDescription()));
+      // choices.add(new RadioButton(choiceList.get(i).getDescription()));
     }
 
     ListView<RadioButton> choiceLs = new ListView<RadioButton>();
@@ -1172,7 +1171,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
     // Submit Button Action Events
     submitBt.setOnAction(e -> {
-      submitQuestionBt(tgG,quizQls,indicator,choices,nextBt, submitBt,choiceLs);
+      submitQuestionBt(tgG, quizQls, indicator, choices, nextBt, submitBt, choiceLs);
     });
 
 
@@ -1202,6 +1201,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
   /**
    * Define the behavior of submit button on question page
+   * 
    * @param tgG is the toggle group for choices
    * @param quizQls is the question array for generated list of questions
    * @param indicator is the label to indicate whether the user has answered the question right
@@ -1210,8 +1210,10 @@ public class Main extends Application implements EventHandler<ActionEvent> {
    * @param submitBt is the button to click to submit the current question
    * @param choiceLs is a list of choices in ListView form
    */
-  private void submitQuestionBt(ToggleGroup tgG, Question[] quizQls, Label indicator, ObservableList<RadioButton> choices, Button nextBt, Button submitBt, ListView<RadioButton> choiceLs) {
- // Set indicator button and next button
+  private void submitQuestionBt(ToggleGroup tgG, Question[] quizQls, Label indicator,
+      ObservableList<RadioButton> choices, Button nextBt, Button submitBt,
+      ListView<RadioButton> choiceLs) {
+    // Set indicator button and next button
     if (tgG.getSelectedToggle() == null)
       return;
     // get correct description
@@ -1371,7 +1373,8 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     });
     backButton.setOnMouseClicked(event -> {
       resetDifferentSetting();
-      primaryStage.setScene(mainMenu);});
+      primaryStage.setScene(mainMenu);
+    });
     // set up border pane by elements
     root.setTop(topHBox);
     root.setCenter(centerVBox);
@@ -1391,7 +1394,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     quizGenerator.userRecord.setNumCor(0);
     quizGenerator.userRecord.topicsChosen = new ArrayList<String>();
     questionFilter = setUpQuestionFilterPage();
-    
+
   }
 
   /**
@@ -1523,7 +1526,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
       alert.showAndWait().filter(response -> response == ButtonType.OK);
       quizGenerator.userRecord.setCurrQuizSaved(false);
     }
-    
+
   }
 
   /**

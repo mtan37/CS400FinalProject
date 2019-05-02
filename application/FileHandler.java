@@ -38,12 +38,10 @@ import java.io.PrintWriter;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.ArrayList;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
@@ -55,7 +53,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
 public class FileHandler {
 
   // Hash table uses the Question topics as the keys and stores ArrayLists of Questions as values
-  Hashtable<String, ArrayList<Question>> questionBank; 
+  Hashtable<String, ArrayList<Question>> questionBank;
 
   /**
    * Basic constructor (no-argument)
@@ -65,24 +63,25 @@ public class FileHandler {
   /**
    * Show user dialog to select file to be read in
    * 
-   * @return ArrayList<Question> a list of questions generated from the json file or null if an exception occurs
+   * @return ArrayList<Question> a list of questions generated from the json file or null if an
+   *         exception occurs
    */
   public ArrayList<Question> pickFile() {
     // Initialize a FileChooser
     FileChooser fileChooser = new FileChooser();
-    
+
     // Set the window title, initial directory, and only allow json files
     fileChooser.setTitle("Open JSON file");
     fileChooser.setInitialDirectory(new File("./"));
     fileChooser.getExtensionFilters().addAll(new ExtensionFilter("JSON Files", "*.JSON", "*.json"));
 
-    // Create a File object and 
+    // Create a File object and
     File file = fileChooser.showOpenDialog(null);
-    
+
     // Return null when the fileChooser dialog is exited
     if (file == null)
       return null;
-    
+
     ArrayList<Question> questionList = readFile(file);
     return questionList;
   }
@@ -91,7 +90,8 @@ public class FileHandler {
    * Reads a json file and inserts question data into bank of questions
    * 
    * @param file: file to be read from
-   * @return ArrayList<Question> a list of questions generated from the JSON file or null if exception occurs
+   * @return ArrayList<Question> a list of questions generated from the JSON file or null if
+   *         exception occurs
    */
   @SuppressWarnings("rawtypes")
   public ArrayList<Question> readFile(File file) {
@@ -105,7 +105,7 @@ public class FileHandler {
       // Store JSONArray of questions and create iterator to parse array
       JSONArray questionArray = (JSONArray) jo.get("questionArray");
       Iterator questionIterator = questionArray.iterator();
-      
+
       // Iterate through array while more questions exist
       while (questionIterator.hasNext()) {
         JSONObject objQ = (JSONObject) questionIterator.next();
@@ -119,7 +119,7 @@ public class FileHandler {
 
         // Set topic of question
         q.setTopic(objQ.get("topic").toString());
-        
+
         // Set image of question
         String imageAddress = (String) objQ.get("image");
         q.saveImage(imageAddress);
@@ -135,13 +135,13 @@ public class FileHandler {
         // Loop through choices, not exceeding 5 choices
         while (choiceIterator.hasNext() && choiceCounter < 5) {
           JSONObject objC = (JSONObject) choiceIterator.next();
-          
+
           // Create choice with default values
           Choice c = new Choice(false, null);
 
           // Get and update truth value for choice
           String truthValue = objC.get("isCorrect").toString();
-          if(truthValue.compareTo("T") == 0)
+          if (truthValue.compareTo("T") == 0)
             c.setIsCorrect(true);
           else {
             c.setIsCorrect(false);
@@ -161,7 +161,7 @@ public class FileHandler {
         questionList.add(q);
       }
       return questionList;
-      
+
     } catch (FileNotFoundException e) {
       e.printStackTrace();
       return null;
@@ -182,11 +182,11 @@ public class FileHandler {
     try {
       // Get save name and location from user
       File saveAddress = pickSaveFile();
-      
+
       // Check that a save location was specified
       if (saveAddress == null)
         throw new FileNotFoundException();
-      
+
       // Create printwriter immediately to check for valid address
       PrintWriter printWriter = new PrintWriter(saveAddress);
 
@@ -196,11 +196,12 @@ public class FileHandler {
       // Create new json array for the questions
       JSONArray questionArray = new JSONArray();
 
-      if(questionBank == null) {
+      if (questionBank == null) {
         System.out.println("null");
       }
       // Parse the hash table of questions by topic
-      questionBank.forEach((topic, questionList) -> { // String topic, ArrayList<Question> questionList
+      questionBank.forEach((topic, questionList) -> { // String topic, ArrayList<Question>
+                                                      // questionList
 
         // Parse the question list
         questionList.forEach(question -> {
@@ -227,11 +228,11 @@ public class FileHandler {
           // Populate choiceArray
           ArrayList<Choice> choices = question.getChoices();
           for (Choice c : choices) {
-            //create the JSONObject represents choices at position i of choiceArray
+            // create the JSONObject represents choices at position i of choiceArray
             JSONObject currChoice = new JSONObject();
-            
+
             // Add truth value to map
-            if(c.getIsCorrect())
+            if (c.getIsCorrect())
               currChoice.put("isCorrect", "T");
             else
               currChoice.put("isCorrect", "F");
@@ -257,18 +258,18 @@ public class FileHandler {
 
       // Use printWriter created at beginning of program to save json object
       printWriter.write(jsonOutput.toJSONString());
-      
+
       // Remove everything from printWriter stream and close
       printWriter.flush();
       printWriter.close();
       return true;
-      
+
     } catch (FileNotFoundException e) {
       // No save location selected. This is okay. Do nothing.
       return false;
     }
   }
-  
+
   /**
    * Helper method for saveFile opens user dialog to select save location
    * 
@@ -277,20 +278,20 @@ public class FileHandler {
   private File pickSaveFile() {
     // Initialize a FileChooser to choose a save location
     FileChooser fileChooser = new FileChooser();
-    
+
     // Set title so user knows to pick a save location
     fileChooser.setTitle("Save File:");
-    
+
     // Set default save name
     fileChooser.setInitialFileName("questionBank.json");
 
     // Prompt user for save location
     File saveAddress = fileChooser.showSaveDialog(null);
-    
+
     // If saveAddress is null don't proceed
     if (saveAddress == null)
       return null;
-    
+
     // Return the save address
     return saveAddress;
   }
