@@ -8,15 +8,17 @@ import java.util.Random;
 /**
  * This class generates and manipulate the quizzes
  * 
- * @author Nate Sackett SHAO BIN DANIEL SHI HONG
+ * @author Nate Sackett, Shao Bin Daniel Shi Hong
  */
 public class QuizGenerator {
-  FileHandler fileHandler;
-  UserRecord userRecord;
-  Hashtable<String, ArrayList<Question>> questionBank;
+  FileHandler fileHandler; // Handles reading/writing json files
+  UserRecord userRecord; // Holds user's actions
+  Hashtable<String, ArrayList<Question>> questionBank; // HashTable holds ArrayLists of questions by topic
   ArrayList<String> topic; // all topics in the questionBank
- 
 
+  /**
+   * Constructor initializes all instance variables as empty
+   */
   public QuizGenerator() {
     this.fileHandler = new FileHandler();
     this.userRecord = new UserRecord();
@@ -28,30 +30,38 @@ public class QuizGenerator {
 
   /**
    * Load file from a JSON file
+   * 
    * @return true if file successfully loaded
    */
   public boolean loadFile() {
+    // Get ArrayList of questions using the file handler
     ArrayList<Question> questionList = fileHandler.pickFile();
-    if(questionList == null)//if file not load successfully
+
+    // Return false when file not loaded
+    if (questionList == null)
       return false;
+
+    // Repeatedly call addQuestion to add the questions to the question bank
     Iterator<Question> it = questionList.iterator();
-    while(it.hasNext()) {
+    while (it.hasNext()) {
       Question currQ = it.next();
       addQuestion(currQ);
     }
+    // Return true upon successful completion
     return true;
   }
 
   /**
-   * Added by Daniel This method searches based on the topic and add the question under this topic
+   * This method searches based on the question topic and adds the question under
+   * the correct topic
    * 
    * @param question
    */
   public boolean addQuestion(Question question) {
 
-
+    // Stop if question is null
     if (question == null) {
-      return false; // might throw NullKeyException in the future
+      return false;
     }
 
     String qTopic = question.topic;
@@ -70,14 +80,8 @@ public class QuizGenerator {
     return true;
   }
 
-  public boolean removeQuestion(Question question) {
-    // TO _ DO : need to discuss more about
-    // what argument is most convenient
-    return false;
-  }
-  
   /**
-   * This method clear isFetched for all questions, prepare for next quiz.
+   * This method clears isFetched for all questions to prepare for the next qui.
    */
   private void clear() {
     for (int i = 0; i < topic.size(); i++) {
@@ -87,22 +91,24 @@ public class QuizGenerator {
       }
     }
   }
+
   /**
-   * This method returns size of questions under
-   * specified topic
+   * This method returns size of questions under a specified topic
+   * 
    * @param topicList List of topics requested by User
    * @return number of questions associated with topicList
    */
   private int getQuestionSize(ArrayList<String> topicList) {
-          int size = 0;
-          for(int i = 0 ; i < topicList.size() ; i++) {
-              size += questionBank.get(topicList.get(i)).size();
-          }
-          return size;
+    int size = 0;
+    for (int i = 0; i < topicList.size(); i++) {
+      size += questionBank.get(topicList.get(i)).size();
+    }
+    return size;
   }
+
   /**
-   * This method generate a random QuestionList based on the currChosenTopic and userRecord.numRqsts
-   * requested by user
+   * This method generates a random QuestionList based on the currChosenTopic and
+   * userRecord.numRqsts requested by user
    * 
    * @return a list of random questions, null if failed.
    */
@@ -111,8 +117,8 @@ public class QuizGenerator {
     int questionSize = getQuestionSize(userRecord.topicsChosen);
     if (questionSize < userRecord.getNumRqst()) {
       userRecord.setNumRqst(questionSize);
-  }
-    
+    }
+
     clear(); // clear the history data from last quiz
 
     ArrayList<String> topicList = new ArrayList<>();
@@ -134,11 +140,11 @@ public class QuizGenerator {
 
     // pick random question in the list
     Question randQuestion = pickRandomQuestionOftopic(questionList);
-    
+
     System.out.println("numberQused" + numberQused);
     System.out.println("request num Q" + userRecord.getNumRqst());
     while (numberQused < userRecord.getNumRqst()) {
-      
+
       if (randQuestion == null) {
         // remove the topic as all questions under it have been fetched
         topicList.remove(randTopic);
@@ -156,8 +162,6 @@ public class QuizGenerator {
     }
 
     return qList;
-
-
 
   }
 
@@ -181,8 +185,8 @@ public class QuizGenerator {
   }
 
   /**
-   * This is a private method checking if all questions in the questionList have been fetched for
-   * generating the quiz.
+   * This is a private method checking if all questions in the questionList have
+   * been fetched for generating the quiz.
    * 
    * @param questionList
    * @return a list of questions that aren't fetched
@@ -194,7 +198,6 @@ public class QuizGenerator {
     if (questionList == null) {
       return notFetchedQuestion; // size if zero, means all questions consumed.
     }
-
 
     for (int i = 0; i < questionList.size(); i++) {
       // if any question is not fetched,add to the notFetchedList
@@ -208,5 +211,3 @@ public class QuizGenerator {
 
   }
 }
-
-

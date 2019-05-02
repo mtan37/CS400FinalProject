@@ -155,20 +155,25 @@ public class Question {
   /**
    * Getter of the Image
    * 
-   * @return image
+   * @return image of question
    */
   public Image loadImage() {
     return image;
   }
 
+  /**
+   * Getter of the image address for the question
+   * 
+   * @return image address String
+   */
   public String getImageAddress() {
     return imageAddress;
   }
 
   /**
-   * Setter of the image(assume the imageAddress is valid
+   * Setter of the image(assume the imageAddress is valid)
    * 
-   * @param image
+   * @param imageAddress String
    */
   public void saveImage(String imageAddress) {
     imageAddress = imageAddress.trim().toLowerCase();
@@ -180,9 +185,9 @@ public class Question {
   }
 
   /**
-   * This method sets which number of choice the User is choosing
+   * This method set which choice the user has selected
    * 
-   * @param answerNumber the number of the User choice
+   * @param answerNumber the integer representing the user's choice
    */
   public void setUserAnswer(int answerNumber) {
     this.userAnswer = answerNumber;
@@ -191,7 +196,7 @@ public class Question {
   /**
    * Getter of UserAnswer
    * 
-   * @return the User's answer number
+   * @return integer representing the user's answer
    */
   public int getUserAnswer() {
     return userAnswer;
@@ -200,7 +205,7 @@ public class Question {
   /**
    * This method sets the metadata String for the question
    * 
-   * @param metadata
+   * @param metadata: additional data String for the question
    */
   public void setMetadata(String metadata) { // FileHandler
     this.metadata = metadata;
@@ -221,12 +226,13 @@ public class Question {
    * @return the correct choice;
    */
   public Choice getCorrectChose() {
+    // Search for correct answer
     for (int i = 0; i < choices.size(); i++) {
       if (choices.get(i).getIsCorrect()) {
         return choices.get(i);
       }
     }
+    // Return null when no correct answer found
     return null;
   }
-
 }

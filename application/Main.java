@@ -312,7 +312,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
     // Create Questions (Button)
     Button createButton = new Button();
-    createButton.setText("Create New Questions");
+    createButton.setText("Create a New Question");
     createButton.getStyleClass().add("NormalButton");
 
     createButton.setOnAction(event -> primaryStage.setScene(addQuestion));
