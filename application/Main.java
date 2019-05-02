@@ -650,7 +650,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
       // Display only the boxes with entry
       for (int i = 0; i < choiceFields.length; i++) {
-        if (choiceFields[i].getText().trim().compareTo("") != 0) {// how to detect no entry TODO
+        if (choiceFields[i].getText().trim().compareTo("") != 0) {// how to detect no entry 
           choicesBox2.getChildren().add(choiceBoxList[i]);
         }
       }
