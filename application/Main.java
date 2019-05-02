@@ -4,8 +4,8 @@
 // Files:
 // json-simple-1.1.1.jar
 // application.css
-// wallpaper-icon.png
 // warn.png
+// noImage.png
 // Course: CS 400
 //
 // Author: Marvin Tan, Nate Sackett, Shao Bin Daniel Shi Hong, Hui Beom Kim, Zhengyi Chen
@@ -24,6 +24,8 @@
 // https://www.geeksforgeeks.org/parse-json-java/
 // https://www.youtube.com/watch?v=hNz8Xf4tMI4
 // https://www.geeksforgeeks.org/parse-json-java/
+// noImage.png: https://en.wikipedia.org/wiki/2016–17_Liga_I#/media/File:No_image_available.svg
+// warn.png: 
 // Known bugs: No known bugs
 ///////////////////////////////////////////////////////////////////////////////
 
