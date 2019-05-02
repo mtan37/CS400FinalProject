@@ -1268,6 +1268,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     });
     changeSettingBt.setOnMouseClicked(event -> {
       resetDifferentSetting();
+      primaryStage.setScene(questionFilter);
     });
     endBt.setOnMouseClicked(event -> {
       try {
@@ -1276,7 +1277,9 @@ public class Main extends Application implements EventHandler<ActionEvent> {
         e.printStackTrace();
       }
     });
-    backButton.setOnMouseClicked(event -> primaryStage.setScene(mainMenu));
+    backButton.setOnMouseClicked(event -> {
+      resetDifferentSetting();
+      primaryStage.setScene(mainMenu);});
     // set up border pane by elements
     root.setTop(topHBox);
     root.setCenter(centerVBox);
@@ -1296,7 +1299,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     quizGenerator.userRecord.setNumCor(0);
     quizGenerator.userRecord.topicsChosen = new ArrayList<String>();
     questionFilter = setUpQuestionFilterPage();
-    primaryStage.setScene(questionFilter);
+    
   }
 
   /**
