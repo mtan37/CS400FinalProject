@@ -232,24 +232,9 @@ public class Main extends Application implements EventHandler<ActionEvent> {
 
     // feedback whether saving quiz successfully or not
     saveBt.setOnAction(e -> {
-      boolean saved = quizGenerator.fileHandler.saveFile(quizGenerator.questionBank);
-      if (saved) {
-        Alert alert = new Alert(AlertType.INFORMATION, "You quiz has been saved");
-        alert.initModality(Modality.APPLICATION_MODAL);
-        alert.initOwner(primaryStage);
-        alert.showAndWait().filter(response -> response == ButtonType.OK);
-        quizGenerator.userRecord.setCurrQuizSaved(true);
-        Platform.exit();
-      } else {
-        Alert alert = new Alert(AlertType.INFORMATION, "Your quiz is not saved due to an error");
-        alert.initModality(Modality.APPLICATION_MODAL);
-        alert.initOwner(primaryStage);
-        alert.showAndWait().filter(response -> response == ButtonType.OK);
-        quizGenerator.userRecord.setCurrQuizSaved(false);
-        dialog.close();
-      }
+      quizSave();
+      dialog.close();
     });
-
 
     // leave without saving
     leaveBt.setOnAction(e -> {
@@ -266,6 +251,28 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     dialog.initOwner(primaryStage);
     dialog.setScene(popSc);
     dialog.show();
+  }
+
+  /**
+   * Define the behavior of save button on the exit popup
+   */
+  private void quizSave() {
+    boolean saved = quizGenerator.fileHandler.saveFile(quizGenerator.questionBank);
+    if (saved) {
+      Alert alert = new Alert(AlertType.INFORMATION, "You quiz has been saved");
+      alert.initModality(Modality.APPLICATION_MODAL);
+      alert.initOwner(primaryStage);
+      alert.showAndWait().filter(response -> response == ButtonType.OK);
+      quizGenerator.userRecord.setCurrQuizSaved(true);
+      Platform.exit();
+    } else {
+      Alert alert = new Alert(AlertType.INFORMATION, "Your quiz is not saved due to an error");
+      alert.initModality(Modality.APPLICATION_MODAL);
+      alert.initOwner(primaryStage);
+      alert.showAndWait().filter(response -> response == ButtonType.OK);
+      quizGenerator.userRecord.setCurrQuizSaved(false);
+    }
+    
   }
 
   /**
