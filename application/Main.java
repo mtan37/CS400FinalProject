@@ -276,6 +276,57 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     questionFilter = setUpQuestionFilterPage();
     primaryStage.setScene(questionFilter);
   }
+  
+
+  /**
+   * A pop up window to inform user that question(s) is(are) added to the bank
+   * @param num: if num=1, prompt add 1 question, other number indicating adding a file
+   */
+  private void popUpSaveLoadSuccess(int num) {
+    BorderPane popRt = new BorderPane();
+    Scene popSc = new Scene(popRt, 400, 100);
+    final Stage dialog = new Stage();
+    
+    String q1="Question added! \n You can view or start a quiz from main menu.";
+    String f= "File loaded! \n You can view or statr a quiz from main menu.";
+    Label prompt = new Label();
+    
+    if(num==1) {
+      prompt.setText(q1);
+    }else {
+      prompt.setText(f);
+    }
+    prompt.getStyleClass().add("smallText");
+    prompt.setWrapText(true);
+    
+   
+    HBox topBox = new HBox( prompt);
+    topBox.setAlignment(Pos.CENTER);
+    topBox.setPadding(new Insets(5,0,0,0));
+   
+    
+    popRt.setTop(topBox);
+    
+    Button closeBt= new Button("Close");
+    closeBt.getStyleClass().add("popUpButton");
+    HBox centerBox= new HBox(closeBt);
+    centerBox.setAlignment(Pos.CENTER_RIGHT);
+    centerBox.setPadding(new Insets(1,10,0,10));
+    popRt.setCenter(centerBox);
+    
+    closeBt.setOnAction(e -> {
+      dialog.close();
+    });
+
+    popSc.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+    dialog.initModality(Modality.APPLICATION_MODAL);
+    dialog.initOwner(primaryStage);
+    dialog.setScene(popSc);
+    dialog.show();
+
+    
+    
+  }
 
   /**
    * Build a load question page
@@ -305,9 +356,13 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     loadButton.getStyleClass().add("NormalButton");
 
     loadButton.setOnAction(event -> {
-      quizGenerator.loadFile();
+      boolean loaded = quizGenerator.loadFile();
       quizGenerator.userRecord.setCurrQuizSaved(false);
       currDataBase = setUpCurrDataBasePage();
+      
+      if(loaded) {
+       popUpSaveLoadSuccess(2);
+      }
     });
 
     // Create Questions (Button)
@@ -719,8 +774,12 @@ public class Main extends Application implements EventHandler<ActionEvent> {
         String topic = topicField.getText();
         String description = descriptionArea.getText();
         Question q = new Question(topic, choicesList, description);
-        quizGenerator.addQuestion(q);
+        boolean saved =quizGenerator.addQuestion(q);
         q.saveImage(imageField.getText());
+        
+        if(saved) {
+          popUpSaveLoadSuccess(1);
+        }
 
         // reset whether current quiz saved
         quizGenerator.userRecord.setCurrQuizSaved(false);
