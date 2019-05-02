@@ -291,8 +291,8 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     Scene popSc = new Scene(popRt, 400, 100);
     final Stage dialog = new Stage();
     
-    String q1="Question added! \n You can view or start a quiz from main menu.";
-    String f= "File loaded! \n You can view or statr a quiz from main menu.";
+    String q1="Question added. \n You can continue adding questions or return to the main menu.";
+    String f= "File loaded. \n You can continue adding questions or return to the main menu.";
     Label prompt = new Label();
     
     if(num==1) {
@@ -915,7 +915,7 @@ public class Main extends Application implements EventHandler<ActionEvent> {
     // Bottom
     // =========
     // Start Quiz (Button)
-    Button add = new Button("Finish selection, start quiz");
+    Button add = new Button("Finish selection and start quiz");
     add.getStyleClass().add("NormalButton");
 
     // Go Back (Button)
