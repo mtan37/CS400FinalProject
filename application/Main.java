@@ -4,7 +4,6 @@
 // Files:
 // json-simple-1.1.1.jar
 // application.css
-// wallpaper-icon.png
 // warn.png
 // Course: CS 400
 //
@@ -24,6 +23,7 @@
 // https://www.geeksforgeeks.org/parse-json-java/
 // https://www.youtube.com/watch?v=hNz8Xf4tMI4
 // https://www.geeksforgeeks.org/parse-json-java/
+// http://www.iconarchive.com
 // Known bugs: No known bugs
 ///////////////////////////////////////////////////////////////////////////////
 
